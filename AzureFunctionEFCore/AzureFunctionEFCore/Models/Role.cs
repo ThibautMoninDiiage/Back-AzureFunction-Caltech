@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+
 namespace AzureFunctionEFCore.Models
 {
     [Table("Roles")]
@@ -8,6 +9,7 @@ namespace AzureFunctionEFCore.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Nom { get; set; }
+
+        public string Name { get; set; }
     }
 }
