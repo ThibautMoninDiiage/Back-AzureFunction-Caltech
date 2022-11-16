@@ -1,0 +1,8 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "SqlConnectionString": "Server=tcp:caltech.database.windows.net,1433;Initial Catalog=SecurityServerDB;Persist Security Info=False;User ID=superadmin;Password=Azerty@123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;"
+  }
+}
