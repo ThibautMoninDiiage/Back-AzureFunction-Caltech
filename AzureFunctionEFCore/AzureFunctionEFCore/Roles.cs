@@ -11,7 +11,7 @@ namespace AzureFunctionEFCore
     public class Roles
     {
         public const string Route = "roles";
-        public IRoleService _roleService { get; set; }
+        private readonly IRoleService _roleService;
 
         public Roles(IRoleService roleService)
         {
