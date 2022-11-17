@@ -1,14 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 
-namespace AzureFunction.UnitOfWork.Models
+namespace AzureFunction.Context.Models
 {
     [Table("Users")]
-    public class User
+    public class User : BaseModel
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
         public string? Username { get; set; }
         public string? Password { get; set; }
         public string? Avatar { get; set; }

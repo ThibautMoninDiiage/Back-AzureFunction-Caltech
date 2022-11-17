@@ -19,4 +19,9 @@
   <ItemGroup>
     <Folder Include="Models\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AzureFunction.Context\AzureFunction.Context.csproj" />
+    <ProjectReference Include="..\AzureFunction.Service\AzureFunction.Service.csproj" />
+    <ProjectReference Include="..\AzureFunction.UnitOfWork\AzureFunction.UnitOfWork.csproj" />
+  </ItemGroup>
 </Project>
