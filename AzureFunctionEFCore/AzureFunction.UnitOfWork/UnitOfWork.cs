@@ -1,8 +1,6 @@
 ﻿using AzureFunction.Repository.Interfaces;
 using AzureFunction.Repository;
 using AzureFunction.UnitOfWork.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using AzureFunction.Context.Models;
 using AzureFunction.Context.DbContextAZ;
 
 namespace AzureFunction.UnitOfWork
