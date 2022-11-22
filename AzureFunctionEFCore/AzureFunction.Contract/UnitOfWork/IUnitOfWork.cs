@@ -1,6 +1,6 @@
-﻿using AzureFunction.Contrat.Repositories;
+﻿using AzureFunction.Contract.Repositories;
 
-namespace AzureFunction.Contrat.UnitOfWork
+namespace AzureFunction.Contract.UnitOfWork
 {
     public interface IUnitOfWork
     {

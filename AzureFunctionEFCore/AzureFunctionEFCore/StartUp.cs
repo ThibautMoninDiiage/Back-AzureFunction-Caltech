@@ -6,7 +6,7 @@ using AzureFunction.Service.Interfaces;
 using AzureFunction.Service;
 using AzureFunction.UnitOfWork.UnitOfWork;
 using AzureFunction.UnitOfWork.DbContextAZ;
-using AzureFunction.Contrat.UnitOfWork;
+using AzureFunction.Contract.UnitOfWork;
 
 [assembly: FunctionsStartup(typeof(AzureFunctionEFCore.StartUp))]
 

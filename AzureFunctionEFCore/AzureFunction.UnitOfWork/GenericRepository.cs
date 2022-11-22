@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using AzureFunction.Contrat;
+using AzureFunction.Contract;
 using AzureFunction.Models.BaseModels;
 using AzureFunction.UnitOfWork.DbContextAZ;
 using Microsoft.EntityFrameworkCore;

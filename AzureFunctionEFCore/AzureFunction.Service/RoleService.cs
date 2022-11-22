@@ -1,4 +1,4 @@
-﻿using AzureFunction.Contrat.UnitOfWork;
+﻿using AzureFunction.Contract.UnitOfWork;
 using AzureFunction.Models;
 using AzureFunction.Service.Interfaces;
 
