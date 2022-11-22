@@ -6,9 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\AzureFunction.Context\AzureFunction.Models.csproj" />
-    <ProjectReference Include="..\AzureFunction.Contract\AzureFunction.Contract.csproj" />
-  </ItemGroup>
-
 </Project>

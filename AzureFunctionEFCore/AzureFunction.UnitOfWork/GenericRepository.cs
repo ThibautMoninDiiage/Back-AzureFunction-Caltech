@@ -1,8 +1,8 @@
-﻿using System.Linq.Expressions;
-using AzureFunction.Contract;
+﻿using AzureFunction.Contract;
 using AzureFunction.Models.BaseModels;
 using AzureFunction.UnitOfWork.DbContextAZ;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace AzureFunction.UnitOfWork
 {

@@ -1,4 +1,5 @@
-﻿using AzureFunction.Contract.Repositories;
+﻿using AzureFunction.Contract;
+using AzureFunction.Contract.Repositories;
 using AzureFunction.Models;
 using AzureFunction.UnitOfWork.DbContextAZ;
 
