@@ -1,12 +1,12 @@
 ﻿using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using AzureFunction.Service.Interfaces;
 using AzureFunction.Service;
-using AzureFunction.UnitOfWork.UnitOfWork;
-using AzureFunction.UnitOfWork.DbContextAZ;
 using AzureFunction.Contract.UnitOfWork;
+using AzureFunction.UnitOfWork.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
+using AzureFunction.UnitOfWork.DbContextAZ;
 
 [assembly: FunctionsStartup(typeof(AzureFunctionEFCore.StartUp))]
 
