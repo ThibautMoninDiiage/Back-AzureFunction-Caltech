@@ -17,8 +17,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AzureFunction.Context\AzureFunction.Models.csproj" />
     <ProjectReference Include="..\AzureFunction.Service\AzureFunction.Service.csproj" />
-    <ProjectReference Include="..\AzureFunction.UnitOfWork\AzureFunction.UnitOfWork.csproj" />
   </ItemGroup>
 </Project>
