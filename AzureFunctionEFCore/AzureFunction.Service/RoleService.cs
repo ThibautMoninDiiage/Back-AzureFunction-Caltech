@@ -1,6 +1,6 @@
-﻿using AzureFunction.Context.Models;
+﻿using AzureFunction.Contract.UnitOfWork;
+using AzureFunction.Models;
 using AzureFunction.Service.Interfaces;
-using AzureFunction.UnitOfWork.Interfaces;
 
 namespace AzureFunction.Service
 {

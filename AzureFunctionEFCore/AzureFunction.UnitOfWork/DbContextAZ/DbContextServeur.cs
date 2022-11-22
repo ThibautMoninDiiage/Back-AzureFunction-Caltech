@@ -1,7 +1,7 @@
-﻿using AzureFunction.Context.Models;
+﻿using AzureFunction.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace AzureFunction.Context.DbContextAZ
+namespace AzureFunction.UnitOfWork.DbContextAZ
 {
     public class DbContextServeur : DbContext
     {

@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\AzureFunction.Context\AzureFunction.Context.csproj" />
-  </ItemGroup>
-
 </Project>

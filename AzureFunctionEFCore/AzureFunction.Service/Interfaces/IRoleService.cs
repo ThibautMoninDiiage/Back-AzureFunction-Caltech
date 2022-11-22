@@ -1,4 +1,4 @@
-﻿using AzureFunction.Context.Models;
+﻿using AzureFunction.Models;
 
 namespace AzureFunction.Service.Interfaces
 {
