@@ -1,10 +1,10 @@
-﻿using AzureFunction.Repository.Interfaces;
+﻿using System.Linq.Expressions;
+using AzureFunction.Contrat;
+using AzureFunction.Models.BaseModels;
+using AzureFunction.UnitOfWork.DbContextAZ;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using AzureFunction.Context.Models;
-using AzureFunction.Context.DbContextAZ;
 
-namespace AzureFunction.Repository
+namespace AzureFunction.UnitOfWork
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : BaseModel
     {

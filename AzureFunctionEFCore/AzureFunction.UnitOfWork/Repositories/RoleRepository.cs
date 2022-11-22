@@ -1,8 +1,8 @@
-﻿using AzureFunction.Context.DbContextAZ;
-using AzureFunction.Context.Models;
-using AzureFunction.Repository.Interfaces;
+﻿using AzureFunction.Contrat.Repositories;
+using AzureFunction.Models;
+using AzureFunction.UnitOfWork.DbContextAZ;
 
-namespace AzureFunction.Repository
+namespace AzureFunction.UnitOfWork.Repositories
 {
     public class RoleRepository : GenericRepository<Role>, IRoleRepository
     {

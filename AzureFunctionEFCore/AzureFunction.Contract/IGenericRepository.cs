@@ -1,7 +1,7 @@
-﻿using AzureFunction.Context.Models;
+﻿using AzureFunction.Models.BaseModels;
 using System.Linq.Expressions;
 
-namespace AzureFunction.Repository.Interfaces
+namespace AzureFunction.Contrat
 {
     public interface IGenericRepository<T> where T : BaseModel
     {

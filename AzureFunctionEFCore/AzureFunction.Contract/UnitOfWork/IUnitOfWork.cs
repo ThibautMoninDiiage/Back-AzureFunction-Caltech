@@ -1,7 +1,6 @@
-﻿using AzureFunction.Context.Models;
-using AzureFunction.Repository.Interfaces;
+﻿using AzureFunction.Contrat.Repositories;
 
-namespace AzureFunction.UnitOfWork.Interfaces
+namespace AzureFunction.Contrat.UnitOfWork
 {
     public interface IUnitOfWork
     {

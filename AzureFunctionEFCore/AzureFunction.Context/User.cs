@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using AzureFunction.Models.BaseModels;
 
-namespace AzureFunction.Context.Models
+namespace AzureFunction.Models
 {
     [Table("Users")]
     public class User : BaseModel

@@ -1,9 +1,9 @@
-﻿using AzureFunction.Repository.Interfaces;
-using AzureFunction.Repository;
-using AzureFunction.UnitOfWork.Interfaces;
-using AzureFunction.Context.DbContextAZ;
+﻿using AzureFunction.Contrat.Repositories;
+using AzureFunction.Contrat.UnitOfWork;
+using AzureFunction.UnitOfWork.DbContextAZ;
+using AzureFunction.UnitOfWork.Repositories;
 
-namespace AzureFunction.UnitOfWork
+namespace AzureFunction.UnitOfWork.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
