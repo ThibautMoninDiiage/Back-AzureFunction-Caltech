@@ -21,6 +21,7 @@ namespace AzureFunctionEFCore
             builder.Services.AddDbContext<DbContextServeur>(options => options.UseSqlServer(connString));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddTransient(typeof(IRoleService), typeof(RoleService));
+            builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
         }
     }
 }

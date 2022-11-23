@@ -7,27 +7,37 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using AzureFunction.Service.Interfaces;
 
 namespace AzureFunctionEFCore
 {
-    public static class Users
+    public class Users
     {
+        public const string Route = "users";
+        private readonly IUserService _userService;
+
+        public Users(IUserService userService)
+        {
+            _userService = userService;
+        }
+
         [FunctionName("Users")]
-        public static async Task<IActionResult> Get([HttpTrigger(AuthorizationLevel.Anonymous,"get", Route = null)] HttpRequest req,ILogger log)
+        public async Task<IActionResult> Get([HttpTrigger(AuthorizationLevel.Anonymous,"get", Route = Route)] HttpRequest req,ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string name = req.Query["name"];
+            string login = req.Query["login"];
+            string mdp = req.Query["password"];
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            if(login == null || mdp == null)
+            {
+                return new BadRequestResult();
+            }
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+            var result = await _userService.Get(login,mdp);
 
-            return new OkObjectResult(responseMessage);
+
+            return new OkObjectResult(result);
         }
     }
 }

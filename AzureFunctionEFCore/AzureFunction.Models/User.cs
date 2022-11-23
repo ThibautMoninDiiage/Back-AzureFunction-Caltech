@@ -10,7 +10,7 @@ namespace AzureFunction.Models
         public string? Password { get; set; }
         public string? Avatar { get; set; }
         public string? Mail { get; set; }
-        public Role? Roles { get; set; }
+        //public Role? Roles { get; set; }
         public int? IdRole { get; set; }
     }
 }
