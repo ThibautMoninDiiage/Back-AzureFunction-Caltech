@@ -14,8 +14,8 @@ namespace AzureFunction.Service
 
         public async Task<Role> Get(string login, string password)
         {
-            //return await _uow.UserRepository.Get()
-            throw new NotImplementedException();
+            return await _uow.UserRepository.Get();
+            //throw new NotImplementedException();
         }
     }
 }
