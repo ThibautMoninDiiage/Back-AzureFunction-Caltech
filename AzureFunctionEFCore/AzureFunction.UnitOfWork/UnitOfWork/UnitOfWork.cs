@@ -9,6 +9,7 @@ namespace AzureFunction.UnitOfWork.UnitOfWork
     {
         private readonly DbContextServeur _context;
         private IRoleRepository? _roleRepository;
+        private IUserRepository? _userRepository;
 
         public UnitOfWork(DbContextServeur context)
         {
@@ -18,6 +19,11 @@ namespace AzureFunction.UnitOfWork.UnitOfWork
         public IRoleRepository RoleRepository
         {
             get { return _roleRepository = _roleRepository ?? new RoleRepository(_context); }
+        }
+
+        public IUserRepository UserRepository
+        {
+            get { return _userRepository = _userRepository ?? new UserRepository(_context); }
         }
 
         public void Commit()
