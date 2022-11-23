@@ -4,6 +4,6 @@ namespace AzureFunction.Service.Interfaces
 {
     public interface IUserService
     {
-        public Task<Role> Get(string login,string password);
+        public Task<User> Get(string login,string password);
     }
 }

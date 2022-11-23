@@ -12,7 +12,7 @@ namespace AzureFunction.Service
             _uow = uow;
         }
 
-        public async Task<Role> Get(string login, string password)
+        public async Task<User> Get(string login, string password)
         {
             //return await _uow.UserRepository.Get();
             throw new NotImplementedException();
