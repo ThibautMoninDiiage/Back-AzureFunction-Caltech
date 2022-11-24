@@ -1,4 +1,4 @@
-﻿namespace SecurityServer.Models.DTO.Down
+﻿namespace SecurityServer.Service.DTO.Down
 {
     public class UserDtoDown
     {

@@ -1,4 +1,4 @@
-﻿namespace SecurityServer.Models.DTO.Up
+﻿namespace SecurityServer.Service.DTO.Up
 {
     public class UserDtoUp
     {

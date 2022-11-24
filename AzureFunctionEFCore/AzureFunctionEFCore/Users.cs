@@ -7,8 +7,8 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
-using SecurityServer.Models.DTO.Up;
 using SecurityServer.Service.Interfaces;
+using SecurityServer.Service.DTO.Up;
 
 namespace SecurityServer.Function
 {
@@ -22,8 +22,8 @@ namespace SecurityServer.Function
             _userService = userService;
         }
 
-        [FunctionName("Connexion")]
-        public async Task<IActionResult> Connexion([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Route)] HttpRequest req)
+        [FunctionName("ServeurConnexion")]
+        public async Task<IActionResult> Connexion([HttpTrigger(AuthorizationLevel.Anonymous,"post", Route = Route)] HttpRequest req)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             UserDtoUp userDtoUp = JsonConvert.DeserializeObject<UserDtoUp>(requestBody);
@@ -43,7 +43,7 @@ namespace SecurityServer.Function
             return new OkObjectResult(result);
         }
 
-        [FunctionName("UserById")]
+        [FunctionName("GetUserById")]
         public async Task<IActionResult> GetById([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route + "/{id}")] HttpRequest req, ILogger log, int? id)
         {
             try

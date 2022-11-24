@@ -1,5 +1,4 @@
-﻿using SecurityServer.Models.DTO.Up;
-using SecurityServer.Models.DTO.Down;
+﻿using SecurityServer.Service.DTO.Down;
 using SecurityServer.Models.Models;
 
 namespace SecurityServer.Service.Interfaces
