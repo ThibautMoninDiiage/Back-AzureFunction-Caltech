@@ -1,4 +1,5 @@
 ﻿using AzureFunction.Models;
+using AzureFunction.Models.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace AzureFunction.UnitOfWork.DbContextAZ

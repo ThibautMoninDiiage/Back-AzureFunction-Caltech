@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace AzureFunction.Models.BaseModels
+namespace AzureFunction.Models.Models.BaseModels
 {
     public abstract class BaseModel
     {

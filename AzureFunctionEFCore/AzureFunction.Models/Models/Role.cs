@@ -1,7 +1,7 @@
-﻿using AzureFunction.Models.BaseModels;
+﻿using AzureFunction.Models.Models.BaseModels;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AzureFunction.Models
+namespace AzureFunction.Models.Models
 {
     [Table("Roles")]
     public class Role : BaseModel

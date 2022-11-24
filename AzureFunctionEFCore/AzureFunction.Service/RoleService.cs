@@ -1,5 +1,5 @@
 ﻿using AzureFunction.Contract.UnitOfWork;
-using AzureFunction.Models;
+using AzureFunction.Models.Models;
 using AzureFunction.Service.Interfaces;
 
 namespace AzureFunction.Service

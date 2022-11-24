@@ -1,4 +1,4 @@
-﻿using AzureFunction.Models.BaseModels;
+﻿using AzureFunction.Models.Models.BaseModels;
 using System.Linq.Expressions;
 
 namespace AzureFunction.Contract
