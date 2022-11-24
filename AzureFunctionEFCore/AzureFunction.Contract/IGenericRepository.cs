@@ -1,7 +1,7 @@
-﻿using AzureFunction.Models.Models.BaseModels;
+﻿using SecurityServer.Models.Models.BaseModels;
 using System.Linq.Expressions;
 
-namespace AzureFunction.Contract
+namespace SecurityServer.Contract
 {
     public interface IGenericRepository<T> where T : BaseModel
     {

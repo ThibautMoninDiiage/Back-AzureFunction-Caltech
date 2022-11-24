@@ -1,7 +1,7 @@
-﻿using AzureFunction.Models.Models.BaseModels;
+﻿using SecurityServer.Models.Models.BaseModels;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AzureFunction.Models.Models
+namespace SecurityServer.Models.Models
 {
     [Table("Roles")]
     public class Role : BaseModel

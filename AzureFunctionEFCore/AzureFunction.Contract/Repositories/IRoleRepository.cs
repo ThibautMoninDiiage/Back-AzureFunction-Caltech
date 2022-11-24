@@ -1,6 +1,6 @@
-﻿using AzureFunction.Models.Models;
+﻿using SecurityServer.Models.Models;
 
-namespace AzureFunction.Contract.Repositories
+namespace SecurityServer.Contract.Repositories
 {
     public interface IRoleRepository : IGenericRepository<Role>
     {

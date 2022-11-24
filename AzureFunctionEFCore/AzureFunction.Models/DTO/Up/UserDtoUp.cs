@@ -1,4 +1,4 @@
-﻿namespace AzureFunction.Models.DTO.Up
+﻿namespace SecurityServer.Models.DTO.Up
 {
     public class UserDtoUp
     {

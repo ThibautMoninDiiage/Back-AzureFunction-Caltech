@@ -1,16 +1,17 @@
 ﻿using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using AzureFunction.Service.Interfaces;
-using AzureFunction.Service;
-using AzureFunction.Contract.UnitOfWork;
-using AzureFunction.UnitOfWork.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
-using AzureFunction.UnitOfWork.DbContextAZ;
+using SecurityServer.Service;
+using SecurityServer.Service.Interfaces;
+using SecurityServer.Function;
+using SecurityServer.Contract.UnitOfWork;
+using SecurityServer.DataAccess.DbContextAZ;
+using SecurityServer.DataAccess.UnitOfWork;
 
-[assembly: FunctionsStartup(typeof(AzureFunctionEFCore.StartUp))]
+[assembly: FunctionsStartup(typeof(StartUp))]
 
-namespace AzureFunctionEFCore
+namespace SecurityServer.Function
 {
     public class StartUp : FunctionsStartup
     {
@@ -18,7 +19,7 @@ namespace AzureFunctionEFCore
         {
             string connString = Environment.GetEnvironmentVariable("SqlConnectionString", EnvironmentVariableTarget.Process);
             builder.Services.AddDbContext<DbContextServeur>(options => options.UseSqlServer(connString));
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
             builder.Services.AddTransient(typeof(IRoleService), typeof(RoleService));
             builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
         }

@@ -1,6 +1,6 @@
-﻿using AzureFunction.Models.Models;
+﻿using SecurityServer.Models.Models;
 
-namespace AzureFunction.Service.Interfaces
+namespace SecurityServer.Service.Interfaces
 {
     public interface IRoleService
     {

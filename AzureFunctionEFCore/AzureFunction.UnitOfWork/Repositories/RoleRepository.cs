@@ -1,9 +1,10 @@
-﻿using AzureFunction.Contract;
-using AzureFunction.Contract.Repositories;
-using AzureFunction.Models.Models;
-using AzureFunction.UnitOfWork.DbContextAZ;
+﻿using SecurityServer.Contract;
+using SecurityServer.Contract.Repositories;
+using SecurityServer.DataAccess;
+using SecurityServer.DataAccess.DbContextAZ;
+using SecurityServer.Models.Models;
 
-namespace AzureFunction.UnitOfWork.Repositories
+namespace SecurityServer.DataAccess.Repositories
 {
     public class RoleRepository : GenericRepository<Role>, IRoleRepository
     {

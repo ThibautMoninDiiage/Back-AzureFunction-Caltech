@@ -1,10 +1,10 @@
-﻿using AzureFunction.Contract.UnitOfWork;
-using AzureFunction.Models;
-using AzureFunction.Models.DTO.Down;
-using AzureFunction.Service.Interfaces;
+﻿using SecurityServer.Contract.UnitOfWork;
+using SecurityServer.Models.DTO.Down;
+using SecurityServer.Models.Models;
+using SecurityServer.Service.Interfaces;
 using System.Linq.Expressions;
 
-namespace AzureFunction.Service
+namespace SecurityServer.Service
 {
     public class UserService : IUserService
     {
@@ -20,7 +20,7 @@ namespace AzureFunction.Service
             var member = Expression.Parameter(type, "param");
             var memberLogin = Expression.PropertyOrField(member, "username");
             var memberPassword = Expression.PropertyOrField(member, "password");
-            var requete = Expression.Lambda<Func<User, bool>>(Expression.AndAlso(Expression.Equal(memberLogin, Expression.Constant(login)),Expression.Equal(memberPassword, Expression.Constant(password))),member);
+            var requete = Expression.Lambda<Func<User, bool>>(Expression.AndAlso(Expression.Equal(memberLogin, Expression.Constant(login)), Expression.Equal(memberPassword, Expression.Constant(password))), member);
             return await _uow.UserRepository.GetAsync(requete) ?? null;
         }
 
@@ -29,7 +29,7 @@ namespace AzureFunction.Service
             var type = typeof(User);
             var member = Expression.Parameter(type, "param");
             var memberId = Expression.PropertyOrField(member, "id");
-            var requete = Expression.Lambda<Func<User, bool>>(Expression.Equal(memberId, Expression.Constant(id)),member);
+            var requete = Expression.Lambda<Func<User, bool>>(Expression.Equal(memberId, Expression.Constant(id)), member);
 
             User user = await _uow.UserRepository.GetAsync(requete);
 

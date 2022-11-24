@@ -1,9 +1,9 @@
-﻿using AzureFunction.Contract.Repositories;
-using AzureFunction.Contract.UnitOfWork;
-using AzureFunction.UnitOfWork.DbContextAZ;
-using AzureFunction.UnitOfWork.Repositories;
+﻿using SecurityServer.DataAccess.Repositories;
+using SecurityServer.Contract.Repositories;
+using SecurityServer.Contract.UnitOfWork;
+using SecurityServer.DataAccess.DbContextAZ;
 
-namespace AzureFunction.UnitOfWork.UnitOfWork
+namespace SecurityServer.DataAccess.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {

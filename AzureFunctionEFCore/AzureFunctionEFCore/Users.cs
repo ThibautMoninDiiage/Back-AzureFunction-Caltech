@@ -6,11 +6,11 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using AzureFunction.Service.Interfaces;
 using Microsoft.Extensions.Logging;
-using AzureFunction.Models.DTO.Up;
+using SecurityServer.Models.DTO.Up;
+using SecurityServer.Service.Interfaces;
 
-namespace AzureFunctionEFCore
+namespace SecurityServer.Function
 {
     public class Users
     {
@@ -23,7 +23,7 @@ namespace AzureFunctionEFCore
         }
 
         [FunctionName("Connexion")]
-        public async Task<IActionResult> Connexion([HttpTrigger(AuthorizationLevel.Anonymous,"post", Route = Route)] HttpRequest req)
+        public async Task<IActionResult> Connexion([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Route)] HttpRequest req)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             UserDtoUp userDtoUp = JsonConvert.DeserializeObject<UserDtoUp>(requestBody);
@@ -44,7 +44,7 @@ namespace AzureFunctionEFCore
         }
 
         [FunctionName("UserById")]
-        public async Task<IActionResult> GetById([HttpTrigger(AuthorizationLevel.Anonymous,"get", Route = Route + "/{id}")] HttpRequest req,ILogger log, int? id)
+        public async Task<IActionResult> GetById([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route + "/{id}")] HttpRequest req, ILogger log, int? id)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace AzureFunctionEFCore
 
                 return new OkObjectResult(result);
             }
-            catch(AggregateException ex)
+            catch (AggregateException ex)
             {
                 log.LogInformation(ex.Message);
                 return new BadRequestResult();
