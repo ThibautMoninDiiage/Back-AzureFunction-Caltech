@@ -44,17 +44,11 @@ namespace AzureFunctionEFCore
         }
 
         [FunctionName("UserById")]
-        public async Task<IActionResult> GetById([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route)] HttpRequest req,ILogger log)
+        public async Task<IActionResult> GetById([HttpTrigger(AuthorizationLevel.Anonymous,"get", Route = Route + "/{id}")] HttpRequest req,ILogger log, int? id)
         {
             try
             {
-                string idRecu = req.Query["id"];
-                if (idRecu == null)
-                {
-                    return new BadRequestResult();
-                }
-                int id = int.Parse(idRecu);
-                if (id == 0)
+                if (id == null)
                 {
                     return new BadRequestResult();
                 }

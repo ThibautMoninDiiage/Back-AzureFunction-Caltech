@@ -7,6 +7,6 @@ namespace AzureFunction.Service.Interfaces
     public interface IUserService
     {
         public Task<User> Get(string login,string password);
-        public Task<UserDtoDown> GetById(int id);
+        public Task<UserDtoDown> GetById(int? id);
     }
 }

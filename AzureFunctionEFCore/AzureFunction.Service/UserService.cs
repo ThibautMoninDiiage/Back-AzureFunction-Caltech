@@ -24,7 +24,7 @@ namespace AzureFunction.Service
             return await _uow.UserRepository.GetAsync(requete) ?? null;
         }
 
-        public async Task<UserDtoDown?> GetById(int id)
+        public async Task<UserDtoDown?> GetById(int? id)
         {
             var type = typeof(User);
             var member = Expression.Parameter(type, "param");
