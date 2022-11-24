@@ -1,4 +1,4 @@
-﻿using AzureFunction.Models.BaseModels;
+﻿using AzureFunction.Models.Models.BaseModels;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AzureFunction.Models

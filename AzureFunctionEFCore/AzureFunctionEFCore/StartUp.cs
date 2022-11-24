@@ -7,7 +7,6 @@ using AzureFunction.Contract.UnitOfWork;
 using AzureFunction.UnitOfWork.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using AzureFunction.UnitOfWork.DbContextAZ;
-using Microsoft.IdentityModel.Protocols;
 
 [assembly: FunctionsStartup(typeof(AzureFunctionEFCore.StartUp))]
 
