@@ -1,8 +1,7 @@
-﻿using AzureFunction.Models;
-using AzureFunction.Models.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using SecurityServer.Models.Models;
 
-namespace AzureFunction.UnitOfWork.DbContextAZ
+namespace SecurityServer.DataAccess.DbContextAZ
 {
     public class DbContextServeur : DbContext
     {

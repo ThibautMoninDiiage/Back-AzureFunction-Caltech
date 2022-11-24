@@ -1,7 +1,7 @@
-﻿using AzureFunction.Models.Models.BaseModels;
+﻿using SecurityServer.Models.Models.BaseModels;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AzureFunction.Models
+namespace SecurityServer.Models.Models
 {
     [Table("Users")]
     public class User : BaseModel
@@ -10,7 +10,6 @@ namespace AzureFunction.Models
         public string? Password { get; set; }
         public string? Avatar { get; set; }
         public string? Mail { get; set; }
-        //public Role? Roles { get; set; }
         public int? IdRole { get; set; }
     }
 }

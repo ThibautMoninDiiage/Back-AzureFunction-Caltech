@@ -4,9 +4,9 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using AzureFunction.Service.Interfaces;
+using SecurityServer.Service.Interfaces;
 
-namespace AzureFunctionEFCore
+namespace SecurityServer.Function
 {
     public class Roles
     {
@@ -20,7 +20,7 @@ namespace AzureFunctionEFCore
 
         [FunctionName("Roles")]
         public async Task<IActionResult> GetAllRoles(
-            [HttpTrigger(AuthorizationLevel.Anonymous,"get", Route = Route)] HttpRequest req,ILogger log)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route)] HttpRequest req, ILogger log)
         {
             log.LogInformation("Getting todo list items");
 

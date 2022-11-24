@@ -1,10 +1,10 @@
-﻿using AzureFunction.Contract;
-using AzureFunction.Models.Models.BaseModels;
-using AzureFunction.UnitOfWork.DbContextAZ;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using SecurityServer.Contract;
+using SecurityServer.DataAccess.DbContextAZ;
+using SecurityServer.Models.Models.BaseModels;
 using System.Linq.Expressions;
 
-namespace AzureFunction.UnitOfWork
+namespace SecurityServer.DataAccess
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : BaseModel
     {

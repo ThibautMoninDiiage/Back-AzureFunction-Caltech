@@ -1,4 +1,4 @@
-﻿namespace AzureFunction.Models.DTO.Down
+﻿namespace SecurityServer.Models.DTO.Down
 {
     public class UserDtoDown
     {

@@ -1,8 +1,8 @@
-﻿using AzureFunction.Contract.UnitOfWork;
-using AzureFunction.Models.Models;
-using AzureFunction.Service.Interfaces;
+﻿using SecurityServer.Contract.UnitOfWork;
+using SecurityServer.Models.Models;
+using SecurityServer.Service.Interfaces;
 
-namespace AzureFunction.Service
+namespace SecurityServer.Service
 {
     public class RoleService : IRoleService
     {

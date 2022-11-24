@@ -1,6 +1,6 @@
-﻿using AzureFunction.Contract.Repositories;
+﻿using SecurityServer.Contract.Repositories;
 
-namespace AzureFunction.Contract.UnitOfWork
+namespace SecurityServer.Contract.UnitOfWork
 {
     public interface IUnitOfWork
     {
