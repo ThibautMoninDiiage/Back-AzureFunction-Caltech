@@ -1,6 +1,6 @@
 ﻿using SecurityServer.Contract.UnitOfWork;
-using SecurityServer.Models.DTO.Down;
 using SecurityServer.Models.Models;
+using SecurityServer.Service.DTO.Down;
 using SecurityServer.Service.Interfaces;
 using System.Linq.Expressions;
 
@@ -18,9 +18,9 @@ namespace SecurityServer.Service
         {
             var type = typeof(User);
             var member = Expression.Parameter(type, "param");
-            var memberLogin = Expression.PropertyOrField(member, "username");
-            var memberPassword = Expression.PropertyOrField(member, "password");
-            var requete = Expression.Lambda<Func<User, bool>>(Expression.AndAlso(Expression.Equal(memberLogin, Expression.Constant(login)), Expression.Equal(memberPassword, Expression.Constant(password))), member);
+            var fieldLogin = Expression.PropertyOrField(member, "username");
+            var fieldPassword = Expression.PropertyOrField(member, "password");
+            var requete = Expression.Lambda<Func<User, bool>>(Expression.AndAlso(Expression.Equal(fieldLogin, Expression.Constant(login)), Expression.Equal(fieldPassword, Expression.Constant(password))), member);
             return await _uow.UserRepository.GetAsync(requete) ?? null;
         }
 
@@ -28,8 +28,8 @@ namespace SecurityServer.Service
         {
             var type = typeof(User);
             var member = Expression.Parameter(type, "param");
-            var memberId = Expression.PropertyOrField(member, "id");
-            var requete = Expression.Lambda<Func<User, bool>>(Expression.Equal(memberId, Expression.Constant(id)), member);
+            var fieldId = Expression.PropertyOrField(member, "id");
+            var requete = Expression.Lambda<Func<User, bool>>(Expression.Equal(fieldId, Expression.Constant(id)), member);
 
             User user = await _uow.UserRepository.GetAsync(requete);
 

@@ -18,7 +18,7 @@ namespace SecurityServer.Function
             _roleService = roleService;
         }
 
-        [FunctionName("Roles")]
+        [FunctionName("GetAllRoles")]
         public async Task<IActionResult> GetAllRoles(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route)] HttpRequest req, ILogger log)
         {
