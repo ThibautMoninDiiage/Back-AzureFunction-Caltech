@@ -44,7 +44,7 @@ namespace SecurityServer.Function
         }
 
         [FunctionName("GetUserById")]
-        public async Task<IActionResult> GetUserById([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route + "/{id}")]ILogger log, int? id)
+        public async Task<IActionResult> GetUserById([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route + "/{id}")]HttpRequest req,ILogger log, int? id)
         {
             try
             {

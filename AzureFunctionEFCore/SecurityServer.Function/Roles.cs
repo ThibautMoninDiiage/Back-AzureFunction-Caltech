@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using SecurityServer.Service.Interfaces;
 using SecurityServer.Models.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using SecurityServer.Service.DTO.Down;
 
 namespace SecurityServer.Function
 {
@@ -20,9 +22,9 @@ namespace SecurityServer.Function
         }
 
         [FunctionName("GetAllRoles")]
-        public async Task<IActionResult> GetAllRoles([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route)]HttpRequest req)
+        public async Task<IActionResult> GetAllRoles([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route)]HttpRequest req,ILogger logger)
         {
-            IEnumerable<Role> result = await _roleService.GetAll();
+            IEnumerable<RoleDtoDown> result = await _roleService.GetAll();
 
             return new OkObjectResult(result);
         }

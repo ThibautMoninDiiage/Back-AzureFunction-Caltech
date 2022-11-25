@@ -1,5 +1,6 @@
 ﻿using SecurityServer.Contract.UnitOfWork;
 using SecurityServer.Models.Models;
+using SecurityServer.Service.DTO.Down;
 using SecurityServer.Service.Interfaces;
 
 namespace SecurityServer.Service
@@ -12,9 +13,16 @@ namespace SecurityServer.Service
             _uow = uow;
         }
 
-        public async Task<IEnumerable<Role>> GetAll()
+        public async Task<IEnumerable<RoleDtoDown>> GetAll()
         {
-            return await _uow.RoleRepository.GetAllAsync();
+            IEnumerable<Role> lstRoles = await _uow.RoleRepository.GetAllAsync();
+
+            List<RoleDtoDown> lstRoleDtoDowns = new ();
+
+            lstRoles.ToList().ForEach(r => lstRoleDtoDowns.Add(new RoleDtoDown() { Id = r.Id, Name = r.Name }));
+
+            return lstRoleDtoDowns;
+
         }
     }
 }
