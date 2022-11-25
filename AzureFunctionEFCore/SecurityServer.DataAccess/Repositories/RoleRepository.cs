@@ -1,6 +1,4 @@
-﻿using SecurityServer.Contract;
-using SecurityServer.Contract.Repositories;
-using SecurityServer.DataAccess;
+﻿using SecurityServer.Contract.Repositories;
 using SecurityServer.DataAccess.SecurityServerContext;
 using SecurityServer.Models.Models;
 

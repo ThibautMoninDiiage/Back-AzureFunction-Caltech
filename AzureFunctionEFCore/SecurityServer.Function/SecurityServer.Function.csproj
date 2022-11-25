@@ -17,7 +17,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AzureFunction.Service\SecurityServer.Service.csproj" />
-    <ProjectReference Include="..\AzureFunction.UnitOfWork\SecurityServer.DataAccess.csproj" />
+    <ProjectReference Include="..\SecurityServer.Contract\SecurityServer.Contract.csproj" />
+    <ProjectReference Include="..\SecurityServer.DataAccess\SecurityServer.DataAccess.csproj" />
+    <ProjectReference Include="..\SecurityServer.Models\SecurityServer.Models.csproj" />
+    <ProjectReference Include="..\SecurityServer.Service\SecurityServer.Service.csproj" />
   </ItemGroup>
 </Project>

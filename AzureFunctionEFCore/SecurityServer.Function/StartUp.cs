@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using SecurityServer.Service;
 using SecurityServer.Service.Interfaces;
 using SecurityServer.Function;
+using SecurityServer.DataAccess.SecurityServerContext;
 using SecurityServer.Contract.UnitOfWork;
 using SecurityServer.DataAccess.UnitOfWork;
-using SecurityServer.DataAccess.SecurityServerContext;
 
 [assembly: FunctionsStartup(typeof(StartUp))]
 

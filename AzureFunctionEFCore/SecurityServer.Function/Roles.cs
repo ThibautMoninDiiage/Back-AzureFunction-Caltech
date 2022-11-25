@@ -2,9 +2,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using SecurityServer.Service.Interfaces;
 using System.Collections.Generic;
+using SecurityServer.Service.Interfaces;
 using SecurityServer.Models.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace SecurityServer.Function
 {
@@ -19,8 +20,7 @@ namespace SecurityServer.Function
         }
 
         [FunctionName("GetAllRoles")]
-        public async Task<IActionResult> GetAllRoles(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route)])
+        public async Task<IActionResult> GetAllRoles([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route)]HttpRequest req)
         {
             IEnumerable<Role> result = await _roleService.GetAll();
 

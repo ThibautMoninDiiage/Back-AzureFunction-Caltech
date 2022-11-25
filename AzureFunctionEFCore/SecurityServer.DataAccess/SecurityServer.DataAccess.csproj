@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AzureFunction.Contract\SecurityServer.Contract.csproj" />
-    <ProjectReference Include="..\AzureFunction.Models\SecurityServer.Models.csproj" />
+    <ProjectReference Include="..\SecurityServer.Contract\SecurityServer.Contract.csproj" />
+    <ProjectReference Include="..\SecurityServer.Models\SecurityServer.Models.csproj" />
   </ItemGroup>
 
 </Project>

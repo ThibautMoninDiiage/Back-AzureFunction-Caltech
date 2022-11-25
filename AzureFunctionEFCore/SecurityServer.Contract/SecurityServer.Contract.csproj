@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AzureFunction.Models\SecurityServer.Models.csproj" />
+    <ProjectReference Include="..\SecurityServer.Models\SecurityServer.Models.csproj" />
   </ItemGroup>
 
 </Project>
