@@ -7,11 +7,11 @@ namespace SecurityServer.DataAccess.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly DbContextServeur _context;
+        private readonly DbContextServer _context;
         private IRoleRepository? _roleRepository;
         private IUserRepository? _userRepository;
 
-        public UnitOfWork(DbContextServeur context)
+        public UnitOfWork(DbContextServer context)
         {
             _context = context;
         }

@@ -8,11 +8,11 @@ namespace SecurityServer.DataAccess
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : BaseModel
     {
-        protected readonly DbContextServeur _dbContext;
+        protected readonly DbContextServer _dbContext;
         private readonly DbSet<T> _entitiySet;
 
 
-        public GenericRepository(DbContextServeur dbContext)
+        public GenericRepository(DbContextServer dbContext)
         {
             _dbContext = dbContext;
             _entitiySet = _dbContext.Set<T>();

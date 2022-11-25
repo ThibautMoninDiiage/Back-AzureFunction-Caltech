@@ -10,6 +10,7 @@ namespace SecurityServer.Models.Models
         public string? Password { get; set; }
         public string? Avatar { get; set; }
         public string? Mail { get; set; }
+        public Role? Role { get; set; }
         public int? IdRole { get; set; }
     }
 }

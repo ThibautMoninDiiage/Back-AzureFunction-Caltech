@@ -18,7 +18,7 @@ namespace SecurityServer.Function
         public override void Configure(IFunctionsHostBuilder builder)
         {
             string connString = Environment.GetEnvironmentVariable("SqlConnectionString", EnvironmentVariableTarget.Process);
-            builder.Services.AddDbContext<DbContextServeur>(options => options.UseSqlServer(connString));
+            builder.Services.AddDbContext<DbContextServer>(options => options.UseSqlServer(connString));
             builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
             builder.Services.AddTransient(typeof(IRoleService), typeof(RoleService));
             builder.Services.AddTransient(typeof(IUserService), typeof(UserService));

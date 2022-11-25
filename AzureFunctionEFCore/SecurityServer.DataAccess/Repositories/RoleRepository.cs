@@ -6,7 +6,7 @@ namespace SecurityServer.DataAccess.Repositories
 {
     public class RoleRepository : GenericRepository<Role>, IRoleRepository
     {
-        public RoleRepository(DbContextServeur dbContext) : base(dbContext)
+        public RoleRepository(DbContextServer dbContext) : base(dbContext)
         {
 
         }

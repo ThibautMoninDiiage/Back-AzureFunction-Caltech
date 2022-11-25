@@ -6,7 +6,7 @@ namespace SecurityServer.DataAccess.Repositories
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
-        public UserRepository(DbContextServeur dbContext) : base(dbContext)
+        public UserRepository(DbContextServer dbContext) : base(dbContext)
         {
 
         }
