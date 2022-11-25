@@ -9,8 +9,8 @@ using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
 using SecurityServer.Service.Interfaces;
 using SecurityServer.Service.DTO.Up;
-using SecurityServer.Service.DTO.Down;
 using SecurityServer.Models.Models;
+using SecurityServer.Service.DTO.Down;
 
 namespace SecurityServer.Function
 {
@@ -34,7 +34,7 @@ namespace SecurityServer.Function
                 return new BadRequestResult();
             else
             {
-                User userResult = await _userService.Get(userDtoUp.UserName, userDtoUp.Password);
+                UserDtoDown userResult = await _userService.Authenticate(userDtoUp);
 
                 if (userResult == null)
                     return new EmptyResult();
@@ -52,13 +52,35 @@ namespace SecurityServer.Function
                     return new BadRequestResult();
                 else
                 {
-                    UserDtoDown result = await _userService.GetById(id);
+                    User result = await _userService.GetById(id);
 
                     if (result == null)
                         return new EmptyResult();
                     else
                         return new OkObjectResult(result);
                 }
+            }
+            catch (AggregateException ex)
+            {
+                log.LogInformation(ex.Message);
+                return new BadRequestResult();
+            }
+        }
+
+        [FunctionName("CreateUser")]
+        public async Task<IActionResult> CreateUser([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Route)] HttpRequest req, ILogger log)
+        {
+            try
+            {
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                User user = JsonConvert.DeserializeObject<User>(requestBody);
+
+                User result = await _userService.CreateUser(user);
+
+                if (result == null)
+                    return new BadRequestResult();
+                else
+                    return new OkObjectResult(result);
             }
             catch (AggregateException ex)
             {

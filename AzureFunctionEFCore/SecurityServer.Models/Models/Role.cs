@@ -1,6 +1,7 @@
 ﻿using SecurityServer.Models.Models.BaseModels;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace SecurityServer.Models.Models
 {
@@ -9,6 +10,7 @@ namespace SecurityServer.Models.Models
     {
         [Required]
         public string? Name { get; set; }
+        [JsonIgnore]
         public List<User>? Users { get; set; }
     }
 }
