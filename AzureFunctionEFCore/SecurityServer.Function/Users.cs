@@ -11,6 +11,9 @@ using SecurityServer.Service.Interfaces;
 using SecurityServer.Service.DTO.Up;
 using SecurityServer.Models.Models;
 using SecurityServer.Service.DTO.Down;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
+using System.Net;
+using Microsoft.OpenApi.Models;
 
 namespace SecurityServer.Function
 {
@@ -68,7 +71,12 @@ namespace SecurityServer.Function
         }
 
         [FunctionName("CreateUser")]
-        public async Task<IActionResult> CreateUser([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Route)] HttpRequest req, ILogger log)
+        [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
+        [OpenApiRequestBody("test",typeof(User))]
+        //[OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
+        //[OpenApiParameter(name: "name", In = ParameterLocation.Query, Required = true, Type = typeof(string), Description = "The **Name** parameter")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "The OK response")]
+        public async Task<IActionResult> CreateUser([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Route + "/create")] HttpRequest req, ILogger log)
         {
             try
             {
