@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SecurityServer.Contract;
-using SecurityServer.DataAccess.DbContextAZ;
+using SecurityServer.DataAccess.SecurityServerContext;
 using SecurityServer.Models.Models.BaseModels;
 using System.Linq.Expressions;
 

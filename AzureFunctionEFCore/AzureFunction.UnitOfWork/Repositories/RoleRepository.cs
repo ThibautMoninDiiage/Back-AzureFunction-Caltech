@@ -1,7 +1,7 @@
 ﻿using SecurityServer.Contract;
 using SecurityServer.Contract.Repositories;
 using SecurityServer.DataAccess;
-using SecurityServer.DataAccess.DbContextAZ;
+using SecurityServer.DataAccess.SecurityServerContext;
 using SecurityServer.Models.Models;
 
 namespace SecurityServer.DataAccess.Repositories

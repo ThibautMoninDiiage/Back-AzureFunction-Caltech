@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SecurityServer.Models.Models;
 
-namespace SecurityServer.DataAccess.DbContextAZ
+namespace SecurityServer.DataAccess.SecurityServerContext
 {
     public class DbContextServeur : DbContext
     {

@@ -6,8 +6,8 @@ using SecurityServer.Service;
 using SecurityServer.Service.Interfaces;
 using SecurityServer.Function;
 using SecurityServer.Contract.UnitOfWork;
-using SecurityServer.DataAccess.DbContextAZ;
 using SecurityServer.DataAccess.UnitOfWork;
+using SecurityServer.DataAccess.SecurityServerContext;
 
 [assembly: FunctionsStartup(typeof(StartUp))]
 

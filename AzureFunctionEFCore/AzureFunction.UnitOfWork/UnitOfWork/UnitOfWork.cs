@@ -1,7 +1,7 @@
 ﻿using SecurityServer.DataAccess.Repositories;
 using SecurityServer.Contract.Repositories;
 using SecurityServer.Contract.UnitOfWork;
-using SecurityServer.DataAccess.DbContextAZ;
+using SecurityServer.DataAccess.SecurityServerContext;
 
 namespace SecurityServer.DataAccess.UnitOfWork
 {

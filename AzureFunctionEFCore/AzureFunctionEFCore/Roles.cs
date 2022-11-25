@@ -2,9 +2,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using SecurityServer.Service.Interfaces;
+using System.Collections.Generic;
+using SecurityServer.Models.Models;
 
 namespace SecurityServer.Function
 {
@@ -20,11 +20,9 @@ namespace SecurityServer.Function
 
         [FunctionName("GetAllRoles")]
         public async Task<IActionResult> GetAllRoles(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route)] HttpRequest req, ILogger log)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route)])
         {
-            log.LogInformation("Getting todo list items");
-
-            var result = await _roleService.GetAll();
+            IEnumerable<Role> result = await _roleService.GetAll();
 
             return new OkObjectResult(result);
         }

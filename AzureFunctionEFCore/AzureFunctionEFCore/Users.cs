@@ -9,6 +9,8 @@ using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
 using SecurityServer.Service.Interfaces;
 using SecurityServer.Service.DTO.Up;
+using SecurityServer.Service.DTO.Down;
+using SecurityServer.Models.Models;
 
 namespace SecurityServer.Function
 {
@@ -23,44 +25,40 @@ namespace SecurityServer.Function
         }
 
         [FunctionName("ServeurConnexion")]
-        public async Task<IActionResult> Connexion([HttpTrigger(AuthorizationLevel.Anonymous,"post", Route = Route)] HttpRequest req)
+        public async Task<IActionResult> ServeurConnexion([HttpTrigger(AuthorizationLevel.Anonymous,"post", Route = Route)] HttpRequest req)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             UserDtoUp userDtoUp = JsonConvert.DeserializeObject<UserDtoUp>(requestBody);
 
             if (userDtoUp.UserName == null || userDtoUp.Password == null)
-            {
                 return new BadRequestResult();
-            }
-
-            var result = await _userService.Get(userDtoUp.UserName, userDtoUp.Password);
-
-            if (result == null)
+            else
             {
-                return new EmptyResult();
-            }
+                User userResult = await _userService.Get(userDtoUp.UserName, userDtoUp.Password);
 
-            return new OkObjectResult(result);
+                if (userResult == null)
+                    return new EmptyResult();
+                else
+                    return new OkObjectResult(userResult);
+            }
         }
 
         [FunctionName("GetUserById")]
-        public async Task<IActionResult> GetById([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route + "/{id}")] HttpRequest req, ILogger log, int? id)
+        public async Task<IActionResult> GetUserById([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route + "/{id}")]ILogger log, int? id)
         {
             try
             {
                 if (id == null)
-                {
                     return new BadRequestResult();
-                }
-
-                var result = await _userService.GetById(id);
-
-                if (result == null)
+                else
                 {
-                    return new EmptyResult();
-                }
+                    UserDtoDown result = await _userService.GetById(id);
 
-                return new OkObjectResult(result);
+                    if (result == null)
+                        return new EmptyResult();
+                    else
+                        return new OkObjectResult(result);
+                }
             }
             catch (AggregateException ex)
             {
