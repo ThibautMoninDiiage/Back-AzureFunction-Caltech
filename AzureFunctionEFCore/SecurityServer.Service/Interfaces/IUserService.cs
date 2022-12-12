@@ -8,6 +8,6 @@ namespace SecurityServer.Service.Interfaces
     {
         public Task<User> GetById(int? id);
         public Task<UserDtoDown> Authenticate(UserDtoUp model);
-        public Task<User> CreateUser(User model);
+        public Task<UserDtoDown> CreateUser(UserCreationDtoUp model);
     }
 }

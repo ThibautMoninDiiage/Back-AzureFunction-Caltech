@@ -4,10 +4,10 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using System.Collections.Generic;
 using SecurityServer.Service.Interfaces;
-using SecurityServer.Models.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using SecurityServer.Service.DTO.Down;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 
 namespace SecurityServer.Function
 {
@@ -22,6 +22,7 @@ namespace SecurityServer.Function
         }
 
         [FunctionName("GetAllRoles")]
+        [OpenApiOperation(operationId: "Run", tags: new[] { "Role" })]
         public async Task<IActionResult> GetAllRoles([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route)]HttpRequest req,ILogger logger)
         {
             IEnumerable<RoleDtoDown> result = await _roleService.GetAll();

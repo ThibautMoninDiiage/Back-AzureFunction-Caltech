@@ -16,10 +16,5 @@
         /// Cible du jeton JWT (quel service doit accepter ce jeton). (Exemple: https://domain.tld/)
         /// </summary>
         public string? JwtAudience { get; set; }
-
-        /// <summary>
-        /// Chaîne de connexion à la base de données.
-        /// </summary>
-        public string? DatabaseChain { get; set; }
     }
 }

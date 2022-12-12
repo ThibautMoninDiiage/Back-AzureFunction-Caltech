@@ -66,7 +66,7 @@ namespace SecurityServer.Service
             return new UserDtoDown(user, token);
         }
 
-        public async Task<User> CreateUser(User model)
+        public async Task<UserDtoDown> CreateUser(UserCreationDtoUp model)
         {
             var salt = GenerateSalt();
             var hashedPassword = HashPasswordWithSalt(model.Password, salt);
@@ -74,17 +74,19 @@ namespace SecurityServer.Service
             var user = new User
             {
                 Mail = model.Mail,
+                Username = model.Username,
                 Password = hashedPassword,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                Role = model.Role,
+                IdRole = 2,
                 Salt = Convert.ToBase64String(salt)
             };
 
             _uow.UserRepository.Add(user);
             await _uow.CommitAsync();
 
-            return user;
+            var token = generateJwtToken(user);
+            return new UserDtoDown(user, token);
         }
 
         private string generateJwtToken(User user)

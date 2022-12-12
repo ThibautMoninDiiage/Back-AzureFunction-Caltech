@@ -8,7 +8,6 @@
   "ApiSettings": {
     "JwtSecret": "masuperclesecrete",
     "JwtIssuer": "https://localhost:7275",
-    "JwtAudience": "AzureFunction",
-    "DatabaseChain": "kjdnklejioej"
+    "JwtAudience": "AzureFunction"
   }
 }

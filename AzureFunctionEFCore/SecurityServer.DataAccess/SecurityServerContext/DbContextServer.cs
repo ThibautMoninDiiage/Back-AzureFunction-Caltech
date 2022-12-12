@@ -16,6 +16,7 @@ namespace SecurityServer.DataAccess.SecurityServerContext
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<User>().HasOne(u => u.Role).WithMany(r => r.Users).HasForeignKey(t => t.IdRole);
+            modelBuilder.Entity<Application>().HasMany(u => u.Users);
         }
     }
 }
