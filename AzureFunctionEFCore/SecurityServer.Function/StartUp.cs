@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using System.Security.Claims;
 
 [assembly: FunctionsStartup(typeof(StartUp))]
 
@@ -20,15 +21,20 @@ namespace SecurityServer.Function
 {
     public class StartUp : FunctionsStartup
     {
+
+        private IConfiguration _configuration = null;
+
         public override void Configure(IFunctionsHostBuilder builder)
         {
+            var serviceProvider = builder.Services.BuildServiceProvider();
+            _configuration = serviceProvider.GetRequiredService<IConfiguration>();
             string connString = Environment.GetEnvironmentVariable("SqlConnectionString", EnvironmentVariableTarget.Process);
 
             builder.Services.AddEndpointsApiExplorer();
 
             IConfiguration localConfig = new ConfigurationBuilder().SetBasePath(Environment.CurrentDirectory).AddJsonFile("local.settings.json", optional: true, reloadOnChange: true).AddEnvironmentVariables().Build();
 
-            ApiSettings jwt = localConfig.GetSection("JwtIssuerOptions").Get<ApiSettings>();
+            ApiSettings jwt = localConfig.GetSection("ApiSettings").Get<ApiSettings>();
             //register with container
             builder.Services.AddSingleton(jwt);
 
