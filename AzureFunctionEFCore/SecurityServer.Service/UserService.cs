@@ -19,10 +19,10 @@ namespace SecurityServer.Service
     {
         private readonly IUnitOfWork _uow;
         private readonly ApiSettings _apiSettings;
-        public UserService(IUnitOfWork uow, IOptions<ApiSettings> apiSettings)
+        public UserService(IUnitOfWork uow,ApiSettings apiSettings)
         {
             _uow = uow;
-            this._apiSettings = apiSettings.Value;
+            this._apiSettings = apiSettings;
         }
 
         public async Task<User?> GetById(int? id)
@@ -99,7 +99,7 @@ namespace SecurityServer.Service
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim("id", user.Id.ToString()),
-                    new Claim(JwtRegisteredClaimNames.Email,user.Mail),
+                    new Claim("idRole", user.IdRole.ToString()),
                     // Cela va garantir que le token est unique
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),
