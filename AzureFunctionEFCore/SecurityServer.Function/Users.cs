@@ -104,7 +104,5 @@ namespace SecurityServer.Function
                 return new BadRequestResult();
             }
         }
-
-
     }
 }

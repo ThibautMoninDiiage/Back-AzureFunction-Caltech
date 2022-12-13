@@ -21,6 +21,7 @@ namespace SecurityServer.Service
                 (await _iuow.ApplicationRepository.GetAllAsync())
                 .Select(app => new ApplicationDtoDown
                 {
+                    Id = app.Id,
                     Description = app.Description,
                     Name = app.Name,
                     Url = app.Url

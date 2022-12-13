@@ -1,16 +1,13 @@
 ﻿using SecurityServer.Models.Models;
+using SecurityServer.Service.DTO.Down;
 using SecurityServer.Service.DTO.Up;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SecurityServer.Service.Interfaces
 {
     public interface IApplicationService
     {
-        public Task<IEnumerable<Application>> GetAllApplications();
+        public Task<IEnumerable<ApplicationDtoDown>> GetAllApplications();
+
         public Task<Application> GetById(int id);
 
         public Task<Application> CreateApplication(ApplicationCreationDtoUp application);

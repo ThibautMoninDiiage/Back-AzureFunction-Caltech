@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
@@ -10,15 +9,12 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using SecurityServer.Models.Models;
 using SecurityServer.Service.DTO.Down;
-using SecurityServer.Service;
 using SecurityServer.Service.DTO.Up;
 using SecurityServer.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SecurityServer.Function
