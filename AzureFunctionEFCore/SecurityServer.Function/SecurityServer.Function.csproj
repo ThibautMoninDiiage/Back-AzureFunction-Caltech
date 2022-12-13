@@ -24,4 +24,5 @@
     <ProjectReference Include="..\SecurityServer.Models\SecurityServer.Models.csproj" />
     <ProjectReference Include="..\SecurityServer.Service\SecurityServer.Service.csproj" />
   </ItemGroup>
+  <ProjectExtensions><VisualStudio><UserProperties local_1settings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 </Project>
