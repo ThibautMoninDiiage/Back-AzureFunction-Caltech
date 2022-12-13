@@ -7,6 +7,7 @@ namespace SecurityServer.DataAccess.SecurityServerContext
     {
         public DbSet<Role>? Roles { get; set; }
         public DbSet<User>? Users { get; set; }
+        public DbSet<Application> Applications { get; set; }
 
         public DbContextServer(DbContextOptions<DbContextServer> options) : base(options)
         {
