@@ -82,7 +82,6 @@ namespace SecurityServer.Function
         [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
         [OpenApiRequestBody("user",typeof(UserCreationDtoUp))]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
-        //[OpenApiParameter(name: "name", In = ParameterLocation.Query, Required = true, Type = typeof(string), Description = "The **Name** parameter")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(UserDtoDown), Description = "Response")]
         public async Task<IActionResult> CreateUser([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Route)] HttpRequest req, ILogger log)
         {
@@ -92,6 +91,32 @@ namespace SecurityServer.Function
                 UserCreationDtoUp user = JsonConvert.DeserializeObject<UserCreationDtoUp>(requestBody);
 
                 UserDtoDown result = await _userService.CreateUser(user);
+
+                if (result == null)
+                    return new BadRequestResult();
+                else
+                    return new OkObjectResult(result);
+            }
+            catch (AggregateException ex)
+            {
+                log.LogInformation(ex.Message);
+                return new BadRequestResult();
+            }
+        }
+
+        [FunctionName("ModifyUser")]
+        [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
+        [OpenApiRequestBody("user", typeof(UserModifyDtoUp))]
+        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(User), Description = "Response")]
+        public async Task<IActionResult> ModifyUser([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = Route)] HttpRequest req, ILogger log)
+        {
+            try
+            {
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                UserModifyDtoUp user = JsonConvert.DeserializeObject<UserModifyDtoUp>(requestBody);
+
+                User result = await _userService.UpdateUser(user);
 
                 if (result == null)
                     return new BadRequestResult();
