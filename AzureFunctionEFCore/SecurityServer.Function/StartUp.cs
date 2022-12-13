@@ -26,8 +26,6 @@ namespace SecurityServer.Function
         {
             string connString = Environment.GetEnvironmentVariable("SqlConnectionString", EnvironmentVariableTarget.Process);
 
-            builder.Services.AddEndpointsApiExplorer();
-
             var jwt = new ApiSettings();
 
             jwt.JwtSecret = Environment.GetEnvironmentVariable("JwtSecret", EnvironmentVariableTarget.Process);
