@@ -7,10 +7,5 @@
     "JwtSecret": "masuperclesecrete",
     "JwtIssuer": "mydomain",
     "JwtAudience": "localhost"
-  },
-  "ApiSettings": {
-    "JwtSecret": "masuperclesecrete",
-    "JwtIssuer": "mydomain",
-    "JwtAudience": "localhost"
   }
 }

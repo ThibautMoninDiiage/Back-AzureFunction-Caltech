@@ -37,12 +37,6 @@ namespace SecurityServer.Function
 
             builder.Services.AddSingleton(jwt);
 
-            //IConfiguration localConfig = new ConfigurationBuilder().SetBasePath(Environment.CurrentDirectory).AddJsonFile("local.settings.json", optional: true, reloadOnChange: true).AddEnvironmentVariables().Build();
-
-            //ApiSettings jwt = localConfig.GetSection("ApiSettings").Get<ApiSettings>();
-            ////register with container
-            //builder.Services.AddSingleton(jwt);
-
             // configuration du middleware d'authentification JWT fourni par Microsoft
             builder.Services.AddAuthentication(auth =>
             {
