@@ -89,6 +89,22 @@ namespace SecurityServer.Service
             return new UserDtoDown(user, token);
         }
 
+        public async Task<User> UpdateUser(UserModifyDtoUp model)
+        {
+            User user = new User()
+            {
+                Id = model.Id,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Username = model.Username,
+                Mail = model.Mail,
+                Avatar = model.Avatar
+            };
+            _uow.UserRepository.Update(user);
+            await _uow.CommitAsync();
+            return user;
+        }
+
         private string generateJwtToken(User user)
         {
             // génère un token valide pour 7 jours
