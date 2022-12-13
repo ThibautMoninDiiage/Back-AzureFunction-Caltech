@@ -22,20 +22,19 @@ namespace SecurityServer.Function
     public class StartUp : FunctionsStartup
     {
 
-        private IConfiguration _configuration = null;
-
         public override void Configure(IFunctionsHostBuilder builder)
         {
             var serviceProvider = builder.Services.BuildServiceProvider();
-            _configuration = serviceProvider.GetRequiredService<IConfiguration>();
             string connString = Environment.GetEnvironmentVariable("SqlConnectionString", EnvironmentVariableTarget.Process);
 
             builder.Services.AddEndpointsApiExplorer();
 
-            IConfiguration localConfig = new ConfigurationBuilder().SetBasePath(Environment.CurrentDirectory).AddJsonFile("local.settings.json", optional: true, reloadOnChange: true).AddEnvironmentVariables().Build();
+            var jwt = new ApiSettings();
 
-            ApiSettings jwt = localConfig.GetSection("ApiSettings").Get<ApiSettings>();
-            //register with container
+            jwt.JwtSecret = Environment.GetEnvironmentVariable("JwtSecret", EnvironmentVariableTarget.Process);
+            jwt.JwtIssuer = Environment.GetEnvironmentVariable("JwtIssuer", EnvironmentVariableTarget.Process);
+            jwt.JwtAudience = Environment.GetEnvironmentVariable("JwtAudience", EnvironmentVariableTarget.Process);
+
             builder.Services.AddSingleton(jwt);
 
             // configuration du middleware d'authentification JWT fourni par Microsoft
