@@ -78,13 +78,24 @@ namespace SecurityServer.Service
             });
         }
 
-        public async Task<Application> UpdateApplication(Application application)
+        public async Task<Application> UpdateApplication(ApplicationUpdateDtoUp update)
         {
             return await Task.Run(() =>
             {
-                _iuow.ApplicationRepository.Update(application);
+                IEnumerable<User> users = _iuow.UserRepository.GetAll(u => (update.UserIds ?? new List<int>()).Any(id => id == u.Id));
+                Application baseApplication = _iuow.ApplicationRepository.Get(app => app.Id == update.Id);
+                Application app = new()
+                {
+                    Id = (int)update.Id,
+                    Description = update.Description ?? baseApplication.Description,
+                    Name = update.Description ?? baseApplication.Description,
+                    Url = update.Url ?? baseApplication.Url,
+                    Users = users.ToList()
+                };
+
+                _iuow.ApplicationRepository.Update(app);
                 _iuow.Commit();
-                return application;
+                return app;
             });
         }
     }

@@ -14,6 +14,7 @@ using SecurityServer.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -34,15 +35,15 @@ namespace SecurityServer.Function
         [OpenApiOperation(operationId: "Run", tags: new[] { "Application" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(IEnumerable<ApplicationDtoDown>), Description = "All applications from the database.")]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.NoContent, contentType: "application/json", bodyType: typeof(void), Description = "The database contains no applications.")]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(void), Description = "Something went wrong.")]
-        public async Task<IActionResult> AcquireAllApplications([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Route + "/All")] HttpRequest req, ILogger log)
+        [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.NoContent, Description = "The database contains no applications.")]
+        [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.BadRequest, Description = "Something went wrong.")]
+        public async Task<IActionResult> AcquireAllApplications([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route + "/All")] HttpRequest req, ILogger log)
         {
             try
             {
                 var result = await _applicationService.GetAllApplications();
 
-                if (result == null)
+                if (result == null || result.Count() == 0)
                     return new NoContentResult();
                 else
                     return new OkObjectResult(result);
@@ -55,12 +56,12 @@ namespace SecurityServer.Function
         }
 
         [FunctionName("GetApplicationById")]                                                            //Get by ID
-        [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
+        [OpenApiOperation(operationId: "Run", tags: new[] { "Application" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
         [OpenApiParameter(name: "id", In = ParameterLocation.Query, Required = true, Type = typeof(int))]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(Application), Description = "The application from the database.")]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.NoContent, contentType: "application/json", bodyType: typeof(void), Description = "No application with that ID was found.")]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(void), Description = "No ID was specified, or something went wrong.")]
+        [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.NoContent, Description = "No application with that ID was found.")]
+        [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.BadRequest, Description = "No ID was specified, or something went wrong.")]
         public async Task<IActionResult> GetApplicationById([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route + "/{id}")] HttpRequest req, ILogger log, int? id)
         {
             try
@@ -88,6 +89,7 @@ namespace SecurityServer.Function
         #region POST
         [FunctionName("CreateApplication")]                                         // Create application
         [OpenApiOperation(operationId: "Run", tags: new[] { "Application" })]
+        [OpenApiRequestBody(contentType: "application/json", typeof(ApplicationCreationDtoUp), Description = "The application to be created.", Required = true)]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(Application), Description = "Successfully created.")]
         public async Task<IActionResult> CreateApplication([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Route + "/create")] HttpRequest req, ILogger log)
@@ -110,24 +112,27 @@ namespace SecurityServer.Function
                 return new BadRequestResult();
             }
         }
+        #endregion
 
+        #region PUT
         [FunctionName("UpdateApplication")]                                                                 //Update application
         [OpenApiOperation(operationId: "Run", tags: new[] { "Application" })]
+        [OpenApiRequestBody(contentType: "application/json", typeof(ApplicationUpdateDtoUp), Description = "The updated application. Comparison is ID-based.", Required = true)]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(Application), Description = "Successfully edited.")]
-        public async Task<IActionResult> UpdateApplication([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Route + "/update")] HttpRequest req, ILogger log)
+        public async Task<IActionResult> UpdateApplication([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = Route + "/update")] HttpRequest req, ILogger log)
         {
             try
             {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                Application updated = JsonConvert.DeserializeObject<Application>(requestBody);
+                ApplicationUpdateDtoUp updated = JsonConvert.DeserializeObject<ApplicationUpdateDtoUp>(requestBody);
+
+                if (updated.Id == null)
+                    return new BadRequestResult();
 
                 Application result = await _applicationService.UpdateApplication(updated);
 
-                if (result == null)
-                    return new BadRequestResult();
-                else
-                    return new OkObjectResult(result);
+                return new OkObjectResult(result);
             }
             catch (AggregateException ex)
             {
@@ -135,19 +140,19 @@ namespace SecurityServer.Function
                 return new BadRequestResult();
             }
         }
+        #endregion
 
+        #region DELETE
         [FunctionName("DeleteApplication")]                                                                 //Delete application
         [OpenApiOperation(operationId: "Run", tags: new[] { "Application" })]
+        [OpenApiParameter("id",Description = "Id of the application to delete",Required = true,Type = typeof(int))]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(ApplicationDeleteDtoUp), Description = "Successfully deleted, or there was no Application with the specified ID.")]
-        public async Task<IActionResult> DeleteApplication([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Route + "/delete")] HttpRequest req, ILogger log)
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "Successfully deleted, or there was no Application with the specified ID.")]
+        public async Task<IActionResult> DeleteApplication([HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = Route + "/delete/{id}")] HttpRequest req, ILogger log, int id)
         {
             try
             {
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                ApplicationDeleteDtoUp removed = JsonConvert.DeserializeObject<ApplicationDeleteDtoUp>(requestBody);
-
-                string result = await _applicationService.DeleteApplication(removed.Id);
+                string result = await _applicationService.DeleteApplication(id);
 
                 return new OkObjectResult(result);
             }

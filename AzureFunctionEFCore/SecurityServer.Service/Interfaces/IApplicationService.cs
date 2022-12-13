@@ -12,7 +12,7 @@ namespace SecurityServer.Service.Interfaces
 
         public Task<Application> CreateApplication(ApplicationCreationDtoUp application);
 
-        public Task<Application> UpdateApplication(Application application);
+        public Task<Application> UpdateApplication(ApplicationUpdateDtoUp application);
 
         public Task<string> DeleteApplication(Application application);
 
