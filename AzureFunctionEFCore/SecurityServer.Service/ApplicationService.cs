@@ -32,14 +32,13 @@ namespace SecurityServer.Service
         {
             return await Task.Run(() =>
             {
-                List<User> users =  _iuow.UserRepository.GetAll(u => (application.UserIds ?? new List<int>()).Any(id => u.Id == id)).ToList();
 
                 Application committed = new()
                 {
                     Description = application.Description,
                     Name = application.Name,
                     Url = application.Url,
-                    Users = users,
+                    Users = new(),
                 };
 
                 _iuow.ApplicationRepository.Add(committed);
@@ -82,7 +81,6 @@ namespace SecurityServer.Service
         {
             return await Task.Run(() =>
             {
-                IEnumerable<User> users = _iuow.UserRepository.GetAll(u => (update.UserIds ?? new List<int>()).Any(id => id == u.Id));
                 Application baseApplication = _iuow.ApplicationRepository.Get(app => app.Id == update.Id);
                 Application app = new()
                 {
@@ -90,7 +88,7 @@ namespace SecurityServer.Service
                     Description = update.Description ?? baseApplication.Description,
                     Name = update.Description ?? baseApplication.Description,
                     Url = update.Url ?? baseApplication.Url,
-                    Users = users.ToList()
+                    Users = baseApplication.Users
                 };
 
                 _iuow.ApplicationRepository.Update(app);

@@ -13,7 +13,5 @@ namespace SecurityServer.Service.DTO.Up
 
         [Required]
         public string? Description { get; set; }
-
-        public IEnumerable<int>? UserIds { get; set; }
     }
 }

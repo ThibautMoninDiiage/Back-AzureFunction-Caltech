@@ -37,7 +37,7 @@ namespace SecurityServer.Function
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(IEnumerable<ApplicationDtoDown>), Description = "All applications from the database.")]
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.NoContent, Description = "The database contains no applications.")]
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.BadRequest, Description = "Something went wrong.")]
-        public async Task<IActionResult> AcquireAllApplications([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route + "/All")] HttpRequest req, ILogger log)
+        public async Task<IActionResult> AcquireAllApplications([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route)] HttpRequest req, ILogger log)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace SecurityServer.Function
         [OpenApiRequestBody(contentType: "application/json", typeof(ApplicationCreationDtoUp), Description = "The application to be created.", Required = true)]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(Application), Description = "Successfully created.")]
-        public async Task<IActionResult> CreateApplication([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Route + "/create")] HttpRequest req, ILogger log)
+        public async Task<IActionResult> CreateApplication([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Route)] HttpRequest req, ILogger log)
         {
             try
             {
@@ -120,7 +120,7 @@ namespace SecurityServer.Function
         [OpenApiRequestBody(contentType: "application/json", typeof(ApplicationUpdateDtoUp), Description = "The updated application. Comparison is ID-based.", Required = true)]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(Application), Description = "Successfully edited.")]
-        public async Task<IActionResult> UpdateApplication([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = Route + "/update")] HttpRequest req, ILogger log)
+        public async Task<IActionResult> UpdateApplication([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = Route)] HttpRequest req, ILogger log)
         {
             try
             {
@@ -148,7 +148,7 @@ namespace SecurityServer.Function
         [OpenApiParameter("id",Description = "Id of the application to delete",Required = true,Type = typeof(int))]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "Successfully deleted, or there was no Application with the specified ID.")]
-        public async Task<IActionResult> DeleteApplication([HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = Route + "/delete/{id}")] HttpRequest req, ILogger log, int id)
+        public async Task<IActionResult> DeleteApplication([HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = Route + "/{id}")] HttpRequest req, ILogger log, int id)
         {
             try
             {
