@@ -29,9 +29,9 @@ namespace SecurityServer.Function
         }
 
         [FunctionName("ServeurConnexion")]
-        [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
-        [OpenApiRequestBody("userDtoUp", typeof(UserDtoUp))]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(UserDtoDown), Description = "Response")]
+        //[OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
+        //[OpenApiRequestBody("userDtoUp", typeof(UserDtoUp))]
+        //[OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(UserDtoDown), Description = "Response")]
         public async Task<IActionResult> ServeurConnexion([HttpTrigger(AuthorizationLevel.Anonymous,"post", Route = "connexion")] HttpRequest req)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
