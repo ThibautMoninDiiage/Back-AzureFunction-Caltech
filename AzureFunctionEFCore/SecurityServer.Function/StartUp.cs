@@ -89,6 +89,7 @@ namespace SecurityServer.Function
             builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
             builder.Services.AddTransient(typeof(IRoleService), typeof(RoleService));
             builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
+            builder.Services.AddTransient(typeof(IApplicationService), typeof(ApplicationService));
         }
     }
 }

@@ -4,6 +4,7 @@ namespace SecurityServer.Contract.UnitOfWork
 {
     public interface IUnitOfWork
     {
+        IApplicationRepository ApplicationRepository { get; }
         IRoleRepository RoleRepository { get; }
         IUserRepository UserRepository { get; }
         void Commit();
