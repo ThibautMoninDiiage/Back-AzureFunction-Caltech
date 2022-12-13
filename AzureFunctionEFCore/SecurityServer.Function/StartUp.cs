@@ -24,10 +24,9 @@ namespace SecurityServer.Function
 
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            var serviceProvider = builder.Services.BuildServiceProvider();
             string connString = Environment.GetEnvironmentVariable("SqlConnectionString", EnvironmentVariableTarget.Process);
 
-            builder.Services.AddEndpointsApiExplorer();
+            //builder.Services.AddEndpointsApiExplorer();
 
             //var jwt = new ApiSettings();
 
