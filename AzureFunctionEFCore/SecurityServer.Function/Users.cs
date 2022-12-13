@@ -29,7 +29,7 @@ namespace SecurityServer.Function
         }
 
         [FunctionName("ServeurConnexion")]
-        [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
+        [OpenApiOperation(operationId: "ServeurConnexion", tags: new[] { "User" })]
         [OpenApiRequestBody("userDtoUp", typeof(UserDtoUp))]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(UserDtoDown), Description = "Response")]
         public async Task<IActionResult> ServeurConnexion([HttpTrigger(AuthorizationLevel.Anonymous,"post", Route = "connexion")] HttpRequest req)
@@ -51,11 +51,11 @@ namespace SecurityServer.Function
         }
 
         [FunctionName("GetUserById")]
-        [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
+        [OpenApiOperation(operationId: "GetUserById", tags: new[] { "User" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
         [OpenApiParameter(name: "id", In = ParameterLocation.Query, Required = true, Type = typeof(int))]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(User), Description = "The OK response")]
-        public async Task<IActionResult> GetUserById([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route + "/{id}")]HttpRequest req,ILogger log, int? id)
+        public async Task<IActionResult> GetUserById([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route + "/{id}")] HttpRequest req,ILogger logger , int? id)
         {
             try
             {
@@ -73,18 +73,17 @@ namespace SecurityServer.Function
             }
             catch (AggregateException ex)
             {
-                log.LogInformation(ex.Message);
+                logger.LogInformation(ex.Message);
                 return new BadRequestResult();
             }
         }
 
         [FunctionName("CreateUser")]
-        [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
+        [OpenApiOperation(operationId: "CreateUser", tags: new[] { "User" })]
         [OpenApiRequestBody("user",typeof(UserCreationDtoUp))]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
-        //[OpenApiParameter(name: "name", In = ParameterLocation.Query, Required = true, Type = typeof(string), Description = "The **Name** parameter")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(UserDtoDown), Description = "Response")]
-        public async Task<IActionResult> CreateUser([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Route)] HttpRequest req, ILogger log)
+        public async Task<IActionResult> CreateUser([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Route)] HttpRequest req,ILogger logger)
         {
             try
             {
@@ -100,7 +99,7 @@ namespace SecurityServer.Function
             }
             catch (AggregateException ex)
             {
-                log.LogInformation(ex.Message);
+                logger.LogInformation(ex.Message);
                 return new BadRequestResult();
             }
         }
