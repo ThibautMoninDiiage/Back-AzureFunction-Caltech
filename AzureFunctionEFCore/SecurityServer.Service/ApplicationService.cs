@@ -3,6 +3,7 @@ using SecurityServer.Models.Models;
 using SecurityServer.Service.DTO.Down;
 using SecurityServer.Service.DTO.Up;
 using SecurityServer.Service.Interfaces;
+using System.Linq.Expressions;
 
 namespace SecurityServer.Service
 {
@@ -69,11 +70,21 @@ namespace SecurityServer.Service
             return await DeleteApplication(target);
         }
 
-        public async Task<Application> GetById(int id)
+        public async Task<Application?> GetById(int id)
         {
-            return await Task.Run(() =>
+            return await Task.Run(async () =>
             {
-                return _iuow.ApplicationRepository.Get(app => app.Id == id);
+                Type type = typeof(Application);
+                ParameterExpression member = Expression.Parameter(type, "param");
+                MemberExpression fieldId = Expression.PropertyOrField(member, "id");
+                Expression<Func<Application, bool>> requete = Expression.Lambda<Func<Application, bool>>(Expression.Equal(fieldId, Expression.Constant(id)), member);
+
+                Application user = await _iuow.ApplicationRepository.GetAsync(requete);
+
+                if (user != null)
+                    return user;
+                else
+                    return null;
             });
         }
 
@@ -81,14 +92,12 @@ namespace SecurityServer.Service
         {
             return await Task.Run(() =>
             {
-                Application baseApplication = _iuow.ApplicationRepository.Get(app => app.Id == update.Id);
                 Application app = new()
                 {
                     Id = (int)update.Id,
-                    Description = update.Description ?? baseApplication.Description,
-                    Name = update.Description ?? baseApplication.Description,
-                    Url = update.Url ?? baseApplication.Url,
-                    Users = baseApplication.Users
+                    Description = update.Description,
+                    Name = update.Name,
+                    Url = update.Url
                 };
 
                 _iuow.ApplicationRepository.Update(app);

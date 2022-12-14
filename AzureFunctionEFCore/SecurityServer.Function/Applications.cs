@@ -58,7 +58,7 @@ namespace SecurityServer.Function
         [FunctionName("GetApplicationById")]                                                            //Get by ID
         [OpenApiOperation(operationId: "Run", tags: new[] { "Application" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
-        [OpenApiParameter(name: "id", In = ParameterLocation.Query, Required = true, Type = typeof(int))]
+        [OpenApiParameter(name: "id", In = ParameterLocation.Path, Required = true, Type = typeof(int))]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(Application), Description = "The application from the database.")]
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.NoContent, Description = "No application with that ID was found.")]
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.BadRequest, Description = "No ID was specified, or something went wrong.")]
@@ -145,7 +145,7 @@ namespace SecurityServer.Function
         #region DELETE
         [FunctionName("DeleteApplication")]                                                                 //Delete application
         [OpenApiOperation(operationId: "Run", tags: new[] { "Application" })]
-        [OpenApiParameter("id",Description = "Id of the application to delete",Required = true,Type = typeof(int))]
+        [OpenApiParameter("id",In = ParameterLocation.Path ,Description = "Id of the application to delete",Required = true,Type = typeof(int))]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "Successfully deleted, or there was no Application with the specified ID.")]
         public async Task<IActionResult> DeleteApplication([HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = Route + "/{id}")] HttpRequest req, ILogger log, int id)

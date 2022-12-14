@@ -8,7 +8,7 @@ namespace SecurityServer.Service.Interfaces
     {
         public Task<IEnumerable<ApplicationDtoDown>> GetAllApplications();
 
-        public Task<Application> GetById(int id);
+        public Task<Application?> GetById(int id);
 
         public Task<Application> CreateApplication(ApplicationCreationDtoUp application);
 
