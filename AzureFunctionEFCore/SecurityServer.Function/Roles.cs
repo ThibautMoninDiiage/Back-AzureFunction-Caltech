@@ -22,6 +22,7 @@ namespace SecurityServer.Function
         }
 
         [FunctionName("GetAllRoles")]
+        [OpenApiOperation(operationId: "Run", tags: new[] { "Role" })]
         public async Task<IActionResult> GetAllRoles([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route)]HttpRequest req,ILogger logger)
         {
             IEnumerable<RoleDtoDown> result = await _roleService.GetAll();
