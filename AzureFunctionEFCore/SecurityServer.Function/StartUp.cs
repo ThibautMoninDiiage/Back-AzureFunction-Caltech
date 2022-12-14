@@ -19,7 +19,6 @@ namespace SecurityServer.Function
 {
     public class StartUp : FunctionsStartup
     {
-
         public override void Configure(IFunctionsHostBuilder builder)
         {
             string connString = Environment.GetEnvironmentVariable("SqlConnectionString", EnvironmentVariableTarget.Process);
@@ -58,9 +57,10 @@ namespace SecurityServer.Function
             .AddCookie();
 
             builder.Services.AddDbContext<DbContextServer>(options => options.UseSqlServer(connString));
-            builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
-            builder.Services.AddTransient<IRoleService,RoleService>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddTransient<IRoleService, RoleService>();
             builder.Services.AddTransient<IUserService, UserService>();
+            builder.Services.AddTransient<IApplicationService,ApplicationService>();
         }
     }
 }

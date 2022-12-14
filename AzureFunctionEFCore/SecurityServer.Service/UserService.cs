@@ -8,7 +8,6 @@ using SecurityServer.Service.DTO.Down;
 using SecurityServer.Service.DTO.Up;
 using SecurityServer.Service.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -19,7 +18,7 @@ namespace SecurityServer.Service
     {
         private readonly IUnitOfWork _uow;
         private readonly ApiSettings _apiSettings;
-        public UserService(IUnitOfWork uow,ApiSettings apiSettings)
+        public UserService(IUnitOfWork uow, ApiSettings apiSettings)
         {
             _uow = uow;
             this._apiSettings = apiSettings;
@@ -106,7 +105,7 @@ namespace SecurityServer.Service
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim("id", user.Id.ToString()),
-                    new Claim("idRole", user.IdRole.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Email,user.Mail),
                     // Cela va garantir que le token est unique
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),
