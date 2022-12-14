@@ -61,6 +61,7 @@ namespace SecurityServer.Function
             builder.Services.AddTransient<IRoleService, RoleService>();
             builder.Services.AddTransient<IUserService, UserService>();
             builder.Services.AddTransient<IApplicationService,ApplicationService>();
+            builder.Services.AddTransient<IAdminService, AdminService>();
         }
     }
 }

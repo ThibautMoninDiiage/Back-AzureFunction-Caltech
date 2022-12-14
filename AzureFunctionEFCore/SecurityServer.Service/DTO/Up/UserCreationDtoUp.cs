@@ -11,5 +11,6 @@ namespace SecurityServer.Service.DTO.Up
         public string? Password { get; set; }
         public string? Avatar { get; set; }
         public string? Mail { get; set; }
+        public string? Role { get; set; }
     }
 }
