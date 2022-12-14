@@ -26,34 +26,34 @@ namespace SecurityServer.Function
         {
             string connString = Environment.GetEnvironmentVariable("SqlConnectionString", EnvironmentVariableTarget.Process);
 
-            var jwt = new ApiSettings();
+            //var jwt = new ApiSettings();
 
-            jwt.JwtSecret = Environment.GetEnvironmentVariable("JwtSecret", EnvironmentVariableTarget.Process);
-            jwt.JwtIssuer = Environment.GetEnvironmentVariable("JwtIssuer", EnvironmentVariableTarget.Process);
-            jwt.JwtAudience = Environment.GetEnvironmentVariable("JwtAudience", EnvironmentVariableTarget.Process);
+            //jwt.JwtSecret = Environment.GetEnvironmentVariable("JwtSecret", EnvironmentVariableTarget.Process);
+            //jwt.JwtIssuer = Environment.GetEnvironmentVariable("JwtIssuer", EnvironmentVariableTarget.Process);
+            //jwt.JwtAudience = Environment.GetEnvironmentVariable("JwtAudience", EnvironmentVariableTarget.Process);
 
-            builder.Services.AddSingleton(jwt);
+            //builder.Services.AddSingleton(jwt);
 
-            // configuration du middleware d'authentification JWT fourni par Microsoft
-            builder.Services.AddAuthentication(auth =>
-            {
-                auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidIssuer = jwt.JwtIssuer,
-                    ValidateAudience = true,
-                    ValidAudience = jwt.JwtAudience,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.JwtSecret))
-                };
-            })
-            .AddCookie();
+            //// configuration du middleware d'authentification JWT fourni par Microsoft
+            //builder.Services.AddAuthentication(auth =>
+            //{
+            //    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //})
+            //.AddJwtBearer(options =>
+            //{
+            //    options.SaveToken = true;
+            //    options.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        ValidateIssuer = true,
+            //        ValidIssuer = jwt.JwtIssuer,
+            //        ValidateAudience = true,
+            //        ValidAudience = jwt.JwtAudience,
+            //        ValidateIssuerSigningKey = true,
+            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.JwtSecret))
+            //    };
+            //})
+            //.AddCookie();
 
             builder.Services.AddDbContext<DbContextServer>(options => options.UseSqlServer(connString));
             builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
