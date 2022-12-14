@@ -6,5 +6,6 @@ namespace SecurityServer.Service.Interfaces
     public interface IAdminService
     {
         public Task<User> CreateUser(UserCreationDtoUp model);
+        public Task<List<User>> GetAllUser();
     }
 }

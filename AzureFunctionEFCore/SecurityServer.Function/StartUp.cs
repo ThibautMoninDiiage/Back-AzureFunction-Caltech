@@ -12,8 +12,6 @@ using SecurityServer.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using SecurityServer.Models.Models;
 
 [assembly: FunctionsStartup(typeof(StartUp))]
 
@@ -26,6 +24,8 @@ namespace SecurityServer.Function
         {
             string connString = Environment.GetEnvironmentVariable("SqlConnectionString", EnvironmentVariableTarget.Process);
 
+            builder.Services.AddHealthChecks();
+            builder.Services.AddCors();
             builder.Services.AddEndpointsApiExplorer();
 
             var jwt = new ApiSettings();
@@ -58,10 +58,10 @@ namespace SecurityServer.Function
             .AddCookie();
 
             builder.Services.AddDbContext<DbContextServer>(options => options.UseSqlServer(connString));
-            builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
-            builder.Services.AddTransient(typeof(IRoleService), typeof(RoleService));
-            builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
-            builder.Services.AddTransient(typeof(IAdminService),typeof(AdminService));
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddTransient<IRoleService, RoleService>();
+            builder.Services.AddTransient<IUserService, UserService>();
+            builder.Services.AddTransient<IAdminService, AdminService>();
         }
     }
 }

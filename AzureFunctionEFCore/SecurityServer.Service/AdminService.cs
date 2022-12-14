@@ -28,14 +28,24 @@ namespace SecurityServer.Service
                 Password = hashedPassword,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                IdRole = 2,
+                Avatar = model.Avatar,
                 Salt = Convert.ToBase64String(salt)
             };
+
+            if (string.IsNullOrEmpty(model.Role))
+                user.IdRole = 2;
+            else
+                user.IdRole = 1;
 
             _uow.UserRepository.Add(user);
             await _uow.CommitAsync();
 
             return user;
+        }
+
+        public async Task<List<User>> GetAllUser()
+        {
+            return _uow.UserRepository.GetAllAsync().Result.ToList();
         }
 
         private byte[] GenerateSalt()

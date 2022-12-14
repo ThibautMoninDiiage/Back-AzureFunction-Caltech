@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -40,6 +41,28 @@ namespace SecurityServer.Function
                 UserCreationDtoUp user = JsonConvert.DeserializeObject<UserCreationDtoUp>(requestBody);
 
                 User result = await _adminService.CreateUser(user);
+
+                if (result == null)
+                    return new BadRequestResult();
+                else
+                    return new OkObjectResult(result);
+            }
+            catch (AggregateException ex)
+            {
+                logger.LogInformation(ex.Message);
+                return new BadRequestResult();
+            }
+        }
+
+        [FunctionName("GetAllUser")]
+        [OpenApiOperation(operationId: "GetAllUser", tags: new[] { "Admin" })]
+        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(List<User>), Description = "Response")]
+        public async Task<IActionResult> GetAllUser([HttpTrigger(AuthorizationLevel.Anonymous,"get",Route = Route)]HttpRequest req,ILogger logger)
+        {
+            try
+            {
+                List<User> result = await _adminService.GetAllUser();
 
                 if (result == null)
                     return new BadRequestResult();
