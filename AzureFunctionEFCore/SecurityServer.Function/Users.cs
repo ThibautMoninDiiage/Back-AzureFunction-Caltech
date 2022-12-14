@@ -29,9 +29,6 @@ namespace SecurityServer.Function
         }
 
         [FunctionName("ServeurConnexion")]
-        [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
-        [OpenApiRequestBody("userDtoUp", typeof(UserDtoUp))]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(UserDtoDown), Description = "Response")]
         public async Task<IActionResult> ServeurConnexion([HttpTrigger(AuthorizationLevel.Anonymous,"post", Route = "connexion")] HttpRequest req)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -51,10 +48,6 @@ namespace SecurityServer.Function
         }
 
         [FunctionName("GetUserById")]
-        [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
-        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
-        [OpenApiParameter(name: "id", In = ParameterLocation.Query, Required = true, Type = typeof(int))]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(User), Description = "The OK response")]
         public async Task<IActionResult> GetUserById([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route + "/{id}")]HttpRequest req,ILogger log, int? id)
         {
             try
@@ -79,10 +72,6 @@ namespace SecurityServer.Function
         }
 
         [FunctionName("CreateUser")]
-        [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
-        [OpenApiRequestBody("user",typeof(UserCreationDtoUp))]
-        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(UserDtoDown), Description = "Response")]
         public async Task<IActionResult> CreateUser([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Route)] HttpRequest req, ILogger log)
         {
             try
@@ -105,10 +94,6 @@ namespace SecurityServer.Function
         }
 
         [FunctionName("ModifyUser")]
-        [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
-        [OpenApiRequestBody("user", typeof(UserModifyDtoUp))]
-        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(User), Description = "Response")]
         public async Task<IActionResult> ModifyUser([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = Route)] HttpRequest req, ILogger log)
         {
             try
