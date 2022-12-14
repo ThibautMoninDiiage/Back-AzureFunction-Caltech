@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using SecurityServer.Contract.UnitOfWork;
 using SecurityServer.Models.Models;
+using SecurityServer.Service.DTO.Down;
 using SecurityServer.Service.DTO.Up;
 using SecurityServer.Service.Interfaces;
+using System.Linq;
 using System.Security.Cryptography;
 
 namespace SecurityServer.Service
@@ -43,9 +45,15 @@ namespace SecurityServer.Service
             return user;
         }
 
-        public async Task<List<User>> GetAllUser()
+        public async Task<List<UserAllDtoDown>> GetAllUsers()
         {
-            return _uow.UserRepository.GetAllAsync().Result.ToList();
+
+            List<User> users = _uow.UserRepository.GetAllAsync().Result.ToList();
+            List<UserAllDtoDown> userAllDtoDowns = new List<UserAllDtoDown>();
+
+            users.ForEach(u => userAllDtoDowns.Add(new UserAllDtoDown() { Id = u.Id, Avatar = u.Avatar, Mail = u.Mail, Username = u.Username }));
+
+            return userAllDtoDowns;
         }
 
         private byte[] GenerateSalt()

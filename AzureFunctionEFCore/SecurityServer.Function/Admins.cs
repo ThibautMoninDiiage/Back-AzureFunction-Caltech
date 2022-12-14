@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using SecurityServer.Models.Models;
+using SecurityServer.Service.DTO.Down;
 using SecurityServer.Service.DTO.Up;
 using SecurityServer.Service.Interfaces;
 
@@ -54,15 +55,15 @@ namespace SecurityServer.Function
             }
         }
 
-        [FunctionName("GetAllUser")]
-        [OpenApiOperation(operationId: "GetAllUser", tags: new[] { "Admin" })]
+        [FunctionName("GetAllUsers")]
+        [OpenApiOperation(operationId: "GetAllUsers", tags: new[] { "Admin" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(List<User>), Description = "Response")]
-        public async Task<IActionResult> GetAllUser([HttpTrigger(AuthorizationLevel.Anonymous,"get",Route = Route)]HttpRequest req,ILogger logger)
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(List<UserAllDtoDown>), Description = "Response")]
+        public async Task<IActionResult> GetAllUsers([HttpTrigger(AuthorizationLevel.Anonymous,"get",Route = Route)]HttpRequest req,ILogger logger)
         {
             try
             {
-                List<User> result = await _adminService.GetAllUser();
+                List<UserAllDtoDown> result = await _adminService.GetAllUsers();
 
                 if (result == null)
                     return new BadRequestResult();
