@@ -27,12 +27,7 @@ namespace SecurityServer.Service
 
         public async Task<User?> GetById(int? id)
         {
-            Type type = typeof(User);
-            ParameterExpression member = Expression.Parameter(type, "param");
-            MemberExpression fieldId = Expression.PropertyOrField(member, "id");
-            Expression<Func<User, bool>> requete = Expression.Lambda<Func<User, bool>>(Expression.Equal(fieldId, Expression.Constant(id)), member);
-
-            User user = await _uow.UserRepository.GetAsync(requete);
+            User user = await _uow.UserRepository.GetAsync(x => x.Id == id);
 
             if (user != null)
                 return user;
@@ -42,13 +37,7 @@ namespace SecurityServer.Service
 
         public async Task<UserDtoDown> Authenticate(UserDtoUp model)
         {
-
-            Type type = typeof(User);
-            ParameterExpression member = Expression.Parameter(type, "param");
-            MemberExpression fieldLogin = Expression.PropertyOrField(member, "username");
-            Expression<Func<User, bool>> requete = Expression.Lambda<Func<User, bool>>(Expression.Equal(fieldLogin, Expression.Constant(model.UserName)), member);
-
-            User user = await _uow.UserRepository.GetAsync(requete);
+            User user = await _uow.UserRepository.GetAsync(x => x.Username == model.UserName);
 
             // return null si on ne trouve pas l'utilisateur
             if (user == null)
