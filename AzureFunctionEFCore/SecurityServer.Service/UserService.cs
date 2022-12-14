@@ -8,7 +8,6 @@ using SecurityServer.Service.DTO.Down;
 using SecurityServer.Service.DTO.Up;
 using SecurityServer.Service.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -19,10 +18,10 @@ namespace SecurityServer.Service
     {
         private readonly IUnitOfWork _uow;
         private readonly ApiSettings _apiSettings;
-        public UserService(IUnitOfWork uow, IOptions<ApiSettings> apiSettings)
+        public UserService(IUnitOfWork uow, ApiSettings apiSettings)
         {
             _uow = uow;
-            this._apiSettings = apiSettings.Value;
+            this._apiSettings = apiSettings;
         }
 
         public async Task<User?> GetById(int? id)
@@ -37,6 +36,7 @@ namespace SecurityServer.Service
 
         public async Task<UserDtoDown> Authenticate(UserDtoUp model)
         {
+
             User user = await _uow.UserRepository.GetAsync(x => x.Username == model.UserName);
 
             // return null si on ne trouve pas l'utilisateur
@@ -63,6 +63,7 @@ namespace SecurityServer.Service
             var user = new User
             {
                 Mail = model.Mail,
+                Avatar = model.Avatar,
                 Username = model.Username,
                 Password = hashedPassword,
                 FirstName = model.FirstName,
@@ -76,6 +77,22 @@ namespace SecurityServer.Service
 
             var token = generateJwtToken(user);
             return new UserDtoDown(user, token);
+        }
+
+        public async Task<User> UpdateUser(UserModifyDtoUp model)
+        {
+            User user = new User()
+            {
+                Id = model.Id,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Username = model.Username,
+                Mail = model.Mail,
+                Avatar = model.Avatar
+            };
+            _uow.UserRepository.Update(user);
+            await _uow.CommitAsync();
+            return user;
         }
 
         private string generateJwtToken(User user)
