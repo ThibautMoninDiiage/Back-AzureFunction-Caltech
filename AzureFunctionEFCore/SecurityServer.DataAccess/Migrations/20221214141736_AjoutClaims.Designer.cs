@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecurityServer.DataAccess.SecurityServerContext;
 
@@ -11,9 +12,10 @@ using SecurityServer.DataAccess.SecurityServerContext;
 namespace SecurityServer.DataAccess.Migrations
 {
     [DbContext(typeof(DbContextServer))]
-    partial class DbContextServerModelSnapshot : ModelSnapshot
+    [Migration("20221214141736_AjoutClaims")]
+    partial class AjoutClaims
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,6 +77,9 @@ namespace SecurityServer.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int?>("ApplicationId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -91,6 +96,8 @@ namespace SecurityServer.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationId");
 
                     b.HasIndex("RoleId");
 
@@ -222,6 +229,10 @@ namespace SecurityServer.DataAccess.Migrations
 
             modelBuilder.Entity("SecurityServer.Models.Models.Application", b =>
                 {
+                    b.HasOne("SecurityServer.Models.Models.Application", null)
+                        .WithMany("Applications")
+                        .HasForeignKey("ApplicationId");
+
                     b.HasOne("SecurityServer.Models.Models.Role", null)
                         .WithMany("Applications")
                         .HasForeignKey("RoleId");
@@ -236,6 +247,11 @@ namespace SecurityServer.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("SecurityServer.Models.Models.Application", b =>
+                {
+                    b.Navigation("Applications");
                 });
 
             modelBuilder.Entity("SecurityServer.Models.Models.Role", b =>

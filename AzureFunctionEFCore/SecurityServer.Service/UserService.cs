@@ -104,10 +104,10 @@ namespace SecurityServer.Service
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim("id", user.Id.ToString()),
-                    new Claim(JwtRegisteredClaimNames.Email,user.Mail),
+                    new System.Security.Claims.Claim("id", user.Id.ToString()),
+                    new System.Security.Claims.Claim(JwtRegisteredClaimNames.Email,user.Mail),
                     // Cela va garantir que le token est unique
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    new System.Security.Claims.Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),
                 Issuer = _apiSettings.JwtIssuer,
                 Audience = _apiSettings.JwtAudience,

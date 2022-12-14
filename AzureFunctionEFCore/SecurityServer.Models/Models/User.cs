@@ -28,5 +28,7 @@ namespace SecurityServer.Models.Models
         [JsonIgnore]
         public int? IdRole { get; set; }
         public List<Application>? Applications { get; set; }
+        [JsonIgnore]
+        public List<Claim> Claims { get; set; }
     }
 }
