@@ -27,7 +27,6 @@ namespace SecurityServer.Service
 
         public async Task<User?> GetById(int? id)
         {
-
             User user = await _uow.UserRepository.GetAsync(x => x.Id == id);
 
             if (user != null)
@@ -39,12 +38,7 @@ namespace SecurityServer.Service
         public async Task<UserDtoDown> Authenticate(UserDtoUp model)
         {
 
-            Type type = typeof(User);
-            ParameterExpression member = Expression.Parameter(type, "param");
-            MemberExpression fieldLogin = Expression.PropertyOrField(member, "username");
-            Expression<Func<User, bool>> requete = Expression.Lambda<Func<User, bool>>(Expression.Equal(fieldLogin, Expression.Constant(model.UserName)), member);
-
-            User user = await _uow.UserRepository.GetAsync(requete);
+            User user = await _uow.UserRepository.GetAsync(x => x.Username == model.UserName);
 
             // return null si on ne trouve pas l'utilisateur
             if (user == null)
@@ -70,6 +64,7 @@ namespace SecurityServer.Service
             var user = new User
             {
                 Mail = model.Mail,
+                Avatar = model.Avatar,
                 Username = model.Username,
                 Password = hashedPassword,
                 FirstName = model.FirstName,
