@@ -51,9 +51,14 @@ namespace SecurityServer.Service
             List<User> users = _uow.UserRepository.GetAllAsync().Result.ToList();
             List<UserAllDtoDown> userAllDtoDowns = new List<UserAllDtoDown>();
 
-            users.ForEach(u => userAllDtoDowns.Add(new UserAllDtoDown() { Id = u.Id, Avatar = u.Avatar, Mail = u.Mail, Username = u.Username }));
+            users.ForEach(u => userAllDtoDowns.Add(new UserAllDtoDown() { Id = u.Id, Avatar = u.Avatar, Mail = u.Mail, Username = u.Username,Role = new RoleUserDtoDown() { Name = GetRoleById((int)u.IdRole).Name} }));
 
             return userAllDtoDowns;
+        }
+
+        public Role GetRoleById(int id)
+        {
+            return _uow.RoleRepository.Get(x => x.Id == id);
         }
 
         private byte[] GenerateSalt()

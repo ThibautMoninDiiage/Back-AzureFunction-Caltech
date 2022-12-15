@@ -8,5 +8,6 @@ namespace SecurityServer.Service.Interfaces
     {
         public Task<User> CreateUser(UserCreationDtoUp model);
         public Task<List<UserAllDtoDown>> GetAllUsers();
+        public Role GetRoleById(int id);
     }
 }
