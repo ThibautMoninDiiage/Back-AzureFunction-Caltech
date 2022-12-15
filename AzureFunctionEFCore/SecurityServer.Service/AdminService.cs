@@ -34,7 +34,7 @@ namespace SecurityServer.Service
                 Salt = Convert.ToBase64String(salt)
             };
 
-            if (string.IsNullOrEmpty(model.Role))
+            if (string.IsNullOrEmpty(model.Role.Name))
                 user.IdRole = 2;
             else
                 user.IdRole = 1;
