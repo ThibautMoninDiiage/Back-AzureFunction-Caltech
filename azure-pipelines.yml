@@ -3,11 +3,8 @@ trigger:
 
 variables:
   azureSubscription: '657f411b-3b8f-4b31-b5bf-38bc6f455e66'
-
   functionAppName: 'test2diiage2'
-
   vmImageName: 'windows-2019'
-
   workingDirectory: '$(System.DefaultWorkingDirectory)/AzureFunctionEFCore/SecurityServer.Function'
 
 stages:
@@ -35,10 +32,10 @@ stages:
         rootFolderOrFile: '$(System.DefaultWorkingDirectory)/publish_output'
         includeRootFolder: false
         archiveType: zip
-        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildNumber).zip
         replaceExistingArchive: true
 
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildNumber).zip
       artifact: drop
 
 - stage: Deploy
@@ -56,7 +53,6 @@ stages:
     strategy:
       runOnce:
         deploy:
-
           steps:
           - task: AzureFunctionApp@1
             displayName: 'Azure functions app deploy'
@@ -64,4 +60,4 @@ stages:
               azureSubscription: '$(azureSubscription)'
               appType: functionApp
               appName: $(functionAppName)
-              package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+              package: '$(Pipeline.Workspace)/drop/$(Build.BuildNumber).zip'
