@@ -12,8 +12,6 @@ using SecurityServer.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.Extensions.Configuration;
-using System.Security.Claims;
 
 [assembly: FunctionsStartup(typeof(StartUp))]
 
@@ -57,8 +55,9 @@ namespace SecurityServer.Function
 
             builder.Services.AddDbContext<DbContextServer>(options => options.UseSqlServer(connString));
             builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
-            builder.Services.AddTransient(typeof(IRoleService), typeof(RoleService));
-            builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
+            builder.Services.AddTransient<IRoleService,RoleService>();
+            builder.Services.AddTransient<IUserService,UserService>();
+            builder.Services.AddTransient<IJwtService, JwtService>();
         }
     }
 }

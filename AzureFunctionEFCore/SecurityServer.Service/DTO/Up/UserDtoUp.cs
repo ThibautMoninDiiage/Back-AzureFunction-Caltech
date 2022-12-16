@@ -5,7 +5,7 @@ namespace SecurityServer.Service.DTO.Up
     public class UserDtoUp
     {
         [Required]
-        public string? UserName { get; set; }
+        public string? Mail { get; set; }
 
         [Required]
         public string? Password { get; set; }

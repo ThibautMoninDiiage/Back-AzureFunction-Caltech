@@ -28,11 +28,15 @@ namespace SecurityServer.Function
         [OpenApiOperation(operationId: "Run", tags: new[] { "Role" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(List<RoleDtoDown>), Description = "Response")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(void))]
         public async Task<IActionResult> GetAllRoles([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route)]HttpRequest req,ILogger logger)
         {
             IEnumerable<RoleDtoDown> result = await _roleService.GetAll();
 
-            return new OkObjectResult(result);
+            if (result != null)
+                return new OkObjectResult(result);
+            else
+                return new BadRequestResult();
         }
     }
 }

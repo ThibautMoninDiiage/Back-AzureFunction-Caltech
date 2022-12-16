@@ -17,7 +17,7 @@ namespace SecurityServer.Service
         {
             IEnumerable<Role> lstRoles = await _uow.RoleRepository.GetAllAsync();
 
-            List<RoleDtoDown> lstRoleDtoDowns = new ();
+            List<RoleDtoDown> lstRoleDtoDowns = new List<RoleDtoDown>();
 
             lstRoles.ToList().ForEach(r => lstRoleDtoDowns.Add(new RoleDtoDown() { Id = r.Id, Name = r.Name }));
 
