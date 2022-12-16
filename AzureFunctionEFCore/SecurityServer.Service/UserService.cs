@@ -27,53 +27,47 @@ namespace SecurityServer.Service
 
         public async Task<User?> GetById(int? id)
         {
-            Type type = typeof(User);
-            ParameterExpression member = Expression.Parameter(type, "param");
-            MemberExpression fieldId = Expression.PropertyOrField(member, "id");
-            Expression<Func<User, bool>> requete = Expression.Lambda<Func<User, bool>>(Expression.Equal(fieldId, Expression.Constant(id)), member);
-
-            User user = await _uow.UserRepository.GetAsync(requete);
+            User user = await _uow.UserRepository.GetAsync(x => x.Id == id);
 
             if (user != null)
                 return user;
             else
                 return null;
+
         }
 
         public async Task<UserDtoDown> Authenticate(UserDtoUp model)
         {
+            User user = await _uow.UserRepository.GetAsync(x => x.Username == model.UserName);
 
-            Type type = typeof(User);
-            ParameterExpression member = Expression.Parameter(type, "param");
-            MemberExpression fieldLogin = Expression.PropertyOrField(member, "username");
-            Expression<Func<User, bool>> requete = Expression.Lambda<Func<User, bool>>(Expression.Equal(fieldLogin, Expression.Constant(model.UserName)), member);
-
-            User user = await _uow.UserRepository.GetAsync(requete);
-
-            // return null si on ne trouve pas l'utilisateur
             if (user == null)
                 return null;
 
-            var hashedPassword = HashPasswordWithSalt(model.Password, Convert.FromBase64String(user.Salt));
+            string hashedPassword = HashPasswordWithSalt(model.Password, Convert.FromBase64String(user.Salt));
 
-            // Si les mots de passe ne correspondent pas on retourne null.
             if (user.Password != hashedPassword)
                 return null;
 
-            // authentification réussie, on génère le token
-            var token = generateJwtToken(user);
+            string? token = generateJwtToken(user);
 
             return new UserDtoDown(user, token);
         }
 
         public async Task<UserDtoDown> CreateUser(UserCreationDtoUp model)
         {
+
+            User userVerify = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
+
+            if (userVerify != null)
+                return null;
+
             var salt = GenerateSalt();
             var hashedPassword = HashPasswordWithSalt(model.Password, salt);
 
             var user = new User
             {
                 Mail = model.Mail,
+                Avatar = model.Avatar,
                 Username = model.Username,
                 Password = hashedPassword,
                 FirstName = model.FirstName,
@@ -85,7 +79,9 @@ namespace SecurityServer.Service
             _uow.UserRepository.Add(user);
             await _uow.CommitAsync();
 
-            var token = generateJwtToken(user);
+            User userCreated = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
+
+            var token = generateJwtToken(userCreated);
             return new UserDtoDown(user, token);
         }
 
