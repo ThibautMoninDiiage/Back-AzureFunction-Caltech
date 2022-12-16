@@ -62,6 +62,7 @@ namespace SecurityServer.Function
             builder.Services.AddTransient<IUserService, UserService>();
             builder.Services.AddTransient<IApplicationService,ApplicationService>();
             builder.Services.AddTransient<IAdminService, AdminService>();
+            builder.Services.AddTransient<IJwtService, JwtService>();
         }
     }
 }
