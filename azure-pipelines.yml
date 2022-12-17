@@ -2,7 +2,7 @@ trigger:
 - dev
 
 variables:
-  azureSubscription: '657f411b-3b8f-4b31-b5bf-38bc6f455e66'
+  azureSubscription: '2d0f8ce7-3fb0-4016-969e-ff8f6af6e15d'
   functionAppName: 'test2diiage2'
   vmImageName: 'windows-latest'
   workingDirectory: '$(System.DefaultWorkingDirectory)/AzureFunctionEFCore/SecurityServer.Function'
