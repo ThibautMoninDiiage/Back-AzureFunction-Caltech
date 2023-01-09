@@ -21,7 +21,7 @@ namespace SecurityServer.Service
             _apiSettings = apiSettings;
         }
 
-        public string generateJwtToken(User user)
+        public string generateJwtToken(int idUser,int idRole)
         {
             // génère un token valide pour 7 jours
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -30,8 +30,8 @@ namespace SecurityServer.Service
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim("id", user.Id.ToString()),
-                    //new Claim("idRole", user.IdRole.ToString()), A modifier
+                    new Claim("id", idUser.ToString()),
+                    new Claim("idRole", idRole.ToString()),
                     // Cela va garantir que le token est unique
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),

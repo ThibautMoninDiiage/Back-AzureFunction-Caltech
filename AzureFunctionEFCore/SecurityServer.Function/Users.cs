@@ -38,16 +38,35 @@ namespace SecurityServer.Function
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             UserDtoUp userDtoUp = JsonConvert.DeserializeObject<UserDtoUp>(requestBody);
 
-            if (userDtoUp.Mail == null || userDtoUp.Password == null)
-                return new BadRequestResult();
-            else
+            if(userDtoUp.Url == null)
             {
-                UserDtoDown userResult = await _userService.Authenticate(userDtoUp);
-
-                if (userResult == null)
+                //Connexion sur le serveur de sécurité
+                if (userDtoUp.Mail == null || userDtoUp.Password == null)
                     return new BadRequestResult();
                 else
-                    return new OkObjectResult(userResult);
+                {
+                    UserDtoDown userResult = await _userService.Authenticate(userDtoUp);
+
+                    if (userResult == null)
+                        return new BadRequestResult();
+                    else
+                        return new OkObjectResult(userResult);
+                }
+            }
+            else
+            {
+                //Connexion sur une autre appli
+                if (userDtoUp.Mail == null || userDtoUp.Password == null)
+                    return new BadRequestResult();
+                else
+                {
+                    UserDtoDown userResult = await _userService.AuthenticateWithUrl(userDtoUp);
+
+                    if (userResult == null)
+                        return new BadRequestResult();
+                    else
+                        return new OkObjectResult(userResult);
+                }
             }
         }
 

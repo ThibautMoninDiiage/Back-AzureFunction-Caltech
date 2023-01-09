@@ -4,7 +4,6 @@ using SecurityServer.Models.Models;
 using SecurityServer.Service.DTO.Down;
 using SecurityServer.Service.DTO.Up;
 using SecurityServer.Service.Interfaces;
-using System.Linq;
 using System.Security.Cryptography;
 
 namespace SecurityServer.Service
@@ -34,12 +33,23 @@ namespace SecurityServer.Service
                 Salt = Convert.ToBase64String(salt)
             };
 
-            //if (string.IsNullOrEmpty(model.Role.Name))
-            //    user.IdRole = 2;
-            //else
-            //    user.IdRole = 1;
-
             _uow.UserRepository.Add(user);
+            await _uow.CommitAsync();
+
+            User userCreated = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
+
+            ApplicationUserRole applicationUserRole = null;
+
+            if (string.IsNullOrEmpty(model.Role.Name))
+            {
+                applicationUserRole = new ApplicationUserRole() { ApplicationId = 1, UserId = userCreated.Id, RoleId = 2 };
+            }
+            else
+            {
+                applicationUserRole = new ApplicationUserRole() { ApplicationId = 1, UserId = userCreated.Id, RoleId = 1 };
+            }
+
+            _uow.ApplicationUserRoleRepository.Add(applicationUserRole);
             await _uow.CommitAsync();
 
             return user;
@@ -52,7 +62,7 @@ namespace SecurityServer.Service
             List<UserAllDtoDown> userAllDtoDowns = new List<UserAllDtoDown>();
 
             // A modifier pour role
-            users.ForEach(u => userAllDtoDowns.Add(new UserAllDtoDown() { Id = u.Id, Avatar = u.Avatar, Mail = u.Mail, Username = u.Username,Role = new RoleUserDtoDown()}));
+            users.ForEach(u => userAllDtoDowns.Add(new UserAllDtoDown() { Id = u.Id, Avatar = u.Avatar, Mail = u.Mail, Username = u.Username}));
 
             return userAllDtoDowns;
         }

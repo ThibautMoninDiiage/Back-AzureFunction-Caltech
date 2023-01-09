@@ -31,15 +31,18 @@ namespace SecurityServer.Service
         {
             User user = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
 
-            if (user == null)
-                return null;
+            if (user == null) return null;
+
+            ApplicationUserRole applicationUserRole = await _uow.ApplicationUserRoleRepository.GetAsync(x => x.Application.Id == 1 && x.User.Id == user.Id);
+
+            if (applicationUserRole == null) return null;
 
             string hashedPassword = _jwtService.HashPasswordWithSalt(model.Password, Convert.FromBase64String(user.Salt));
 
             if (user.Password != hashedPassword)
                 return null;
 
-            string? token = _jwtService.generateJwtToken(user);
+            string? token = _jwtService.generateJwtToken(user.Id,applicationUserRole.RoleId);
 
             return new UserDtoDown(user, token);
         }
@@ -48,16 +51,16 @@ namespace SecurityServer.Service
         {
 
             User userVerify = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
+            Role role = await _uow.RoleRepository.GetAsync(x => x.Name == model.Role.Name);
 
-            if (userVerify != null)
-                return null;
+            if (userVerify != null) return null;
 
             var salt = _jwtService.GenerateSalt();
             var hashedPassword = _jwtService.HashPasswordWithSalt(model.Password, salt);
 
             // A modifier
 
-            var user = new User
+            User user = new User
             {
                 Mail = model.Mail,
                 Avatar = model.Avatar,
@@ -65,7 +68,6 @@ namespace SecurityServer.Service
                 Password = hashedPassword,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                //IdRole = 2,
                 Salt = Convert.ToBase64String(salt)
             };
 
@@ -74,7 +76,17 @@ namespace SecurityServer.Service
 
             User userCreated = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
 
-            var token = _jwtService.generateJwtToken(userCreated);
+            ApplicationUserRole applicationUserRole = new ApplicationUserRole()
+            {
+                UserId = userCreated.Id,
+                RoleId = role.Id,
+                ApplicationId = model.ApplicationId,
+            };
+
+            _uow.ApplicationUserRoleRepository.Add(applicationUserRole);
+            await _uow.CommitAsync();
+
+            var token = _jwtService.generateJwtToken(userCreated.Id,role.Id);
             return new UserDtoDown(user, token);
         }
 
@@ -92,6 +104,30 @@ namespace SecurityServer.Service
             _uow.UserRepository.Update(user);
             await _uow.CommitAsync();
             return user;
+        }
+
+        public async Task<UserDtoDown> AuthenticateWithUrl(UserDtoUp model)
+        {
+            User user = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
+
+            if (user == null) return null;
+
+            Application application = await _uow.ApplicationRepository.GetAsync(x => x.Url == model.Url);
+
+            if (application == null) return null;
+
+            ApplicationUserRole applicationUserRole = await _uow.ApplicationUserRoleRepository.GetAsync(x => x.Application.Id == application.Id && x.User.Id == user.Id);
+
+            if (applicationUserRole == null) return null;
+
+            string hashedPassword = _jwtService.HashPasswordWithSalt(model.Password, Convert.FromBase64String(user.Salt));
+
+            if (user.Password != hashedPassword)
+                return null;
+
+            string? token = _jwtService.generateJwtToken(user.Id, applicationUserRole.RoleId);
+
+            return new UserDtoDown(user, token);
         }
     }
 }
