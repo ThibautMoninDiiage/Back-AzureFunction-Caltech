@@ -39,7 +39,7 @@ namespace SecurityServer.Service
                     Description = application.Description,
                     Name = application.Name,
                     Url = application.Url,
-                    Users = new(),
+                    //Users = new(), A modifier
                 };
 
                 _iuow.ApplicationRepository.Add(committed);

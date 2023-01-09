@@ -34,10 +34,10 @@ namespace SecurityServer.Service
                 Salt = Convert.ToBase64String(salt)
             };
 
-            if (string.IsNullOrEmpty(model.Role.Name))
-                user.IdRole = 2;
-            else
-                user.IdRole = 1;
+            //if (string.IsNullOrEmpty(model.Role.Name))
+            //    user.IdRole = 2;
+            //else
+            //    user.IdRole = 1;
 
             _uow.UserRepository.Add(user);
             await _uow.CommitAsync();
@@ -51,7 +51,8 @@ namespace SecurityServer.Service
             List<User> users = _uow.UserRepository.GetAllAsync().Result.ToList();
             List<UserAllDtoDown> userAllDtoDowns = new List<UserAllDtoDown>();
 
-            users.ForEach(u => userAllDtoDowns.Add(new UserAllDtoDown() { Id = u.Id, Avatar = u.Avatar, Mail = u.Mail, Username = u.Username,Role = new RoleUserDtoDown() { Name = GetRoleById((int)u.IdRole).Name} }));
+            // A modifier pour role
+            users.ForEach(u => userAllDtoDowns.Add(new UserAllDtoDown() { Id = u.Id, Avatar = u.Avatar, Mail = u.Mail, Username = u.Username,Role = new RoleUserDtoDown()}));
 
             return userAllDtoDowns;
         }

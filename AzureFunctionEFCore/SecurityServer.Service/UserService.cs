@@ -55,6 +55,8 @@ namespace SecurityServer.Service
             var salt = _jwtService.GenerateSalt();
             var hashedPassword = _jwtService.HashPasswordWithSalt(model.Password, salt);
 
+            // A modifier
+
             var user = new User
             {
                 Mail = model.Mail,
@@ -63,7 +65,7 @@ namespace SecurityServer.Service
                 Password = hashedPassword,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                IdRole = 2,
+                //IdRole = 2,
                 Salt = Convert.ToBase64String(salt)
             };
 

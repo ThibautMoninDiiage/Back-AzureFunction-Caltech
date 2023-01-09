@@ -35,7 +35,7 @@ namespace SecurityServer.Service
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim("id", user.Id.ToString()),
-                    new Claim("idRole", user.IdRole.ToString()),
+                    //new Claim("idRole", user.IdRole.ToString()), A modifier
                     // Cela va garantir que le token est unique
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),
