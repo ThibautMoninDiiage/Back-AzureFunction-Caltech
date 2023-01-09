@@ -9,6 +9,7 @@ namespace SecurityServer.DataAccess.SecurityServerContext
         public DbSet<User>? Users { get; set; }
         public DbSet<Application> Applications { get; set; }
         public DbSet<ApplicationUserRole> ApplicationUserRoles { get; set; }
+        public DbSet<Claim> Claims { get; set; }
 
         public DbContextServer(DbContextOptions<DbContextServer> options) : base(options)
         {
@@ -21,6 +22,10 @@ namespace SecurityServer.DataAccess.SecurityServerContext
             modelBuilder.Entity<ApplicationUserRole>().HasOne(a => a.Role).WithMany(r => r.ApplicationUserRoles).HasForeignKey(a => a.RoleId);
             modelBuilder.Entity<ApplicationUserRole>().HasOne(a => a.User).WithMany(r => r.ApplicationUserRoles).HasForeignKey(a => a.UserId);
             modelBuilder.Entity<ApplicationUserRole>().HasOne(a => a.Application).WithMany(r => r.ApplicationUserRoles).HasForeignKey(a => a.ApplicationId);
+            modelBuilder.Entity<Claim>().HasMany(c => c.Applications);
+            modelBuilder.Entity<Claim>().HasMany(c => c.Users);
+            modelBuilder.Entity<User>().HasMany(u => u.Claims);
+            modelBuilder.Entity<Application>().HasMany(a => a.Claims);
         }
     }
 }

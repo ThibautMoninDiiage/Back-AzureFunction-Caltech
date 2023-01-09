@@ -2,16 +2,12 @@
 using Microsoft.IdentityModel.Tokens;
 using SecurityServer.Models.Models;
 using SecurityServer.Models;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
 using SecurityServer.Service.Interfaces;
+using Claim = System.Security.Claims.Claim;
 
 namespace SecurityServer.Service
 {

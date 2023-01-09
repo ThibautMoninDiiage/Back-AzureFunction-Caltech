@@ -23,7 +23,7 @@ namespace SecurityServer.Models.Models
         [JsonIgnore]
         public string? Salt { get; set; }
         [JsonIgnore]
-        public List<Claim> Claims { get; set; }
+        public List<Claim>? Claims { get; set; }
         public List<ApplicationUserRole>? ApplicationUserRoles { get; set; }
     }
 }
