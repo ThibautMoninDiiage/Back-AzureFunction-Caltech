@@ -13,8 +13,7 @@ namespace SecurityServer.Models.Models
         [Required]
         public string? Description { get; set; }
         [JsonIgnore]
-        public List<User>? Users { get; set; }
-        [JsonIgnore]
         public List<Claim> Claims { get; set; }
+        public List<ApplicationUserRole>? ApplicationUserRoles { get; set; }
     }
 }

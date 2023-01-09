@@ -32,19 +32,20 @@ namespace SecurityServer.Function
         [OpenApiOperation(operationId: "ServeurConnexion", tags: new[] { "User" })]
         [OpenApiRequestBody("userDtoUp", typeof(UserDtoUp))]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(UserDtoDown), Description = "Response")]
-        public async Task<IActionResult> ServeurConnexion([HttpTrigger(AuthorizationLevel.Anonymous,"post", Route = "connexion")] HttpRequest req)
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(void))]
+        public async Task<IActionResult> ServeurConnexion([HttpTrigger(AuthorizationLevel.Anonymous,"post", Route = "signin")] HttpRequest req)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             UserDtoUp userDtoUp = JsonConvert.DeserializeObject<UserDtoUp>(requestBody);
 
-            if (userDtoUp.UserName == null || userDtoUp.Password == null)
+            if (userDtoUp.Mail == null || userDtoUp.Password == null)
                 return new BadRequestResult();
             else
             {
                 UserDtoDown userResult = await _userService.Authenticate(userDtoUp);
 
                 if (userResult == null)
-                    return new EmptyResult();
+                    return new BadRequestResult();
                 else
                     return new OkObjectResult(userResult);
             }
@@ -55,7 +56,8 @@ namespace SecurityServer.Function
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
         [OpenApiParameter(name: "id", In = ParameterLocation.Path, Required = true, Type = typeof(int))]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(User), Description = "The OK response")]
-        public async Task<IActionResult> GetUserById([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route + "/{id}")] HttpRequest req, ILogger log, int? id)
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(void))]
+        public async Task<IActionResult> GetUserById([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route + "/{id}")]HttpRequest req,ILogger log, int? id)
         {
             try
             {
@@ -66,7 +68,7 @@ namespace SecurityServer.Function
                     User result = await _userService.GetById(id);
 
                     if (result == null)
-                        return new EmptyResult();
+                        return new BadRequestResult();
                     else
                         return new OkObjectResult(result);
                 }
@@ -83,7 +85,8 @@ namespace SecurityServer.Function
         [OpenApiRequestBody("user",typeof(UserCreationDtoUp))]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(UserDtoDown), Description = "Response")]
-        public async Task<IActionResult> CreateUser([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Route)] HttpRequest req,ILogger logger)
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(void))]
+        public async Task<IActionResult> CreateUser([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "signup")] HttpRequest req, ILogger logger)
         {
             try
             {
@@ -109,6 +112,7 @@ namespace SecurityServer.Function
         [OpenApiRequestBody("user", typeof(UserModifyDtoUp))]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(User), Description = "Response")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(void))]
         public async Task<IActionResult> ModifyUser([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = Route)] HttpRequest req, ILogger log)
         {
             try

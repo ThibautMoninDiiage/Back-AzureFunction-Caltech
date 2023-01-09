@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SecurityServer.Service.DTO.Down;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace SecurityServer.Service.DTO.Up
@@ -11,6 +12,6 @@ namespace SecurityServer.Service.DTO.Up
         public string? Password { get; set; }
         public string? Avatar { get; set; }
         public string? Mail { get; set; }
-        public string? Role { get; set; }
+        public RoleUserDtoDown Role { get; set; }
     }
 }

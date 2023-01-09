@@ -11,8 +11,6 @@ namespace SecurityServer.Models.Models
         [Required]
         public string? Name { get; set; }
         [JsonIgnore]
-        public List<User>? Users { get; set; }
-        [JsonIgnore]
-        public List<Application> Applications { get; set; }
+        public List<ApplicationUserRole>? ApplicationUserRoles { get; set; }
     }
 }
