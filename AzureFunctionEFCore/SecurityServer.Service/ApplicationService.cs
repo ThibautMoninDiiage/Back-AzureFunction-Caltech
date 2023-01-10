@@ -39,6 +39,7 @@ namespace SecurityServer.Service
                     Description = application.Description,
                     Name = application.Name,
                     Url = application.Url,
+                    RedirectUri = application.RedirectUri
                     //Users = new(), A modifier
                 };
 
@@ -48,7 +49,8 @@ namespace SecurityServer.Service
                 return _iuow.ApplicationRepository.Get(app => 
                     app.Name == committed.Name &&
                     app.Url == committed.Url &&
-                    app.Description == (committed.Description ?? "")
+                    app.Description == (committed.Description ?? "") &&
+                    app.RedirectUri == committed.RedirectUri
                 );
             });
         }
