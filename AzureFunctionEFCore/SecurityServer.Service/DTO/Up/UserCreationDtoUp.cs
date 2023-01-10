@@ -11,6 +11,6 @@ namespace SecurityServer.Service.DTO.Up
         public string? Avatar { get; set; }
         public string? Mail { get; set; }
         public RoleUserDtoDown? Role { get; set; }
-        public int ApplicationId { get; set; }
+        public int idApplication { get; set; }
     }
 }

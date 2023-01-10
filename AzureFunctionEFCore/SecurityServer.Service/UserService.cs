@@ -80,7 +80,7 @@ namespace SecurityServer.Service
             {
                 UserId = userCreated.Id,
                 RoleId = role.Id,
-                ApplicationId = model.ApplicationId,
+                ApplicationId = model.idApplication,
             };
 
             _uow.ApplicationUserRoleRepository.Add(applicationUserRole);

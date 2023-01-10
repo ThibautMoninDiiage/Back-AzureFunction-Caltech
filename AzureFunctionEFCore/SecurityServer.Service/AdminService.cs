@@ -19,6 +19,11 @@ namespace SecurityServer.Service
 
         public async Task<User> CreateUser(UserCreationDtoUp model)
         {
+
+            User userVerify = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
+
+            if (userVerify != null) return null;
+
             var salt = GenerateSalt();
             var hashedPassword = HashPasswordWithSalt(model.Password, salt);
 

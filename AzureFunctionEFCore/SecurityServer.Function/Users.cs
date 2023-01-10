@@ -38,7 +38,7 @@ namespace SecurityServer.Function
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             UserDtoUp userDtoUp = JsonConvert.DeserializeObject<UserDtoUp>(requestBody);
 
-            if(userDtoUp.Url == null)
+            if(userDtoUp.Url == null || userDtoUp.Url == "")
             {
                 //Connexion sur le serveur de sécurité
                 if (userDtoUp.Mail == null || userDtoUp.Password == null)
