@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecurityServer.DataAccess.SecurityServerContext;
 
@@ -10,9 +11,10 @@ using SecurityServer.DataAccess.SecurityServerContext;
 namespace SecurityServer.DataAccess.Migrations
 {
     [DbContext(typeof(DbContextServer))]
-    partial class DbContextServerModelSnapshot : ModelSnapshot
+    [Migration("20230109102903_TestTriple4")]
+    partial class TestTriple4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -20,36 +22,6 @@ namespace SecurityServer.DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("ApplicationClaim", b =>
-                {
-                    b.Property<int>("ApplicationsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ClaimsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ApplicationsId", "ClaimsId");
-
-                    b.HasIndex("ClaimsId");
-
-                    b.ToTable("ApplicationClaim");
-                });
-
-            modelBuilder.Entity("ClaimUser", b =>
-                {
-                    b.Property<int>("ClaimsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ClaimsId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("ClaimUser");
-                });
 
             modelBuilder.Entity("SecurityServer.Models.Models.Application", b =>
                 {
@@ -94,22 +66,6 @@ namespace SecurityServer.DataAccess.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ApplicationUserRoles");
-                });
-
-            modelBuilder.Entity("SecurityServer.Models.Models.Claim", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Claims");
                 });
 
             modelBuilder.Entity("SecurityServer.Models.Models.Role", b =>
@@ -166,36 +122,6 @@ namespace SecurityServer.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("ApplicationClaim", b =>
-                {
-                    b.HasOne("SecurityServer.Models.Models.Application", null)
-                        .WithMany()
-                        .HasForeignKey("ApplicationsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SecurityServer.Models.Models.Claim", null)
-                        .WithMany()
-                        .HasForeignKey("ClaimsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ClaimUser", b =>
-                {
-                    b.HasOne("SecurityServer.Models.Models.Claim", null)
-                        .WithMany()
-                        .HasForeignKey("ClaimsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SecurityServer.Models.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("SecurityServer.Models.Models.ApplicationUserRole", b =>

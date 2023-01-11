@@ -2,16 +2,12 @@
 using Microsoft.IdentityModel.Tokens;
 using SecurityServer.Models.Models;
 using SecurityServer.Models;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
 using SecurityServer.Service.Interfaces;
+using Claim = System.Security.Claims.Claim;
 
 namespace SecurityServer.Service
 {
@@ -25,7 +21,7 @@ namespace SecurityServer.Service
             _apiSettings = apiSettings;
         }
 
-        public string generateJwtToken(User user)
+        public string generateJwtToken(int idUser,int idRole)
         {
             // génère un token valide pour 7 jours
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -34,8 +30,8 @@ namespace SecurityServer.Service
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim("id", user.Id.ToString()),
-                    new Claim("idRole", user.IdRole.ToString()),
+                    new Claim("id", idUser.ToString()),
+                    new Claim("idRole", idRole.ToString()),
                     // Cela va garantir que le token est unique
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),

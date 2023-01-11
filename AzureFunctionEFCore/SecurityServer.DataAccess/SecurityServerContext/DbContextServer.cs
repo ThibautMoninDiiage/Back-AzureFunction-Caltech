@@ -8,6 +8,8 @@ namespace SecurityServer.DataAccess.SecurityServerContext
         public DbSet<Role>? Roles { get; set; }
         public DbSet<User>? Users { get; set; }
         public DbSet<Application> Applications { get; set; }
+        public DbSet<ApplicationUserRole> ApplicationUserRoles { get; set; }
+        public DbSet<Claim> Claims { get; set; }
 
         public DbContextServer(DbContextOptions<DbContextServer> options) : base(options)
         {
@@ -16,8 +18,14 @@ namespace SecurityServer.DataAccess.SecurityServerContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<User>().HasOne(u => u.Role).WithMany(r => r.Users).HasForeignKey(t => t.IdRole);
-            modelBuilder.Entity<Application>().HasMany(u => u.Users);
+            modelBuilder.Entity<ApplicationUserRole>().HasKey(a => new { a.RoleId, a.UserId, a.ApplicationId });
+            modelBuilder.Entity<ApplicationUserRole>().HasOne(a => a.Role).WithMany(r => r.ApplicationUserRoles).HasForeignKey(a => a.RoleId);
+            modelBuilder.Entity<ApplicationUserRole>().HasOne(a => a.User).WithMany(r => r.ApplicationUserRoles).HasForeignKey(a => a.UserId);
+            modelBuilder.Entity<ApplicationUserRole>().HasOne(a => a.Application).WithMany(r => r.ApplicationUserRoles).HasForeignKey(a => a.ApplicationId);
+            modelBuilder.Entity<Claim>().HasMany(c => c.Applications);
+            modelBuilder.Entity<Claim>().HasMany(c => c.Users);
+            modelBuilder.Entity<User>().HasMany(u => u.Claims);
+            modelBuilder.Entity<Application>().HasMany(a => a.Claims);
         }
     }
 }

@@ -9,5 +9,8 @@ namespace SecurityServer.Service.DTO.Up
 
         [Required]
         public string? Password { get; set; }
+
+        [Required]
+        public string? Url { get; set; }
     }
 }
