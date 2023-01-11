@@ -16,12 +16,36 @@ namespace SecurityServer.Service
             _jwtService = jwtService;
         }
 
-        public async Task<User?> GetById(int? id)
+        public async Task<UserGetByIdDtoDown?> GetById(int? id)
         {
             User user = await _uow.UserRepository.GetAsync(x => x.Id == id);
 
+            IEnumerable<ApplicationUserRole> applicationUserRoles = await _uow.ApplicationUserRoleRepository.GetAllAsync(a => a.UserId == user.Id);
+
+            List<ApplicationByUserDtoDown> applications = new List<ApplicationByUserDtoDown>();
+
+            foreach (var item in applicationUserRoles)
+            {
+                Application application = await _uow.ApplicationRepository.GetAsync(a => a.Id == item.ApplicationId);
+                ApplicationByUserDtoDown applicationByUserDtoDown = new ApplicationByUserDtoDown() { Id = application.Id,Description = application.Description, Name = application.Name,RedirectUri = application.RedirectUri, Url = application.Url };
+                Role role = await _uow.RoleRepository.GetAsync(r => r.Id == item.RoleId);
+                RoleByApplicationIdDtoDown roleByApplicationIdDtoDown = new RoleByApplicationIdDtoDown() { Id = role.Id,Name = role.Name};
+                applicationByUserDtoDown.RoleByApplicationIdDtoDown = roleByApplicationIdDtoDown;
+                applications.Add(applicationByUserDtoDown);
+            }
+
+            UserGetByIdDtoDown userGetByIdDtoDown = new UserGetByIdDtoDown()
+            {
+                Id = user.Id,
+                Firstname = user.FirstName,
+                Lastname = user.LastName,
+                Mail = user.Mail,
+                Username = user.Username,
+                ApplicationByUserDtoDown = applications
+            };
+
             if (user != null)
-                return user;
+                return userGetByIdDtoDown;
             else
                 return null;
 
