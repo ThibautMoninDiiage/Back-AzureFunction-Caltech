@@ -41,6 +41,7 @@ namespace SecurityServer.Service
                 Lastname = user.LastName,
                 Mail = user.Mail,
                 Username = user.Username,
+                Avatar = user.Avatar,
                 ApplicationByUserDtoDown = applications
             };
 
