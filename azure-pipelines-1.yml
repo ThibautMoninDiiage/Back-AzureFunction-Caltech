@@ -28,6 +28,18 @@ stages:
     
     - task: DotNetCoreCLI@2
       inputs:
+        command: 'custom'
+        projects: '**/SecurityServer.DataAccess.csproj'
+        custom: 'dotnet ef migrations add migrationName'
+
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'custom'
+        projects: '**/SecurityServer.DataAccess.csproj'
+        custom: 'dotnet ef database update'
+
+    - task: DotNetCoreCLI@2
+      inputs:
         command: 'publish'
         publishWebProjects: false
         projects: '**/*.csproj'
