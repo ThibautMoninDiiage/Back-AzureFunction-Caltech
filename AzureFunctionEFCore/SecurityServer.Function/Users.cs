@@ -45,7 +45,7 @@ namespace SecurityServer.Function
                     return new BadRequestResult();
                 else
                 {
-                    Guid? userResult = await _userService.Authenticate(userDtoUp);
+                    string userResult = await _userService.Authenticate(userDtoUp);
 
                     if (userResult == null)
                         return new BadRequestResult();

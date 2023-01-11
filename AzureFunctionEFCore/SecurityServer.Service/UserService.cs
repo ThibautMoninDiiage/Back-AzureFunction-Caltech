@@ -52,7 +52,7 @@ namespace SecurityServer.Service
 
         }
 
-        public async Task<Guid?> Authenticate(UserDtoUp model)
+        public async Task<string> Authenticate(UserDtoUp model)
         {
             User user = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
 
@@ -69,12 +69,15 @@ namespace SecurityServer.Service
 
             Guid grantCode = _jwtService.GenerateGrantCode();
 
-            Grant grant = new Grant() { ApplicationId = 1,UserId = user.Id, Code = grantCode };
+            Grant grant = new Grant() { ApplicationId = 1,UserId = user.Id, Code = grantCode,CreatedAt = DateTime.Now };
 
+            _uow.GrantRepository.Add(grant);
+            await _uow.CommitAsync();
 
+            Application application = await _uow.ApplicationRepository.GetAsync(a => a.Id == applicationUserRole.ApplicationId);
+
+            return application.Url + "&code=" + grantCode.ToString();
             //string? token = _jwtService.generateJwtToken(user.Id,applicationUserRole.RoleId);
-
-            return grantCode;
         }
 
         public async Task<UserDtoDown> CreateUser(UserCreationDtoUp model)
