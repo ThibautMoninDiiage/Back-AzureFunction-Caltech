@@ -29,7 +29,7 @@ stages:
     - task: DotNetCoreCLI@2
       inputs:
         command: 'custom'
-        projects: '**/SecurityServer.DataAccess.csproj'
+        projects: '**/*.csproj'
         custom: 'dotnet ef migrations add migrationName'
 
     - task: DotNetCoreCLI@2
