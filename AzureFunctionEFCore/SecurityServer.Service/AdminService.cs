@@ -17,7 +17,7 @@ namespace SecurityServer.Service
             _uow = uow;
         }
 
-        public async Task<User> CreateUser(UserCreationDtoUp model)
+        public async Task<UserAdminDtoDown> CreateUser(UserCreationDtoUp model)
         {
 
             User userVerify = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
@@ -57,7 +57,16 @@ namespace SecurityServer.Service
             _uow.ApplicationUserRoleRepository.Add(applicationUserRole);
             await _uow.CommitAsync();
 
-            return user;
+            UserAdminDtoDown userAdminDtoDown = new UserAdminDtoDown()
+            {
+                Id = userCreated.Id,
+                Firstname = userCreated.FirstName,
+                Lastname = userCreated.LastName,
+                Mail = model.Mail,
+                Username = model.Username
+            };
+
+            return userAdminDtoDown;
         }
 
         public async Task<List<UserAllDtoDown>> GetAllUsers()

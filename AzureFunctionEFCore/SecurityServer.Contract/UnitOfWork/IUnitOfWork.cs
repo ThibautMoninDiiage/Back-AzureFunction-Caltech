@@ -8,6 +8,7 @@ namespace SecurityServer.Contract.UnitOfWork
         IRoleRepository RoleRepository { get; }
         IUserRepository UserRepository { get; }
         IApplicationUserRoleRepository ApplicationUserRoleRepository { get; }
+        IGrantRepository GrantRepository { get; }
         void Commit();
         void Rollback();
         Task CommitAsync();

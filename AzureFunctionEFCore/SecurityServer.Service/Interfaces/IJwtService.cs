@@ -7,5 +7,6 @@ namespace SecurityServer.Service.Interfaces
         public string generateJwtToken(int idUser, int idRole);
         public byte[] GenerateSalt();
         public string HashPasswordWithSalt(string password, byte[] salt);
+        public Guid GenerateGrantCode();
     }
 }

@@ -7,7 +7,7 @@ namespace SecurityServer.Service.Interfaces
     public interface IUserService
     {
         public Task<User> GetById(int? id);
-        public Task<UserDtoDown> Authenticate(UserDtoUp model);
+        public Task<Guid?> Authenticate(UserDtoUp model);
         public Task<UserDtoDown> AuthenticateWithUrl(UserDtoUp model);
         public Task<UserDtoDown> CreateUser(UserCreationDtoUp model);
         public Task<User> UpdateUser(UserModifyDtoUp model);
