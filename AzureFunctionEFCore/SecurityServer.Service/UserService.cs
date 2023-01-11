@@ -33,7 +33,7 @@ namespace SecurityServer.Service
 
             if (user == null) return null;
 
-            ApplicationUserRole applicationUserRole = await _uow.ApplicationUserRoleRepository.GetAsync(x => x.Application.Id == 1 && x.User.Id == user.Id);
+            ApplicationUserRole applicationUserRole = await _uow.ApplicationUserRoleRepository.GetAsync(x => x.ApplicationId == 1 && x.UserId == user.Id);
 
             if (applicationUserRole == null) return null;
 
@@ -121,7 +121,7 @@ namespace SecurityServer.Service
 
             if (application == null) return null;
 
-            ApplicationUserRole applicationUserRole = await _uow.ApplicationUserRoleRepository.GetAsync(x => x.Application.Id == application.Id && x.User.Id == user.Id);
+            ApplicationUserRole applicationUserRole = await _uow.ApplicationUserRoleRepository.GetAsync(x => x.ApplicationId == application.Id && x.UserId == user.Id);
 
             if (applicationUserRole == null) return null;
 

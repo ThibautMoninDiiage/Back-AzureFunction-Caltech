@@ -21,9 +21,6 @@ namespace SecurityServer.DataAccess.SecurityServerContext
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<ApplicationUserRole>().HasKey(a => new { a.RoleId, a.UserId, a.ApplicationId });
             modelBuilder.Entity<Grant>().HasKey(g => new { g.UserId, g.ApplicationId });
-            modelBuilder.Entity<ApplicationUserRole>().HasOne(a => a.Role).WithMany(r => r.ApplicationUserRoles).HasForeignKey(a => a.RoleId);
-            modelBuilder.Entity<ApplicationUserRole>().HasOne(a => a.User).WithMany(r => r.ApplicationUserRoles).HasForeignKey(a => a.UserId);
-            modelBuilder.Entity<ApplicationUserRole>().HasOne(a => a.Application).WithMany(r => r.ApplicationUserRoles).HasForeignKey(a => a.ApplicationId);
             modelBuilder.Entity<Claim>().HasMany(c => c.Applications);
             modelBuilder.Entity<Claim>().HasMany(c => c.Users);
             modelBuilder.Entity<User>().HasMany(u => u.Claims);
