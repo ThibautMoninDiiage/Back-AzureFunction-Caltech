@@ -3,7 +3,7 @@ trigger:
 
 variables:
   azureSubscription: 'Azure for Students (2d0f8ce7-3fb0-4016-969e-ff8f6af6e15d)'
-  functionAppName: 'test2diiage2'
+  functionAppName: 'testgroup2'
   vmImageName: 'windows-latest'
   workingDirectory: '$(System.DefaultWorkingDirectory)/AzureFunctionEFCore/SecurityServer.Function'
 
