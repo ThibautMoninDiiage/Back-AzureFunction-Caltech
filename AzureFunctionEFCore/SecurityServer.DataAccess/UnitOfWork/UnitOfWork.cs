@@ -12,6 +12,7 @@ namespace SecurityServer.DataAccess.UnitOfWork
         private IUserRepository? _userRepository;
         private IApplicationRepository? _applicationRepository;
         private IApplicationUserRoleRepository? _applicationUserRoleRepository;
+        private IGrantRepository? _grantRepository;
 
         public UnitOfWork(DbContextServer context)
         {
@@ -33,6 +34,11 @@ namespace SecurityServer.DataAccess.UnitOfWork
         public IApplicationUserRoleRepository ApplicationUserRoleRepository
         {
             get { return _applicationUserRoleRepository = _applicationUserRoleRepository ?? new ApplicationUserRoleRepository(_context); }
+        }
+
+        public IGrantRepository GrantRepository
+        {
+            get { return _grantRepository = _grantRepository ?? new GrantRepository(_context); }
         }
 
         public void Commit()

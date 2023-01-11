@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.IdentityModel.Tokens;
-using SecurityServer.Models.Models;
 using SecurityServer.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -64,6 +63,11 @@ namespace SecurityServer.Service
                 prf: KeyDerivationPrf.HMACSHA256,
                 iterationCount: 100000,
                 numBytesRequested: 256 / 8));
+        }
+
+        public Guid GenerateGrantCode()
+        {
+            return Guid.NewGuid();
         }
     }
 }

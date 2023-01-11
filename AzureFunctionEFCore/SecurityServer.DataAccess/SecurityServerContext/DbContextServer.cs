@@ -10,6 +10,7 @@ namespace SecurityServer.DataAccess.SecurityServerContext
         public DbSet<Application> Applications { get; set; }
         public DbSet<ApplicationUserRole> ApplicationUserRoles { get; set; }
         public DbSet<Claim> Claims { get; set; }
+        public DbSet<Grant> Grants { get; set; }
 
         public DbContextServer(DbContextOptions<DbContextServer> options) : base(options)
         {
@@ -19,6 +20,7 @@ namespace SecurityServer.DataAccess.SecurityServerContext
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<ApplicationUserRole>().HasKey(a => new { a.RoleId, a.UserId, a.ApplicationId });
+            modelBuilder.Entity<Grant>().HasKey(g => new { g.UserId, g.ApplicationId });
             modelBuilder.Entity<ApplicationUserRole>().HasOne(a => a.Role).WithMany(r => r.ApplicationUserRoles).HasForeignKey(a => a.RoleId);
             modelBuilder.Entity<ApplicationUserRole>().HasOne(a => a.User).WithMany(r => r.ApplicationUserRoles).HasForeignKey(a => a.UserId);
             modelBuilder.Entity<ApplicationUserRole>().HasOne(a => a.Application).WithMany(r => r.ApplicationUserRoles).HasForeignKey(a => a.ApplicationId);

@@ -27,7 +27,7 @@ namespace SecurityServer.Service
 
         }
 
-        public async Task<UserDtoDown?> Authenticate(UserDtoUp model)
+        public async Task<Guid?> Authenticate(UserDtoUp model)
         {
             User user = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
 
@@ -42,9 +42,14 @@ namespace SecurityServer.Service
             if (user.Password != hashedPassword)
                 return null;
 
-            string? token = _jwtService.generateJwtToken(user.Id,applicationUserRole.RoleId);
+            Guid grantCode = _jwtService.GenerateGrantCode();
 
-            return new UserDtoDown(user, token);
+            Grant grant = new Grant() { ApplicationId = 1,UserId = user.Id, Code = grantCode };
+
+
+            //string? token = _jwtService.generateJwtToken(user.Id,applicationUserRole.RoleId);
+
+            return grantCode;
         }
 
         public async Task<UserDtoDown> CreateUser(UserCreationDtoUp model)
