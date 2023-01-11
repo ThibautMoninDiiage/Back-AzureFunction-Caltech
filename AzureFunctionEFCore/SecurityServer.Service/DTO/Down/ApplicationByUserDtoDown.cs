@@ -7,6 +7,6 @@
         public string? Url { get; set; }
         public string? Description { get; set; }
         public string? RedirectUri { get; set; }
-        public RoleByApplicationIdDtoDown? RoleByApplicationIdDtoDown { get; set; }
+        public RoleByApplicationIdDtoDown? Role { get; set; }
     }
 }

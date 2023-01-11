@@ -30,7 +30,7 @@ namespace SecurityServer.Service
                 ApplicationByUserDtoDown applicationByUserDtoDown = new ApplicationByUserDtoDown() { Id = application.Id,Description = application.Description, Name = application.Name,RedirectUri = application.RedirectUri, Url = application.Url };
                 Role role = await _uow.RoleRepository.GetAsync(r => r.Id == item.RoleId);
                 RoleByApplicationIdDtoDown roleByApplicationIdDtoDown = new RoleByApplicationIdDtoDown() { Id = role.Id,Name = role.Name};
-                applicationByUserDtoDown.RoleByApplicationIdDtoDown = roleByApplicationIdDtoDown;
+                applicationByUserDtoDown.Role = roleByApplicationIdDtoDown;
                 applications.Add(applicationByUserDtoDown);
             }
 
@@ -42,7 +42,7 @@ namespace SecurityServer.Service
                 Mail = user.Mail,
                 Username = user.Username,
                 Avatar = user.Avatar,
-                ApplicationByUserDtoDown = applications
+                Applications = applications
             };
 
             if (user != null)
