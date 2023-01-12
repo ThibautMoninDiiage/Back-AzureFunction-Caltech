@@ -31,7 +31,7 @@ namespace SecurityServer.Function
         [FunctionName("ServeurConnexion")]
         [OpenApiOperation(operationId: "ServeurConnexion", tags: new[] { "User" })]
         [OpenApiRequestBody("userDtoUp", typeof(UserDtoUp))]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(UserDtoDown), Description = "Response")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(GrantDtoUp), Description = "Response")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(void))]
         public async Task<IActionResult> ServeurConnexion([HttpTrigger(AuthorizationLevel.Anonymous,"post", Route = "signin")] HttpRequest req)
         {
@@ -67,6 +67,29 @@ namespace SecurityServer.Function
                     else
                         return new OkObjectResult(userResult);
                 }
+            }
+        }
+
+        [FunctionName("ConnexionGrant")]
+        [OpenApiOperation(operationId: "ConnexionGrant", tags: new[] { "User" })]
+        [OpenApiRequestBody("GrantDtoUp", typeof(GrantDtoUp))]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(UserDtoDown), Description = "Response")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(void))]
+        public async Task<IActionResult> ConnexionGrant([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "AuthenticateGrant")] HttpRequest req)
+        {
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            GrantDtoUp grantDtoUp  = JsonConvert.DeserializeObject<GrantDtoUp>(requestBody);
+
+            if (grantDtoUp.CodeGrant == null || grantDtoUp.CodeGrant == "")
+                return new BadRequestResult();
+            else
+            {
+                UserDtoDown userResult = await _userService.GetToken(grantDtoUp.CodeGrant);
+
+                if (userResult == null)
+                    return new BadRequestResult();
+                else
+                    return new OkObjectResult(userResult);
             }
         }
 

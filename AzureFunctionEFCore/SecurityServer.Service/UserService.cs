@@ -69,7 +69,7 @@ namespace SecurityServer.Service
 
             Guid grantCode = _jwtService.GenerateGrantCode();
 
-            Grant grant = new Grant() { ApplicationId = 1,UserId = user.Id, Code = grantCode,CreatedAt = DateTime.Now };
+            Grant grant = new Grant() { ApplicationId = 1,UserId = user.Id, Code = grantCode.ToString(),CreatedAt = DateTime.Now };
 
             _uow.GrantRepository.Add(grant);
             await _uow.CommitAsync();
@@ -159,6 +159,22 @@ namespace SecurityServer.Service
                 return null;
 
             string? token = _jwtService.generateJwtToken(user.Id, applicationUserRole.RoleId);
+
+            return new UserDtoDown(user, token);
+        }
+
+        public async Task<UserDtoDown> GetToken(string codeGrant)
+        {
+            Grant grant = await _uow.GrantRepository.GetAsync(g => g.Code == codeGrant);
+
+            ApplicationUserRole applicationUserRole = await _uow.ApplicationUserRoleRepository.GetAsync(a => a.ApplicationId == grant.ApplicationId && a.UserId == grant.UserId);
+
+            User user = await _uow.UserRepository.GetAsync(u => u.Id == applicationUserRole.UserId);
+
+            string token = _jwtService.generateJwtToken(applicationUserRole.UserId, applicationUserRole.RoleId);
+
+            _uow.GrantRepository.Remove(grant);
+            await _uow.CommitAsync();
 
             return new UserDtoDown(user, token);
         }
