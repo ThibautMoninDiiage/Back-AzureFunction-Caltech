@@ -30,7 +30,7 @@ stages:
       displayName: 'Install dotnet-ef'
       inputs:
         command: 'custom'
-        custom: 'dotnet tool'
+        custom: 'tool'
         arguments: 'install --global dotnet-ef'
 
     - task: DotNetCoreCLI@2
