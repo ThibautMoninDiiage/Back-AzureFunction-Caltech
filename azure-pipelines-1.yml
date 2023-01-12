@@ -36,20 +36,20 @@ stages:
     - task: DotNetCoreCLI@2
       inputs:
         command: 'custom'
-        projects: '$(workingDirectory)/SecurityServer.DataAccess.csproj'
+        projects: '**/*.csproj'
         custom: 'dotnet ef migrations add migrationName'
 
     - task: DotNetCoreCLI@2
       inputs:
         command: 'custom'
-        projects: '$(workingDirectory)/SecurityServer.DataAccess.csproj'
+        projects: '**/*.csproj'
         custom: 'dotnet ef database update'
 
     - task: DotNetCoreCLI@2
       inputs:
         command: 'publish'
         publishWebProjects: false
-        projects: '$(workingDirectory)/*.csproj'
+        projects: '**/*.csproj'
         arguments: '--output $(System.DefaultWorkingDirectory)/publish_output --configuration Release'
     
     - task: ArchiveFiles@2
