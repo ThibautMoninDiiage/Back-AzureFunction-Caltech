@@ -36,7 +36,7 @@ stages:
     - task: DotNetCoreCLI@2
       inputs:
         command: 'custom'
-        projects: '**/SecurityServer.DataAccess.csproj.csproj'
+        projects: 'AzureFunctionEFCore/SecurityServer.DataAccess/SecurityServer.DataAccess.csproj.csproj'
         custom: 'ef'
         arguments: 'migrations add test-migration'
         workingDirectory: '$(System.DefaultWorkingDirectory)'
