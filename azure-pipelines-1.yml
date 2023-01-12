@@ -37,7 +37,7 @@ stages:
       inputs:
         command: 'custom'
         projects: '**/*.csproj'
-        custom: 'add migration migrationName'
+        custom: 'dotnet ef migrations add migrationName'
 
     - task: DotNetCoreCLI@2
       inputs:
