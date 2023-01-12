@@ -38,7 +38,7 @@ stages:
         command: 'custom'
         projects: '**/*.csproj'
         custom: 'ef'
-        arguments: 'migrations add test-migration'
+        arguments: '--project "**/SecurityServer.DataAccess.csproj" migrations add test-migration'
 
     - task: DotNetCoreCLI@2
       inputs:
