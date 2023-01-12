@@ -17,5 +17,6 @@ namespace SecurityServer.Service.Interfaces
         public Task<string> DeleteApplication(Application application);
 
         public Task<string> DeleteApplication(int appId);
+        public Task<List<ApplicationUserDtoDown>> GetUserWhereIsNotInAppli(int idApp);
     }
 }

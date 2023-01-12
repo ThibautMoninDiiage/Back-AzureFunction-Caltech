@@ -163,5 +163,27 @@ namespace SecurityServer.Function
             }
         }
         #endregion
+
+        #region LstUserNotInAppli
+        [FunctionName("GetUserWhereIsNotInAppli")]
+        [OpenApiOperation(operationId: "Run", tags: new[] { "Application" })]
+        [OpenApiParameter("id", In = ParameterLocation.Path, Description = "Id of the application", Required = true, Type = typeof(int))]
+        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(List<ApplicationUserDtoDown>), Description = "GetAllUSersOk")]
+        public async Task<IActionResult> GetUserWhereIsNotInAppli([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Route + "/users/{id}")] HttpRequest req, ILogger log, int id)
+        {
+            try
+            {
+                List<ApplicationUserDtoDown> result = await _applicationService.GetUserWhereIsNotInAppli(id);
+
+                return new OkObjectResult(result);
+            }
+            catch (AggregateException ex)
+            {
+                log.LogInformation(ex.Message);
+                return new BadRequestResult();
+            }
+        }
+        #endregion
     }
 }

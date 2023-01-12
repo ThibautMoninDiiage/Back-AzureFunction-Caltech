@@ -8,7 +8,7 @@ namespace SecurityServer.Models.Models
         public int UserId { get; set; }
         public Application? Application { get; set; }
         public int ApplicationId { get; set; }
-        public Guid Code { get; set; }
+        public string? Code { get; set; }
         public DateTime? CreatedAt { get; set; }
     }
 }

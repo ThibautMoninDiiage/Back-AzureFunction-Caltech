@@ -52,7 +52,7 @@ namespace SecurityServer.Service
 
         }
 
-        public async Task<Guid?> Authenticate(UserDtoUp model)
+        public async Task<string> Authenticate(UserDtoUp model)
         {
             User user = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
 
@@ -69,12 +69,15 @@ namespace SecurityServer.Service
 
             Guid grantCode = _jwtService.GenerateGrantCode();
 
-            Grant grant = new Grant() { ApplicationId = 1,UserId = user.Id, Code = grantCode };
+            Grant grant = new Grant() { ApplicationId = 1,UserId = user.Id, Code = grantCode.ToString(),CreatedAt = DateTime.Now };
 
+            _uow.GrantRepository.Add(grant);
+            await _uow.CommitAsync();
 
+            Application application = await _uow.ApplicationRepository.GetAsync(a => a.Id == applicationUserRole.ApplicationId);
+
+            return application.Url + "&code=" + grantCode.ToString();
             //string? token = _jwtService.generateJwtToken(user.Id,applicationUserRole.RoleId);
-
-            return grantCode;
         }
 
         public async Task<UserDtoDown> CreateUser(UserCreationDtoUp model)
@@ -158,6 +161,32 @@ namespace SecurityServer.Service
             string? token = _jwtService.generateJwtToken(user.Id, applicationUserRole.RoleId);
 
             return new UserDtoDown(user, token);
+        }
+
+        public async Task<UserDtoDown> GetToken(string codeGrant)
+        {
+            Grant grant = await _uow.GrantRepository.GetAsync(g => g.Code == codeGrant);
+
+            ApplicationUserRole applicationUserRole = await _uow.ApplicationUserRoleRepository.GetAsync(a => a.ApplicationId == grant.ApplicationId && a.UserId == grant.UserId);
+
+            User user = await _uow.UserRepository.GetAsync(u => u.Id == applicationUserRole.UserId);
+
+            string token = _jwtService.generateJwtToken(applicationUserRole.UserId, applicationUserRole.RoleId);
+
+            _uow.GrantRepository.Remove(grant);
+            await _uow.CommitAsync();
+
+            return new UserDtoDown(user, token);
+        }
+
+        public async Task<bool> AddExistantUser(AddUserInApplicationDtoDown model)
+        {
+            Role role = await _uow.RoleRepository.GetAsync(r => r.Name == model.Role.Name);
+
+            ApplicationUserRole applicationUserRole = new ApplicationUserRole() { ApplicationId = model.ApplicationId, RoleId = role.Id, UserId = model.UserId };
+            _uow.ApplicationUserRoleRepository.Add(applicationUserRole);
+            await _uow.CommitAsync();
+            return true;
         }
     }
 }

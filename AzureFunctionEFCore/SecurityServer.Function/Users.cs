@@ -31,7 +31,7 @@ namespace SecurityServer.Function
         [FunctionName("ServeurConnexion")]
         [OpenApiOperation(operationId: "ServeurConnexion", tags: new[] { "User" })]
         [OpenApiRequestBody("userDtoUp", typeof(UserDtoUp))]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(UserDtoDown), Description = "Response")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "Response")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(void))]
         public async Task<IActionResult> ServeurConnexion([HttpTrigger(AuthorizationLevel.Anonymous,"post", Route = "signin")] HttpRequest req)
         {
@@ -45,12 +45,12 @@ namespace SecurityServer.Function
                     return new BadRequestResult();
                 else
                 {
-                    Guid? userResult = await _userService.Authenticate(userDtoUp);
+                    string userResult = await _userService.Authenticate(userDtoUp);
 
                     if (userResult == null)
                         return new BadRequestResult();
                     else
-                        return new OkObjectResult(userResult);
+                        return new RedirectResult(userResult);
                 }
             }
             else
@@ -67,6 +67,29 @@ namespace SecurityServer.Function
                     else
                         return new OkObjectResult(userResult);
                 }
+            }
+        }
+
+        [FunctionName("ConnexionGrant")]
+        [OpenApiOperation(operationId: "ConnexionGrant", tags: new[] { "User" })]
+        [OpenApiRequestBody("GrantDtoUp", typeof(GrantDtoUp))]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(UserDtoDown), Description = "Response")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(void))]
+        public async Task<IActionResult> ConnexionGrant([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "AuthenticateGrant")] HttpRequest req)
+        {
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            GrantDtoUp grantDtoUp  = JsonConvert.DeserializeObject<GrantDtoUp>(requestBody);
+
+            if (grantDtoUp.CodeGrant == null || grantDtoUp.CodeGrant == "")
+                return new BadRequestResult();
+            else
+            {
+                UserDtoDown userResult = await _userService.GetToken(grantDtoUp.CodeGrant);
+
+                if (userResult == null)
+                    return new BadRequestResult();
+                else
+                    return new OkObjectResult(userResult);
             }
         }
 
@@ -140,6 +163,33 @@ namespace SecurityServer.Function
                 UserModifyDtoUp user = JsonConvert.DeserializeObject<UserModifyDtoUp>(requestBody);
 
                 User result = await _userService.UpdateUser(user);
+
+                if (result == null)
+                    return new BadRequestResult();
+                else
+                    return new OkObjectResult(result);
+            }
+            catch (AggregateException ex)
+            {
+                log.LogInformation(ex.Message);
+                return new BadRequestResult();
+            }
+        }
+
+        [FunctionName("AjoutExistantUser")]
+        [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
+        [OpenApiRequestBody("AddUserInApplicationDtoDown", typeof(AddUserInApplicationDtoDown))]
+        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(User), Description = "Response")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(void))]
+        public async Task<IActionResult> AjoutExistantUser([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = Route+"/AddUser")] HttpRequest req, ILogger log)
+        {
+            try
+            {
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                AddUserInApplicationDtoDown user = JsonConvert.DeserializeObject<AddUserInApplicationDtoDown>(requestBody);
+
+                bool result = await _userService.AddExistantUser(user);
 
                 if (result == null)
                     return new BadRequestResult();
