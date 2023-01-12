@@ -43,16 +43,9 @@ namespace SecurityServer.Service
 
             User userCreated = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
 
-            ApplicationUserRole applicationUserRole = null;
+            Role role = await _uow.RoleRepository.GetAsync(r => r.Name == model.Role.Name);
 
-            if (string.IsNullOrEmpty(model.Role.Name))
-            {
-                applicationUserRole = new ApplicationUserRole() { ApplicationId = 1, UserId = userCreated.Id, RoleId = 2 };
-            }
-            else
-            {
-                applicationUserRole = new ApplicationUserRole() { ApplicationId = 1, UserId = userCreated.Id, RoleId = 1 };
-            }
+            ApplicationUserRole applicationUserRole = new ApplicationUserRole() { ApplicationId = model.idApplication,UserId = userCreated.Id, RoleId = role.Id};
 
             _uow.ApplicationUserRoleRepository.Add(applicationUserRole);
             await _uow.CommitAsync();
