@@ -26,6 +26,9 @@ stages:
           $(workingDirectory)/*.csproj
         arguments: --output $(System.DefaultWorkingDirectory)/publish_output --configuration Release
     
+    - script: dir $(System.DefaultWorkingDirectory)
+      displayName: "Test"
+      
     - task: DotNetCoreCLI@2
       displayName: 'Install dotnet-ef'
       inputs:
@@ -36,9 +39,9 @@ stages:
     - task: DotNetCoreCLI@2
       inputs:
         command: 'custom'
-        projects: '**/*.csproj'
+        projects: '**/SecurityServer.DataAccess.csproj'
         custom: 'ef'
-        arguments: '--project "D:\a\1\s\AzureFunctionEFCore\SecurityServer.DataAccess\SecurityServer.DataAccess.csproj" migrations add test-migration'
+        arguments: 'migrations add test-migration'
 
     - task: DotNetCoreCLI@2
       inputs:
