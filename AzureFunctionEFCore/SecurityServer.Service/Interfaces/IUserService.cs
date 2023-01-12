@@ -12,5 +12,6 @@ namespace SecurityServer.Service.Interfaces
         public Task<UserDtoDown> AuthenticateWithUrl(UserDtoUp model);
         public Task<UserDtoDown> CreateUser(UserCreationDtoUp model);
         public Task<User> UpdateUser(UserModifyDtoUp model);
+        public Task<bool> AddExistantUser(AddUserInApplicationDtoDown model);
     }
 }

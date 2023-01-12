@@ -178,5 +178,15 @@ namespace SecurityServer.Service
 
             return new UserDtoDown(user, token);
         }
+
+        public async Task<bool> AddExistantUser(AddUserInApplicationDtoDown model)
+        {
+            Role role = await _uow.RoleRepository.GetAsync(r => r.Name == model.Role.Name);
+
+            ApplicationUserRole applicationUserRole = new ApplicationUserRole() { ApplicationId = model.ApplicationId, RoleId = role.Id, UserId = model.UserId };
+            _uow.ApplicationUserRoleRepository.Add(applicationUserRole);
+            await _uow.CommitAsync();
+            return true;
+        }
     }
 }

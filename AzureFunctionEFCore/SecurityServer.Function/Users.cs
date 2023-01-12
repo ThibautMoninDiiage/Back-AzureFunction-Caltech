@@ -175,5 +175,32 @@ namespace SecurityServer.Function
                 return new BadRequestResult();
             }
         }
+
+        [FunctionName("AjoutExistantUser")]
+        [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
+        [OpenApiRequestBody("AddUserInApplicationDtoDown", typeof(AddUserInApplicationDtoDown))]
+        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(User), Description = "Response")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(void))]
+        public async Task<IActionResult> AjoutExistantUser([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = Route+"/AddUser")] HttpRequest req, ILogger log)
+        {
+            try
+            {
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                AddUserInApplicationDtoDown user = JsonConvert.DeserializeObject<AddUserInApplicationDtoDown>(requestBody);
+
+                bool result = await _userService.AddExistantUser(user);
+
+                if (result == null)
+                    return new BadRequestResult();
+                else
+                    return new OkObjectResult(result);
+            }
+            catch (AggregateException ex)
+            {
+                log.LogInformation(ex.Message);
+                return new BadRequestResult();
+            }
+        }
     }
 }
