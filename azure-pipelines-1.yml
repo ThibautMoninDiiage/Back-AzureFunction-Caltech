@@ -39,6 +39,7 @@ stages:
         projects: '**/SecurityServer.DataAccess.csproj.csproj'
         custom: 'ef'
         arguments: 'migrations add test-migration'
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
 
     - task: DotNetCoreCLI@2
       inputs:
