@@ -18,15 +18,41 @@ namespace SecurityServer.Service
 
         public async Task<IEnumerable<ApplicationDtoDown>> GetAllApplications()
         {
-            return 
-                (await _iuow.ApplicationRepository.GetAllAsync())
-                .Select(app => new ApplicationDtoDown
+            List<ApplicationDtoDown> applicationsDtoDown = new List<ApplicationDtoDown>();
+            IEnumerable<Application> applications = await _iuow.ApplicationRepository.GetAllAsync();
+
+            foreach (var application in applications)
+            {
+                IEnumerable<ApplicationUserRole> applicationUserRoles = await _iuow.ApplicationUserRoleRepository.GetAllAsync(a => a.ApplicationId == application.Id);
+                List<UserByApplicationDtoDown> users = new List<UserByApplicationDtoDown>();
+
+                foreach (var applicationUserRole in applicationUserRoles)
                 {
-                    Id = app.Id,
-                    Description = app.Description,
-                    Name = app.Name,
-                    Url = app.Url
-                });
+                    User user = await _iuow.UserRepository.GetAsync(u => u.Id == applicationUserRole.UserId);
+                    Role role = await _iuow.RoleRepository.GetAsync(r => r.Id == applicationUserRole.RoleId);
+
+                    RoleByApplicationIdDtoDown roleByApplicationIdDtoDown = new RoleByApplicationIdDtoDown() { Id = role.Id, Name = role.Name };
+
+                    UserByApplicationDtoDown userByApplicationDtoDown = new UserByApplicationDtoDown()
+                    {
+                        Id = user.Id,
+                        Firstname = user.FirstName,
+                        Lastname = user.LastName,
+                        Avatar = user.Avatar,
+                        Mail = user.Mail,
+                        Username = user.Username,
+                        Role = roleByApplicationIdDtoDown
+                    };
+
+                    users.Add(userByApplicationDtoDown);
+                }
+
+                ApplicationDtoDown applicationDtoDown = new ApplicationDtoDown() { Id = application.Id,Description = application.Description,Name = application.Name,Url = application.Url,Users = users};
+                applicationsDtoDown.Add(applicationDtoDown);
+
+            }
+
+            return applicationsDtoDown;
         }
 
         public async Task<Application> CreateApplication(ApplicationCreationDtoUp application)
