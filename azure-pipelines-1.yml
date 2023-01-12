@@ -27,22 +27,29 @@ stages:
         arguments: --output $(System.DefaultWorkingDirectory)/publish_output --configuration Release
     
     - task: DotNetCoreCLI@2
+      displayName: 'Install dotnet-ef'
       inputs:
         command: 'custom'
-        projects: '**/*.csproj'
+        custom: 'tool'
+        arguments: 'install --global dotnet-ef'
+
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'custom'
+        projects: '$(workingDirectory)/SecurityServer.DataAccess.csproj'
         custom: 'dotnet ef migrations add migrationName'
 
     - task: DotNetCoreCLI@2
       inputs:
         command: 'custom'
-        projects: '**/SecurityServer.DataAccess.csproj'
+        projects: '$(workingDirectory)/SecurityServer.DataAccess.csproj'
         custom: 'dotnet ef database update'
 
     - task: DotNetCoreCLI@2
       inputs:
         command: 'publish'
         publishWebProjects: false
-        projects: '**/*.csproj'
+        projects: '$(workingDirectory)/*.csproj'
         arguments: '--output $(System.DefaultWorkingDirectory)/publish_output --configuration Release'
     
     - task: ArchiveFiles@2
