@@ -26,9 +26,9 @@ stages:
           $(workingDirectory)/*.csproj
         arguments: --output $(System.DefaultWorkingDirectory)/publish_output --configuration Release
     
-    - script: dir $(System.DefaultWorkingDirectory)
+    - script: dir $(System.DefaultWorkingDirectory)/AzureFunctionEFCore/SecurityServer.DataAccess
       displayName: "Test"
-      
+
     - task: DotNetCoreCLI@2
       displayName: 'Install dotnet-ef'
       inputs:
