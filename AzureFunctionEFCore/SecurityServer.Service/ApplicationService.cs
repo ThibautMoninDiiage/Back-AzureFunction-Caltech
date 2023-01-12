@@ -133,5 +133,24 @@ namespace SecurityServer.Service
                 return app;
             });
         }
+
+        public async Task<List<ApplicationUserDtoDown>> GetUserWhereIsNotInAppli(int idApp)
+        {
+            List<ApplicationUserDtoDown> applicationUserDtoDowns = new List<ApplicationUserDtoDown>();
+
+            //IEnumerable<Application> applications = await _iuow.ApplicationRepository.GetAllAsync(a => a.Id == idApp);
+            IEnumerable<ApplicationUserRole> applicationUserRoles = await _iuow.ApplicationUserRoleRepository.GetAllAsync(a => a.ApplicationId == idApp);
+            IEnumerable<User> users = await _iuow.UserRepository.GetAllAsync();
+
+            IEnumerable<User> result = users.ExceptBy(applicationUserRoles.Select(a => a.UserId),u => u.Id);
+
+            foreach (var item in result)
+            {
+                ApplicationUserDtoDown applicationUserDtoDown = new ApplicationUserDtoDown() { IdUser = item.Id, Mail = item.Mail };
+                applicationUserDtoDowns.Add(applicationUserDtoDown);
+            }
+
+            return applicationUserDtoDowns;
+        }
     }
 }
