@@ -180,9 +180,9 @@ namespace SecurityServer.Function
         [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
         [OpenApiRequestBody("AddUserInApplicationDtoDown", typeof(AddUserInApplicationDtoDown))]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(User), Description = "Response")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(bool), Description = "Response")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(void))]
-        public async Task<IActionResult> AjoutExistantUser([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = Route+"/AddUser")] HttpRequest req, ILogger log)
+        public async Task<IActionResult> AjoutExistantUser([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Route+"/AddUser")] HttpRequest req, ILogger log)
         {
             try
             {
