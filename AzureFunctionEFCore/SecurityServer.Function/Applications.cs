@@ -147,12 +147,12 @@ namespace SecurityServer.Function
         [OpenApiOperation(operationId: "Run", tags: new[] { "Application" })]
         [OpenApiParameter("id",In = ParameterLocation.Path ,Description = "Id of the application to delete",Required = true,Type = typeof(int))]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "Successfully deleted, or there was no Application with the specified ID.")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(bool), Description = "Successfully deleted, or there was no Application with the specified ID.")]
         public async Task<IActionResult> DeleteApplication([HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = Route + "/{id}")] HttpRequest req, ILogger log, int id)
         {
             try
             {
-                string result = await _applicationService.DeleteApplication(id);
+                bool result = await _applicationService.DeleteApplication(id);
 
                 return new OkObjectResult(result);
             }

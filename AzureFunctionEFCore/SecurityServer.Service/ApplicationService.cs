@@ -81,21 +81,23 @@ namespace SecurityServer.Service
             });
         }
 
-        public async Task<string> DeleteApplication(Application application)
+        public async Task<bool> DeleteApplication(int appId)
         {
-            return await Task.Run(() =>
+            Application target = await _iuow.ApplicationRepository.GetAsync(a => a.Id == appId);
+            IEnumerable<ApplicationUserRole> applicationUserRole = await _iuow.ApplicationUserRoleRepository.GetAllAsync(a => a.ApplicationId == target.Id);
+
+            if(applicationUserRole != null)
             {
-                _iuow.ApplicationRepository.Remove(application);
-                _iuow.Commit();
-                return "Succesfully removed the application.";
-            });
-        }
+                foreach (var item in applicationUserRole)
+                {
+                    _iuow.ApplicationUserRoleRepository.Remove(item);
+                }
+            }
 
-        public async Task<string> DeleteApplication(int appId)
-        {
-            Application target = await GetById(appId);
+            _iuow.ApplicationRepository.Remove(target);
+            await _iuow.CommitAsync();
 
-            return await DeleteApplication(target);
+            return true;
         }
 
         public async Task<Application?> GetById(int id)
