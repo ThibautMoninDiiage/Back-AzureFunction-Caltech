@@ -146,7 +146,7 @@ namespace SecurityServer.Service
 
             foreach (var item in result)
             {
-                ApplicationUserDtoDown applicationUserDtoDown = new ApplicationUserDtoDown() { IdUser = item.Id, Mail = item.Mail };
+                ApplicationUserDtoDown applicationUserDtoDown = new ApplicationUserDtoDown() { Id = item.Id, Mail = item.Mail };
                 applicationUserDtoDowns.Add(applicationUserDtoDown);
             }
 

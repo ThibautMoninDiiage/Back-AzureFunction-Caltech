@@ -8,7 +8,7 @@ namespace SecurityServer.Service.DTO.Down
 {
     public class ApplicationUserDtoDown
     {
-        public int IdUser { get; set; }
+        public int Id { get; set; }
         public string? Mail { get; set; }
     }
 }
