@@ -4,7 +4,7 @@ namespace SecurityServer.Service.Interfaces
 {
     public interface IJwtService
     {
-        public string generateJwtToken(int idUser, int idRole);
+        public string GenerateJwtToken(int idUser, int idRole);
         public byte[] GenerateSalt();
         public string HashPasswordWithSalt(string password, byte[] salt);
         public Guid GenerateGrantCode();
