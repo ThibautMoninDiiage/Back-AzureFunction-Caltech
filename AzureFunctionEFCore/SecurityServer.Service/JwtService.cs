@@ -88,7 +88,7 @@ namespace SecurityServer.Service
                 Issuer = _apiSettings.JwtIssuer,
                 Audience = _apiSettings.JwtAudience,
                 Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha512)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
