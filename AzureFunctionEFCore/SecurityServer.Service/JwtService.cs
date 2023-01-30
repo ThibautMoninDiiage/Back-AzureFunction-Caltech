@@ -26,7 +26,7 @@ namespace SecurityServer.Service
 
         public static X509Certificate2 LoadCertificate(string vaultUrl,string clientId,string tenantId,string secret)
         {
-            var certificateName = "certificats";
+            var certificateName = "certificatetoken";
 
             var credentials = new ClientSecretCredential(tenantId,clientId,secret);
             var certClient = new CertificateClient(new Uri(vaultUrl), credentials);
@@ -67,7 +67,7 @@ namespace SecurityServer.Service
         public string GenerateJwtToken(int idUser,int idRole)
         {
 
-            X509Certificate2 certificate = LoadCertificate("https://preprodkeyvaultgdeux.vault.azure.net/", "14bc5219-40ca-4d62-a8e4-7c97c1236349", "4e9414cf-0bfd-4144-880c-ccff9e466553", "pz28Q~65gNo_IQDJR-A6zca5XrwgGRSLY-VWya.S");
+            X509Certificate2 certificate = LoadCertificate("https://preprodkeyvaultgdeuxb.vault.azure.net/", "4e9414cf-0bfd-4144-880c-ccff9e466553", "14bc5219-40ca-4d62-a8e4-7c97c1236349", "woJ8Q~UaQLITEXeUaiyKoy1mOGTplvEj8K5WObS2");
 
             RSA test = certificate.GetRSAPrivateKey();
             RsaSecurityKey securityKey = new RsaSecurityKey(test);

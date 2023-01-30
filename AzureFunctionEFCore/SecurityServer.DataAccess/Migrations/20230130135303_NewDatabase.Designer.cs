@@ -12,8 +12,8 @@ using SecurityServer.DataAccess.SecurityServerContext;
 namespace SecurityServer.DataAccess.Migrations
 {
     [DbContext(typeof(DbContextServer))]
-    [Migration("20221214142047_MajSchema")]
-    partial class MajSchema
+    [Migration("20230130135303_NewDatabase")]
+    partial class NewDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,21 +37,6 @@ namespace SecurityServer.DataAccess.Migrations
                     b.HasIndex("ClaimsId");
 
                     b.ToTable("ApplicationClaim");
-                });
-
-            modelBuilder.Entity("ApplicationUser", b =>
-                {
-                    b.Property<int>("ApplicationsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ApplicationsId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("ApplicationUser");
                 });
 
             modelBuilder.Entity("ClaimUser", b =>
@@ -85,8 +70,8 @@ namespace SecurityServer.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<string>("RedirectUri")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Url")
                         .IsRequired()
@@ -94,9 +79,27 @@ namespace SecurityServer.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoleId");
-
                     b.ToTable("Applications");
+                });
+
+            modelBuilder.Entity("SecurityServer.Models.Models.ApplicationUserRole", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("RoleId", "UserId", "ApplicationId");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ApplicationUserRoles");
                 });
 
             modelBuilder.Entity("SecurityServer.Models.Models.Claim", b =>
@@ -112,7 +115,28 @@ namespace SecurityServer.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Claim");
+                    b.ToTable("Claims");
+                });
+
+            modelBuilder.Entity("SecurityServer.Models.Models.Grant", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("UserId", "ApplicationId");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.ToTable("Grants");
                 });
 
             modelBuilder.Entity("SecurityServer.Models.Models.Role", b =>
@@ -147,10 +171,6 @@ namespace SecurityServer.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("IdRole")
-                        .IsRequired()
-                        .HasColumnType("int");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -172,8 +192,6 @@ namespace SecurityServer.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdRole");
-
                     b.ToTable("Users");
                 });
 
@@ -188,21 +206,6 @@ namespace SecurityServer.DataAccess.Migrations
                     b.HasOne("SecurityServer.Models.Models.Claim", null)
                         .WithMany()
                         .HasForeignKey("ClaimsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ApplicationUser", b =>
-                {
-                    b.HasOne("SecurityServer.Models.Models.Application", null)
-                        .WithMany()
-                        .HasForeignKey("ApplicationsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SecurityServer.Models.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -222,29 +225,59 @@ namespace SecurityServer.DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SecurityServer.Models.Models.Application", b =>
+            modelBuilder.Entity("SecurityServer.Models.Models.ApplicationUserRole", b =>
                 {
-                    b.HasOne("SecurityServer.Models.Models.Role", null)
-                        .WithMany("Applications")
-                        .HasForeignKey("RoleId");
-                });
-
-            modelBuilder.Entity("SecurityServer.Models.Models.User", b =>
-                {
-                    b.HasOne("SecurityServer.Models.Models.Role", "Role")
-                        .WithMany("Users")
-                        .HasForeignKey("IdRole")
+                    b.HasOne("SecurityServer.Models.Models.Application", null)
+                        .WithMany("ApplicationUserRoles")
+                        .HasForeignKey("ApplicationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Role");
+                    b.HasOne("SecurityServer.Models.Models.Role", null)
+                        .WithMany("ApplicationUserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SecurityServer.Models.Models.User", null)
+                        .WithMany("ApplicationUserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SecurityServer.Models.Models.Grant", b =>
+                {
+                    b.HasOne("SecurityServer.Models.Models.Application", "Application")
+                        .WithMany()
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SecurityServer.Models.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Application");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SecurityServer.Models.Models.Application", b =>
+                {
+                    b.Navigation("ApplicationUserRoles");
                 });
 
             modelBuilder.Entity("SecurityServer.Models.Models.Role", b =>
                 {
-                    b.Navigation("Applications");
+                    b.Navigation("ApplicationUserRoles");
+                });
 
-                    b.Navigation("Users");
+            modelBuilder.Entity("SecurityServer.Models.Models.User", b =>
+                {
+                    b.Navigation("ApplicationUserRoles");
                 });
 #pragma warning restore 612, 618
         }

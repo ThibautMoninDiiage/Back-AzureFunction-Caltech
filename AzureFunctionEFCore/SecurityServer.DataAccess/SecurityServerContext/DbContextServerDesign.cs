@@ -11,7 +11,7 @@ namespace SecurityServer.DataAccess.SecurityServerContext
 
             //string connectionString = @"";
 
-            string connectionString = "Server=tcp:test-server-database.database.windows.net,1433;Initial Catalog=testdbdiiagedeux;Persist Security Info=False;User ID=CloudSAf42aaec6;Password=Azerty@123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+            string connectionString = "Server=tcp:preprod-server-database-groupe2b.database.windows.net,1433;Initial Catalog=pre-prod-sql-server;Persist Security Info=False;User ID=CloudSAa18a0c39;Password=JgR7hp2AB8/eua;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
             optionsBuilder.UseSqlServer(connectionString);
             return new DbContextServer(optionsBuilder.Options);

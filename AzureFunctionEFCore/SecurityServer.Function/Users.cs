@@ -75,7 +75,7 @@ namespace SecurityServer.Function
         [OpenApiRequestBody("GrantDtoUp", typeof(GrantDtoUp))]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(UserDtoDown), Description = "Response")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(void))]
-        public async Task<IActionResult> ConnexionGrant([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "AuthenticateGrant")] HttpRequest req)
+        public async Task<IActionResult> ConnexionGrant([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "authenticateGrant")] HttpRequest req)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             GrantDtoUp grantDtoUp  = JsonConvert.DeserializeObject<GrantDtoUp>(requestBody);
