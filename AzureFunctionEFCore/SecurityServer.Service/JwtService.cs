@@ -67,10 +67,10 @@ namespace SecurityServer.Service
         public string GenerateJwtToken(int idUser,int idRole)
         {
 
-            X509Certificate2 certificate = LoadCertificate("https://preprodkeyvaultgdeux.vault.azure.net/", "14bc5219-40ca-4d62-a8e4-7c97c1236349", "4e9414cf-0bfd-4144-880c-ccff9e466553", "pz28Q~65gNo_IQDJR-A6zca5XrwgGRSLY-VWya.S");
+            //X509Certificate2 certificate = LoadCertificate("https://preprodkeyvaultgdeux.vault.azure.net/", "14bc5219-40ca-4d62-a8e4-7c97c1236349", "4e9414cf-0bfd-4144-880c-ccff9e466553", "pz28Q~65gNo_IQDJR-A6zca5XrwgGRSLY-VWya.S");
 
-            RSA test = certificate.GetRSAPrivateKey();
-            RsaSecurityKey securityKey = new RsaSecurityKey(test);
+            //RSA test = certificate.GetRSAPrivateKey();
+            //RsaSecurityKey securityKey = new RsaSecurityKey(test);
 
 
             // génère un token valide pour 7 jours
@@ -88,7 +88,7 @@ namespace SecurityServer.Service
                 Issuer = _apiSettings.JwtIssuer,
                 Audience = _apiSettings.JwtAudience,
                 Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
