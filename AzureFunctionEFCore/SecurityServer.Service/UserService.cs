@@ -119,7 +119,7 @@ namespace SecurityServer.Service
             _uow.ApplicationUserRoleRepository.Add(applicationUserRole);
             await _uow.CommitAsync();
 
-            var token = _jwtService.generateJwtToken(userCreated.Id,role.Id);
+            var token = _jwtService.GenerateJwtToken(userCreated.Id,role.Id);
             return new UserDtoDown(user, token);
         }
 
@@ -158,7 +158,7 @@ namespace SecurityServer.Service
             if (user.Password != hashedPassword)
                 return null;
 
-            string? token = _jwtService.generateJwtToken(user.Id, applicationUserRole.RoleId);
+            string? token = _jwtService.GenerateJwtToken(user.Id, applicationUserRole.RoleId);
 
             return new UserDtoDown(user, token);
         }
@@ -171,7 +171,7 @@ namespace SecurityServer.Service
 
             User user = await _uow.UserRepository.GetAsync(u => u.Id == applicationUserRole.UserId);
 
-            string token = _jwtService.generateJwtToken(applicationUserRole.UserId, applicationUserRole.RoleId);
+            string token = _jwtService.GenerateJwtToken(applicationUserRole.UserId, applicationUserRole.RoleId);
 
             _uow.GrantRepository.Remove(grant);
             await _uow.CommitAsync();
