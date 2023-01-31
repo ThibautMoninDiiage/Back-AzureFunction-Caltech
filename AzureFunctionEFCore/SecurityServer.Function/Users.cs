@@ -60,7 +60,7 @@ namespace SecurityServer.Function
                     return new BadRequestResult();
                 else
                 {
-                    UserDtoDown userResult = await _userService.AuthenticateWithUrl(userDtoUp);
+                    string userResult = await _userService.AuthenticateWithUrl(userDtoUp);
 
                     if (userResult == null)
                         return new BadRequestResult();

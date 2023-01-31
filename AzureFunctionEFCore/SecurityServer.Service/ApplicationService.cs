@@ -66,7 +66,6 @@ namespace SecurityServer.Service
                     Name = application.Name,
                     Url = application.Url,
                     RedirectUri = application.RedirectUri
-                    //Users = new(), A modifier
                 };
 
                 _iuow.ApplicationRepository.Add(committed);
@@ -127,7 +126,8 @@ namespace SecurityServer.Service
                     Id = (int)update.Id,
                     Description = update.Description,
                     Name = update.Name,
-                    Url = update.Url
+                    Url = update.Url,
+                    RedirectUri = update.RedirectUrl
                 };
 
                 _iuow.ApplicationRepository.Update(app);
@@ -140,7 +140,6 @@ namespace SecurityServer.Service
         {
             List<ApplicationUserDtoDown> applicationUserDtoDowns = new List<ApplicationUserDtoDown>();
 
-            //IEnumerable<Application> applications = await _iuow.ApplicationRepository.GetAllAsync(a => a.Id == idApp);
             IEnumerable<ApplicationUserRole> applicationUserRoles = await _iuow.ApplicationUserRoleRepository.GetAllAsync(a => a.ApplicationId == idApp);
             IEnumerable<User> users = await _iuow.UserRepository.GetAllAsync();
 

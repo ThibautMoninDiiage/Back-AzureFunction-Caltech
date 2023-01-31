@@ -59,11 +59,6 @@ namespace SecurityServer.Service
 
         }
 
-        //private static X509Certificate2 GetCertificateAsync(CertificateClient certificateClient, SecretClient secretClient,string certifcateName)
-        //{
-            
-        //}
-
         public string GenerateJwtToken(int idUser,int idRole)
         {
 
