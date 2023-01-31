@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.IdentityModel.Tokens;
-using SecurityServer.Models.Models;
 using SecurityServer.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -8,6 +7,10 @@ using System.Security.Cryptography;
 using System.Text;
 using SecurityServer.Service.Interfaces;
 using Claim = System.Security.Claims.Claim;
+using System.Security.Cryptography.X509Certificates;
+using Azure.Security.KeyVault.Certificates;
+using Azure.Security.KeyVault.Secrets;
+using Azure.Identity;
 
 namespace SecurityServer.Service
 {
@@ -21,8 +24,50 @@ namespace SecurityServer.Service
             _apiSettings = apiSettings;
         }
 
-        public string generateJwtToken(int idUser,int idRole)
+        public static X509Certificate2 LoadCertificate(string vaultUrl,string clientId,string tenantId,string secret)
         {
+            var certificateName = "certificatetoken";
+
+            var credentials = new ClientSecretCredential(tenantId,clientId,secret);
+            var certClient = new CertificateClient(new Uri(vaultUrl), credentials);
+            var secretClient = new SecretClient(new Uri(vaultUrl),credentials);
+
+
+            KeyVaultCertificateWithPolicy certificate = certClient.GetCertificate(certificateName);
+            if (certificate.Policy?.Exportable != true)
+            {
+                return new X509Certificate2(certificate.Cer);
+            }
+
+            string[] segments = certificate.SecretId.AbsolutePath.Split('/',StringSplitOptions.RemoveEmptyEntries);
+            if (segments.Length != 3)
+                throw new Exception("Le certificat n'est pas complet");
+
+            string secretName = segments[1];
+            string secretVersion = segments[2];
+
+            KeyVaultSecret keyVaultSecret = secretClient.GetSecret(secretName,secretVersion);
+
+            if ("application/x-pkcs12".Equals(keyVaultSecret.Properties.ContentType, StringComparison.InvariantCultureIgnoreCase))
+            {
+                byte[] pfx = Convert.FromBase64String(keyVaultSecret.Value);
+                return new X509Certificate2(pfx);
+            }
+
+            throw new NotSupportedException("Le certificat n'est pas au format application/x-pkcs12");
+
+
+        }
+
+        public string GenerateJwtToken(int idUser,int idRole)
+        {
+
+            X509Certificate2 certificate = LoadCertificate("https://preprodkeyvaultgdeuxb.vault.azure.net/", "4e9414cf-0bfd-4144-880c-ccff9e466553", "14bc5219-40ca-4d62-a8e4-7c97c1236349", "woJ8Q~UaQLITEXeUaiyKoy1mOGTplvEj8K5WObS2");
+
+            RSA test = certificate.GetRSAPrivateKey();
+            RsaSecurityKey securityKey = new RsaSecurityKey(test);
+
+
             // génère un token valide pour 7 jours
             var tokenHandler = new JwtSecurityTokenHandler();
             byte[] key = Encoding.ASCII.GetBytes(_apiSettings.JwtSecret);
@@ -38,7 +83,7 @@ namespace SecurityServer.Service
                 Issuer = _apiSettings.JwtIssuer,
                 Audience = _apiSettings.JwtAudience,
                 Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha512)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
@@ -64,6 +109,11 @@ namespace SecurityServer.Service
                 prf: KeyDerivationPrf.HMACSHA256,
                 iterationCount: 100000,
                 numBytesRequested: 256 / 8));
+        }
+
+        public Guid GenerateGrantCode()
+        {
+            return Guid.NewGuid();
         }
     }
 }

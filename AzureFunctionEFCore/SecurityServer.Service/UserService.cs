@@ -16,24 +16,49 @@ namespace SecurityServer.Service
             _jwtService = jwtService;
         }
 
-        public async Task<User?> GetById(int? id)
+        public async Task<UserGetByIdDtoDown?> GetById(int? id)
         {
             User user = await _uow.UserRepository.GetAsync(x => x.Id == id);
 
+            IEnumerable<ApplicationUserRole> applicationUserRoles = await _uow.ApplicationUserRoleRepository.GetAllAsync(a => a.UserId == user.Id);
+
+            List<ApplicationByUserDtoDown> applications = new List<ApplicationByUserDtoDown>();
+
+            foreach (var item in applicationUserRoles)
+            {
+                Application application = await _uow.ApplicationRepository.GetAsync(a => a.Id == item.ApplicationId);
+                ApplicationByUserDtoDown applicationByUserDtoDown = new ApplicationByUserDtoDown() { Id = application.Id,Description = application.Description, Name = application.Name,RedirectUri = application.RedirectUri, Url = application.Url };
+                Role role = await _uow.RoleRepository.GetAsync(r => r.Id == item.RoleId);
+                RoleByApplicationIdDtoDown roleByApplicationIdDtoDown = new RoleByApplicationIdDtoDown() { Id = role.Id,Name = role.Name};
+                applicationByUserDtoDown.Role = roleByApplicationIdDtoDown;
+                applications.Add(applicationByUserDtoDown);
+            }
+
+            UserGetByIdDtoDown userGetByIdDtoDown = new UserGetByIdDtoDown()
+            {
+                Id = user.Id,
+                Firstname = user.FirstName,
+                Lastname = user.LastName,
+                Mail = user.Mail,
+                Username = user.Username,
+                Avatar = user.Avatar,
+                Applications = applications
+            };
+
             if (user != null)
-                return user;
+                return userGetByIdDtoDown;
             else
                 return null;
 
         }
 
-        public async Task<UserDtoDown?> Authenticate(UserDtoUp model)
+        public async Task<string> Authenticate(UserDtoUp model)
         {
             User user = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
 
             if (user == null) return null;
 
-            ApplicationUserRole applicationUserRole = await _uow.ApplicationUserRoleRepository.GetAsync(x => x.Application.Id == 1 && x.User.Id == user.Id);
+            ApplicationUserRole applicationUserRole = await _uow.ApplicationUserRoleRepository.GetAsync(x => x.ApplicationId == 1 && x.UserId == user.Id);
 
             if (applicationUserRole == null) return null;
 
@@ -42,9 +67,25 @@ namespace SecurityServer.Service
             if (user.Password != hashedPassword)
                 return null;
 
-            string? token = _jwtService.generateJwtToken(user.Id,applicationUserRole.RoleId);
+            Guid grantCode = _jwtService.GenerateGrantCode();
 
-            return new UserDtoDown(user, token);
+            Application application = await _uow.ApplicationRepository.GetAsync(a => a.Id == 1);
+
+            Grant grantVerify = await _uow.GrantRepository.GetAsync(g => g.UserId == user.Id && g.ApplicationId == 1);
+
+            if (grantVerify != null) 
+                return application.Url + "&code=" + grantVerify.ToString();
+            else
+            {
+                Grant grant = new Grant() { ApplicationId = 1, UserId = user.Id, Code = grantCode.ToString(), CreatedAt = DateTime.Now };
+
+                _uow.GrantRepository.Add(grant);
+                await _uow.CommitAsync();
+
+                return application.Url + "&code=" + grantCode.ToString();
+            }
+
+
         }
 
         public async Task<UserDtoDown> CreateUser(UserCreationDtoUp model)
@@ -57,8 +98,6 @@ namespace SecurityServer.Service
 
             var salt = _jwtService.GenerateSalt();
             var hashedPassword = _jwtService.HashPasswordWithSalt(model.Password, salt);
-
-            // A modifier
 
             User user = new User
             {
@@ -86,7 +125,7 @@ namespace SecurityServer.Service
             _uow.ApplicationUserRoleRepository.Add(applicationUserRole);
             await _uow.CommitAsync();
 
-            var token = _jwtService.generateJwtToken(userCreated.Id,role.Id);
+            var token = _jwtService.GenerateJwtToken(userCreated.Id,role.Id);
             return new UserDtoDown(user, token);
         }
 
@@ -106,7 +145,7 @@ namespace SecurityServer.Service
             return user;
         }
 
-        public async Task<UserDtoDown> AuthenticateWithUrl(UserDtoUp model)
+        public async Task<string> AuthenticateWithUrl(UserDtoUp model)
         {
             User user = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
 
@@ -116,7 +155,7 @@ namespace SecurityServer.Service
 
             if (application == null) return null;
 
-            ApplicationUserRole applicationUserRole = await _uow.ApplicationUserRoleRepository.GetAsync(x => x.Application.Id == application.Id && x.User.Id == user.Id);
+            ApplicationUserRole applicationUserRole = await _uow.ApplicationUserRoleRepository.GetAsync(x => x.ApplicationId == application.Id && x.UserId == user.Id);
 
             if (applicationUserRole == null) return null;
 
@@ -125,9 +164,47 @@ namespace SecurityServer.Service
             if (user.Password != hashedPassword)
                 return null;
 
-            string? token = _jwtService.generateJwtToken(user.Id, applicationUserRole.RoleId);
+            Guid grantCode = _jwtService.GenerateGrantCode();
+
+            Grant grantVerify = await _uow.GrantRepository.GetAsync(g => g.UserId == user.Id && g.ApplicationId == );
+
+            if (grantVerify != null)
+                return application.Url + "&code=" + grantVerify.ToString();
+            else
+            {
+                Grant grant = new Grant() { ApplicationId = 1, UserId = user.Id, Code = grantCode.ToString(), CreatedAt = DateTime.Now };
+
+                _uow.GrantRepository.Add(grant);
+                await _uow.CommitAsync();
+
+                return application.Url + "&code=" + grantCode.ToString();
+            }
+        }
+
+        public async Task<UserDtoDown> GetToken(string codeGrant)
+        {
+            Grant grant = await _uow.GrantRepository.GetAsync(g => g.Code == codeGrant);
+
+            ApplicationUserRole applicationUserRole = await _uow.ApplicationUserRoleRepository.GetAsync(a => a.ApplicationId == grant.ApplicationId && a.UserId == grant.UserId);
+
+            User user = await _uow.UserRepository.GetAsync(u => u.Id == applicationUserRole.UserId);
+
+            string token = _jwtService.GenerateJwtToken(applicationUserRole.UserId, applicationUserRole.RoleId);
+
+            _uow.GrantRepository.Remove(grant);
+            await _uow.CommitAsync();
 
             return new UserDtoDown(user, token);
+        }
+
+        public async Task<bool> AddExistantUser(AddUserInApplicationDtoDown model)
+        {
+            Role role = await _uow.RoleRepository.GetAsync(r => r.Name == model.Role.Name);
+
+            ApplicationUserRole applicationUserRole = new ApplicationUserRole() { ApplicationId = model.ApplicationId, RoleId = role.Id, UserId = model.UserId };
+            _uow.ApplicationUserRoleRepository.Add(applicationUserRole);
+            await _uow.CommitAsync();
+            return true;
         }
     }
 }

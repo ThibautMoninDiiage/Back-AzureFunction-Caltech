@@ -17,7 +17,7 @@ namespace SecurityServer.Service
             _uow = uow;
         }
 
-        public async Task<User> CreateUser(UserCreationDtoUp model)
+        public async Task<UserAdminDtoDown> CreateUser(UserCreationDtoUp model)
         {
 
             User userVerify = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
@@ -43,21 +43,23 @@ namespace SecurityServer.Service
 
             User userCreated = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
 
-            ApplicationUserRole applicationUserRole = null;
+            Role role = await _uow.RoleRepository.GetAsync(r => r.Name == model.Role.Name);
 
-            if (string.IsNullOrEmpty(model.Role.Name))
-            {
-                applicationUserRole = new ApplicationUserRole() { ApplicationId = 1, UserId = userCreated.Id, RoleId = 2 };
-            }
-            else
-            {
-                applicationUserRole = new ApplicationUserRole() { ApplicationId = 1, UserId = userCreated.Id, RoleId = 1 };
-            }
+            ApplicationUserRole applicationUserRole = new ApplicationUserRole() { ApplicationId = model.idApplication,UserId = userCreated.Id, RoleId = role.Id};
 
             _uow.ApplicationUserRoleRepository.Add(applicationUserRole);
             await _uow.CommitAsync();
 
-            return user;
+            UserAdminDtoDown userAdminDtoDown = new UserAdminDtoDown()
+            {
+                Id = userCreated.Id,
+                Firstname = userCreated.FirstName,
+                Lastname = userCreated.LastName,
+                Mail = model.Mail,
+                Username = model.Username
+            };
+
+            return userAdminDtoDown;
         }
 
         public async Task<List<UserAllDtoDown>> GetAllUsers()
@@ -66,7 +68,6 @@ namespace SecurityServer.Service
             List<User> users = _uow.UserRepository.GetAllAsync().Result.ToList();
             List<UserAllDtoDown> userAllDtoDowns = new List<UserAllDtoDown>();
 
-            // A modifier pour role
             users.ForEach(u => userAllDtoDowns.Add(new UserAllDtoDown() { Id = u.Id, Avatar = u.Avatar, Mail = u.Mail, Username = u.Username}));
 
             return userAllDtoDowns;

@@ -33,7 +33,7 @@ namespace SecurityServer.Function
         [OpenApiOperation(operationId: "CreateUserByAdmin", tags: new[] { "Admin" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
         [OpenApiRequestBody("userDtoUp", typeof(UserCreationDtoUp))]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(User), Description = "Response")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(UserAdminDtoDown), Description = "Response")]
         public async Task<IActionResult> CreateUserByAdmin([HttpTrigger(AuthorizationLevel.Anonymous,"post", Route = Route)] HttpRequest req, ILogger logger)
         {
             try
@@ -41,7 +41,7 @@ namespace SecurityServer.Function
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 UserCreationDtoUp user = JsonConvert.DeserializeObject<UserCreationDtoUp>(requestBody);
 
-                User result = await _adminService.CreateUser(user);
+                UserAdminDtoDown result = await _adminService.CreateUser(user);
 
                 if (result == null)
                     return new BadRequestResult();

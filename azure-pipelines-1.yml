@@ -2,8 +2,8 @@ trigger:
 - dev
 
 variables:
-  azureSubscription: 'Azure for Students (2d0f8ce7-3fb0-4016-969e-ff8f6af6e15d)'
-  functionAppName: 'test2diiage2'
+  azureSubscription: 'Azure for Students (a428c075-d253-4045-ad71-30fc90d3c209)'
+  functionAppName: 'preprodfuncappgroupedeuxb2'
   vmImageName: 'windows-latest'
   workingDirectory: '$(System.DefaultWorkingDirectory)/AzureFunctionEFCore/SecurityServer.Function'
 
@@ -26,6 +26,26 @@ stages:
           $(workingDirectory)/*.csproj
         arguments: --output $(System.DefaultWorkingDirectory)/publish_output --configuration Release
     
+    # - task: DotNetCoreCLI@2
+    #   displayName: 'Install dotnet-ef'
+    #   inputs:
+    #     command: 'custom'
+    #     custom: 'tool'
+    #     arguments: 'install --global dotnet-ef'
+
+    # - task: DotNetCoreCLI@2
+    #   inputs:
+    #     command: 'custom'
+    #     projects: '**/SecurityServer.DataAccess.csproj'
+    #     custom: 'ef'
+    #     arguments: migrations script -o $(Build.ArtifactStagingDirectory)/migrations/scripts.sql -v -i
+
+    # - task: DotNetCoreCLI@2
+    #   inputs:
+    #     command: 'custom'
+    #     projects: '**/*.csproj'
+    #     custom: 'dotnet ef database update'
+
     - task: DotNetCoreCLI@2
       inputs:
         command: 'publish'

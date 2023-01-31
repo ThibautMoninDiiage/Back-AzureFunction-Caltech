@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityServer.Contract", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityServer.Models", "SecurityServer.Models\SecurityServer.Models.csproj", "{FCACF1AA-21A5-46F0-BA0C-86395FE4BBB4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityServer.Test", "SecurityServer.Test\SecurityServer.Test.csproj", "{793AAAC5-D880-4C80-BF5D-A2467E82BBB5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{FCACF1AA-21A5-46F0-BA0C-86395FE4BBB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCACF1AA-21A5-46F0-BA0C-86395FE4BBB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCACF1AA-21A5-46F0-BA0C-86395FE4BBB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{793AAAC5-D880-4C80-BF5D-A2467E82BBB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{793AAAC5-D880-4C80-BF5D-A2467E82BBB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{793AAAC5-D880-4C80-BF5D-A2467E82BBB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{793AAAC5-D880-4C80-BF5D-A2467E82BBB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
