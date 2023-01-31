@@ -1,6 +1,4 @@
-﻿using SecurityServer.Models.Models;
-
-namespace SecurityServer.Service.Interfaces
+﻿namespace SecurityServer.Service.Interfaces
 {
     public interface IJwtService
     {
