@@ -152,9 +152,14 @@ namespace SecurityServer.Function
         {
             try
             {
-                bool result = await _applicationService.DeleteApplication(id);
+                if(id == 1)
+                    return new BadRequestResult();
+                else
+                {
+                    bool result = await _applicationService.DeleteApplication(id);
 
-                return new OkObjectResult(result);
+                    return new OkObjectResult(result);
+                }
             }
             catch (AggregateException ex)
             {
