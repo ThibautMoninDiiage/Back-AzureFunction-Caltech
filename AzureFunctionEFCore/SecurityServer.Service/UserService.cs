@@ -73,18 +73,25 @@ namespace SecurityServer.Service
 
             Grant grantVerify = await _uow.GrantRepository.GetAsync(g => g.UserId == user.Id && g.ApplicationId == 1);
 
-            if (grantVerify != null) 
-                return application.Url + "&code=" + grantVerify.ToString();
+            if (grantVerify != null)
+            {
+                if (application.Url.LastIndexOf('/') == application.Url.Length - 1)
+                    return application.Url + "?code=" + grantVerify.Code.ToString();
+                else
+                    return application.Url + "/?code=" + grantVerify.Code.ToString();
+            }
             else
             {
-                Grant grant = new Grant() { ApplicationId = 1, UserId = user.Id, Code = grantCode.ToString(), CreatedAt = DateTime.Now };
+                Grant grant = new Grant() { ApplicationId = application.Id, UserId = user.Id, Code = grantCode.ToString(), CreatedAt = DateTime.Now };
 
                 _uow.GrantRepository.Add(grant);
                 await _uow.CommitAsync();
 
-                return application.Url + "&code=" + grantCode.ToString();
+                if (application.Url.LastIndexOf('/') == application.Url.Length - 1)
+                    return application.Url + "?code=" + grantCode.ToString();
+                else
+                    return application.Url + "/?code=" + grantCode.ToString();
             }
-
 
         }
 
@@ -166,18 +173,26 @@ namespace SecurityServer.Service
 
             Guid grantCode = _jwtService.GenerateGrantCode();
 
-            Grant grantVerify = await _uow.GrantRepository.GetAsync(g => g.UserId == user.Id && g.ApplicationId == );
+            Grant grantVerify = await _uow.GrantRepository.GetAsync(g => g.UserId == user.Id && g.ApplicationId == application.Id);
 
             if (grantVerify != null)
-                return application.Url + "&code=" + grantVerify.ToString();
+            {
+                if (application.Url.LastIndexOf('/') == application.Url.Length - 1)
+                    return application.Url + "?code=" + grantVerify.Code.ToString();
+                else
+                    return application.Url + "/?code=" + grantVerify.Code.ToString();
+            }     
             else
             {
-                Grant grant = new Grant() { ApplicationId = 1, UserId = user.Id, Code = grantCode.ToString(), CreatedAt = DateTime.Now };
+                Grant grant = new Grant() { ApplicationId = application.Id, UserId = user.Id, Code = grantCode.ToString(), CreatedAt = DateTime.Now };
 
                 _uow.GrantRepository.Add(grant);
                 await _uow.CommitAsync();
 
-                return application.Url + "&code=" + grantCode.ToString();
+                if(application.Url.LastIndexOf('/') == application.Url.Length -1)
+                    return application.Url + "?code=" + grantCode.ToString();
+                else
+                    return application.Url + "/?code=" + grantCode.ToString();
             }
         }
 
