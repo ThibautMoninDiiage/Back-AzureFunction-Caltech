@@ -166,7 +166,7 @@ namespace SecurityServer.Service
 
             Guid grantCode = _jwtService.GenerateGrantCode();
 
-            Grant grantVerify = await _uow.GrantRepository.GetAsync(g => g.UserId == user.Id && g.ApplicationId == );
+            Grant grantVerify = await _uow.GrantRepository.GetAsync(g => g.UserId == user.Id && g.ApplicationId == application.Id);
 
             if (grantVerify != null)
                 return application.Url + "&code=" + grantVerify.ToString();
