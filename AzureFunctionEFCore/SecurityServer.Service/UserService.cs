@@ -171,9 +171,9 @@ namespace SecurityServer.Service
             if (grantVerify != null)
             {
                 if (application.Url.LastIndexOf('/') == application.Url.Length - 1)
-                    return application.Url + "?code=" + grantVerify.ToString();
+                    return application.Url + "?code=" + grantVerify.Code.ToString();
                 else
-                    return application.Url + "/?code=" + grantVerify.ToString();
+                    return application.Url + "/?code=" + grantVerify.Code.ToString();
             }     
             else
             {
