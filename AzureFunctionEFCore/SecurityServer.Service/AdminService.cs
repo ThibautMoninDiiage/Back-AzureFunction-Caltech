@@ -68,7 +68,6 @@ namespace SecurityServer.Service
             List<User> users = _uow.UserRepository.GetAllAsync().Result.ToList();
             List<UserAllDtoDown> userAllDtoDowns = new List<UserAllDtoDown>();
 
-            // A modifier pour role
             users.ForEach(u => userAllDtoDowns.Add(new UserAllDtoDown() { Id = u.Id, Avatar = u.Avatar, Mail = u.Mail, Username = u.Username}));
 
             return userAllDtoDowns;

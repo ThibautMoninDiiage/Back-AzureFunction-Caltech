@@ -13,5 +13,6 @@ namespace SecurityServer.Service.DTO.Up
         public string? Url { get; set; }
 
         public string? Description { get; set; }
+        public string? RedirectUrl { get; set; }
     }
 }

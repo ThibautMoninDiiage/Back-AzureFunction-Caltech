@@ -69,15 +69,23 @@ namespace SecurityServer.Service
 
             Guid grantCode = _jwtService.GenerateGrantCode();
 
-            Grant grant = new Grant() { ApplicationId = 1,UserId = user.Id, Code = grantCode.ToString(),CreatedAt = DateTime.Now };
+            Application application = await _uow.ApplicationRepository.GetAsync(a => a.Id == 1);
 
-            _uow.GrantRepository.Add(grant);
-            await _uow.CommitAsync();
+            Grant grantVerify = await _uow.GrantRepository.GetAsync(g => g.UserId == user.Id && g.ApplicationId == 1);
 
-            Application application = await _uow.ApplicationRepository.GetAsync(a => a.Id == applicationUserRole.ApplicationId);
+            if (grantVerify != null) 
+                return application.Url + "&code=" + grantVerify.ToString();
+            else
+            {
+                Grant grant = new Grant() { ApplicationId = 1, UserId = user.Id, Code = grantCode.ToString(), CreatedAt = DateTime.Now };
 
-            return application.Url + "&code=" + grantCode.ToString();
-            //string? token = _jwtService.generateJwtToken(user.Id,applicationUserRole.RoleId);
+                _uow.GrantRepository.Add(grant);
+                await _uow.CommitAsync();
+
+                return application.Url + "&code=" + grantCode.ToString();
+            }
+
+
         }
 
         public async Task<UserDtoDown> CreateUser(UserCreationDtoUp model)
@@ -90,8 +98,6 @@ namespace SecurityServer.Service
 
             var salt = _jwtService.GenerateSalt();
             var hashedPassword = _jwtService.HashPasswordWithSalt(model.Password, salt);
-
-            // A modifier
 
             User user = new User
             {
@@ -139,7 +145,7 @@ namespace SecurityServer.Service
             return user;
         }
 
-        public async Task<UserDtoDown> AuthenticateWithUrl(UserDtoUp model)
+        public async Task<string> AuthenticateWithUrl(UserDtoUp model)
         {
             User user = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
 
@@ -158,9 +164,21 @@ namespace SecurityServer.Service
             if (user.Password != hashedPassword)
                 return null;
 
-            string? token = _jwtService.GenerateJwtToken(user.Id, applicationUserRole.RoleId);
+            Guid grantCode = _jwtService.GenerateGrantCode();
 
-            return new UserDtoDown(user, token);
+            Grant grantVerify = await _uow.GrantRepository.GetAsync(g => g.UserId == user.Id && g.ApplicationId == );
+
+            if (grantVerify != null)
+                return application.Url + "&code=" + grantVerify.ToString();
+            else
+            {
+                Grant grant = new Grant() { ApplicationId = 1, UserId = user.Id, Code = grantCode.ToString(), CreatedAt = DateTime.Now };
+
+                _uow.GrantRepository.Add(grant);
+                await _uow.CommitAsync();
+
+                return application.Url + "&code=" + grantCode.ToString();
+            }
         }
 
         public async Task<UserDtoDown> GetToken(string codeGrant)
