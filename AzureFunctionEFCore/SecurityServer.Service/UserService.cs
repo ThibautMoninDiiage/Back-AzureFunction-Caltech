@@ -221,5 +221,32 @@ namespace SecurityServer.Service
             await _uow.CommitAsync();
             return true;
         }
+
+        public async Task<bool> DeleteUser(int userId)
+        {
+            try
+            {
+                User target = await _uow.UserRepository.GetAsync(a => a.Id == userId);
+
+                IEnumerable<ApplicationUserRole> applicationUserRoles = await _uow.ApplicationUserRoleRepository.GetAllAsync(a => a.UserId == target.Id);
+
+                if (applicationUserRoles.Any())
+                    _uow.ApplicationUserRoleRepository.RemoveRange(applicationUserRoles);
+
+                IEnumerable<Grant> grants = await _uow.GrantRepository.GetAllAsync(a => a.UserId == userId);
+
+                if (grants.Any())
+                    _uow.GrantRepository.RemoveRange(grants);
+
+                _uow.UserRepository.Remove(target);
+                await _uow.CommitAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
     }
 }

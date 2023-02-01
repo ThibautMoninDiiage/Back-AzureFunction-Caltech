@@ -1,7 +1,6 @@
 using Moq;
 using SecurityServer.Contract.Repositories;
 using SecurityServer.Contract.UnitOfWork;
-using SecurityServer.DataAccess.Repositories;
 using SecurityServer.Models;
 using SecurityServer.Models.Models;
 using SecurityServer.Service;
@@ -68,7 +67,6 @@ namespace SecurityServer.Test
             _uow.Setup(m => m.UserRepository.GetAsync(x => x.Mail == userDtoUp.Mail, It.IsAny<CancellationToken>())).ReturnsAsync(useressai);
             _uow.Setup(m => m.ApplicationUserRoleRepository.GetAsync(x => x.ApplicationId == 1 && x.UserId == useressai.Id, It.IsAny<CancellationToken>())).ReturnsAsync(new ApplicationUserRole() { ApplicationId = 1, UserId = 1, RoleId = 1 });
             _uow.Setup(m => m.GrantRepository.GetAsync(x => x.UserId == useressai.Id && x.ApplicationId == 1, It.IsAny<CancellationToken>())).ReturnsAsync(new Grant() { ApplicationId = 1, UserId = 1, CreatedAt = DateTime.Now, Code = grantCode.ToString() });
-            _uow.Setup(m => m.RoleRepository).Returns(_roleRepository.Object);
 
             UserService _userService = new UserService(_uow.Object, _jwtService);
 
