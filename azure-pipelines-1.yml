@@ -34,11 +34,11 @@ stages:
         arguments: 'install --global dotnet-ef'
         
     - task: DotNetCoreCLI@2
-      displayName: Check dotnet-ef version
+      displayName: Creating migration
       inputs:
         command: 'custom'
         custom: 'ef'
-        arguments: '--version'
+        arguments: 'migrations add Migration_$(Build.BuildNumber)'
 
     - task: DotNetCoreCLI@2
       inputs:
