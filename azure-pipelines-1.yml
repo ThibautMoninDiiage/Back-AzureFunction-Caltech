@@ -26,26 +26,22 @@ stages:
           $(workingDirectory)/*.csproj
         arguments: --output $(System.DefaultWorkingDirectory)/publish_output --configuration Release
     
-    # - task: DotNetCoreCLI@2
-    #   displayName: 'Install dotnet-ef'
-    #   inputs:
-    #     command: 'custom'
-    #     custom: 'tool'
-    #     arguments: 'install --global dotnet-ef'
-
-    # - task: DotNetCoreCLI@2
-    #   inputs:
-    #     command: 'custom'
-    #     projects: '**/SecurityServer.DataAccess.csproj'
-    #     custom: 'ef'
-    #     arguments: migrations script -o $(Build.ArtifactStagingDirectory)/migrations/scripts.sql -v -i
-
-    # - task: DotNetCoreCLI@2
-    #   inputs:
-    #     command: 'custom'
-    #     projects: '**/*.csproj'
-    #     custom: 'dotnet ef database update'
-
+    - task: DotNetCoreCLI@2
+      displayName: Install dotnet-ef
+      inputs:
+        command: 'custom'
+        custom: 'tool'
+        arguments: 'install --global dotnet-ef'
+    - script: "echo $(System.DefaultWorkingDirectory)"
+    - task: DotNetCoreCLI@2
+      displayName: Creating migration
+      inputs:
+        command: 'custom'
+        projects: '*/SecurityServer.DataAccess.csproj'
+        custom: 'ef'
+        arguments: 'migrations add Migration_$(Build.BuildNumber)'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/SecurityServer.DataAccess/SecurityServer.DataAccess.csproj'
+    
     - task: DotNetCoreCLI@2
       inputs:
         command: 'publish'
@@ -64,27 +60,3 @@ stages:
 
     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildNumber).zip
       artifact: drop
-
-# - stage: Deploy
-#   displayName: Deploy stage
-#   dependsOn: Build
-#   condition: succeeded()
-
-#   jobs:
-#   - deployment: Deploy
-#     displayName: Deploy
-#     environment: 'development'
-#     pool:
-#       vmImage: $(vmImageName)
-
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:
-#           - task: AzureFunctionApp@1
-#             displayName: 'Azure functions app deploy'
-#             inputs:
-#               azureSubscription: '$(azureSubscription)'
-#               appType: functionApp
-#               appName: $(functionAppName)
-#               package: '$(Pipeline.Workspace)/drop/$(Build.BuildNumber).zip'
