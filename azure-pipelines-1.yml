@@ -37,7 +37,7 @@ stages:
       displayName: Creating migration
       inputs:
         command: 'custom'
-        projects: '*/SecurityServer.DataAccess.csproj'
+        projects: '**/SecurityServer.DataAccess.csproj'
         custom: 'ef'
         arguments: 'migrations add Migration_$(Build.BuildNumber)'
         workingDirectory: '$(System.DefaultWorkingDirectory)/SecurityServer.DataAccess/SecurityServer.DataAccess.csproj'
