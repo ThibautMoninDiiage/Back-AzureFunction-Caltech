@@ -27,7 +27,7 @@ namespace SecurityServer.Service
             foreach (var item in applicationUserRoles)
             {
                 Application application = await _uow.ApplicationRepository.GetAsync(a => a.Id == item.ApplicationId);
-                ApplicationByUserDtoDown applicationByUserDtoDown = new ApplicationByUserDtoDown() { Id = application.Id,Description = application.Description, Name = application.Name,RedirectUri = application.RedirectUri, Url = application.Url };
+                ApplicationByUserDtoDown applicationByUserDtoDown = new ApplicationByUserDtoDown() { Id = application.Id,Description = application.Description, Name = application.Name, Url = application.Url };
                 Role role = await _uow.RoleRepository.GetAsync(r => r.Id == item.RoleId);
                 RoleByApplicationIdDtoDown roleByApplicationIdDtoDown = new RoleByApplicationIdDtoDown() { Id = role.Id,Name = role.Name};
                 applicationByUserDtoDown.Role = roleByApplicationIdDtoDown;

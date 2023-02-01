@@ -4,7 +4,6 @@ using SecurityServer.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
 using SecurityServer.Service.Interfaces;
 using Claim = System.Security.Claims.Claim;
 using System.Security.Cryptography.X509Certificates;
@@ -70,7 +69,6 @@ namespace SecurityServer.Service
 
             // génère un token valide pour 7 jours
             var tokenHandler = new JwtSecurityTokenHandler();
-            byte[] key = Encoding.ASCII.GetBytes(_apiSettings.JwtSecret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
