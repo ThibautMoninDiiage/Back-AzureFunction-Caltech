@@ -15,6 +15,7 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using System.Net;
 using Microsoft.OpenApi.Models;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
+using SecurityServer.Service;
 
 namespace SecurityServer.Function
 {
@@ -202,5 +203,27 @@ namespace SecurityServer.Function
                 return new BadRequestResult();
             }
         }
+
+        #region DELETE
+        [FunctionName("DeleteUser")]                                                                 //Delete application
+        [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
+        [OpenApiParameter("id", In = ParameterLocation.Path, Description = "Id of the user to delete", Required = true, Type = typeof(int))]
+        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(bool), Description = "Successfully deleted, or there was no User with the specified ID.")]
+        public async Task<IActionResult> DeleteUser([HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = Route + "/{id}")] HttpRequest req, ILogger log, int id)
+        {
+            try
+            {
+                bool result = await _userService.DeleteUser(id);
+
+                return new OkObjectResult(result);
+            }
+            catch (AggregateException ex)
+            {
+                log.LogInformation(ex.Message);
+                return new BadRequestResult();
+            }
+        }
+        #endregion
     }
 }

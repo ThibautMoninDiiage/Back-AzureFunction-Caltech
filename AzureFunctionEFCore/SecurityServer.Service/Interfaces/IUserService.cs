@@ -13,5 +13,6 @@ namespace SecurityServer.Service.Interfaces
         public Task<UserDtoDown> CreateUser(UserCreationDtoUp model);
         public Task<User> UpdateUser(UserModifyDtoUp model);
         public Task<bool> AddExistantUser(AddUserInApplicationDtoDown model);
+        public Task<bool> DeleteUser(int userId);
     }
 }
