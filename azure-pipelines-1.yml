@@ -18,20 +18,20 @@ stages:
       vmImage: $(vmImageName)
 
     steps:
-    - task: DotNetCoreCLI@2
-      displayName: Build
-      inputs:
-        command: 'build'
-        projects: |
-          $(workingDirectory)/*.csproj
-        arguments: --output $(System.DefaultWorkingDirectory)/publish_output --configuration Release
+    # - task: DotNetCoreCLI@2
+    #   displayName: Build
+    #   inputs:
+    #     command: 'build'
+    #     projects: |
+    #       $(workingDirectory)/*.csproj
+    #     arguments: --output $(System.DefaultWorkingDirectory)/publish_output --configuration Release
     
-    - task: DotNetCoreCLI@2
-      displayName: Install dotnet-ef
-      inputs:
-        command: 'custom'
-        custom: 'tool'
-        arguments: 'install --global dotnet-ef --version 6.0.0'
+    # - task: DotNetCoreCLI@2
+    #   displayName: Install dotnet-ef
+    #   inputs:
+    #     command: 'custom'
+    #     custom: 'tool'
+    #     arguments: 'install --global dotnet-ef --version 6.0.0'
 
     - task: DotNetCoreCLI@2
       displayName: Creating migration
