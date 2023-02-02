@@ -26,21 +26,21 @@ stages:
           $(workingDirectory)/*.csproj
         arguments: --output $(System.DefaultWorkingDirectory)/publish_output --configuration Release
     
-    # - task: DotNetCoreCLI@2
-    #   displayName: Install dotnet-ef
-    #   inputs:
-    #     command: 'custom'
-    #     custom: 'tool'
-    #     arguments: 'install --global dotnet-ef --version 6.0.0'
+    - task: DotNetCoreCLI@2
+      displayName: Install dotnet-ef
+      inputs:
+        command: 'custom'
+        custom: 'tool'
+        arguments: 'install --global dotnet-ef --version 6.0.0'
 
-    # - task: DotNetCoreCLI@2
-    #   displayName: Creating migration
-    #   inputs:
-    #     command: 'custom'
-    #     projects: '$(System.DefaultWorkingDirectory)\AzureFunctionEFCore\SecurityServer.DataAccess\SecurityServer.DataAccess.csproj'
-    #     custom: 'ef'
-    #     arguments: 'migrations add Migration_$(Build.BuildNumber)'
-    #     workingDirectory: '$(System.DefaultWorkingDirectory)\SecurityServer.DataAccess'
+    - task: DotNetCoreCLI@2
+      displayName: Creating migration
+      inputs:
+        command: 'custom'
+        projects: '$(System.DefaultWorkingDirectory)\AzureFunctionEFCore\SecurityServer.DataAccess\SecurityServer.DataAccess.csproj'
+        custom: 'ef'
+        arguments: 'migrations add Migration_$(Build.BuildNumber)'
+        workingDirectory: '$(System.DefaultWorkingDirectory)\SecurityServer.DataAccess'
     
     - task: DotNetCoreCLI@2
       inputs:
