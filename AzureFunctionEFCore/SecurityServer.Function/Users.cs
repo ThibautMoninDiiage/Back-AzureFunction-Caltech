@@ -39,36 +39,18 @@ namespace SecurityServer.Function
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             UserDtoUp userDtoUp = JsonConvert.DeserializeObject<UserDtoUp>(requestBody);
 
-            if(userDtoUp.Url == null || userDtoUp.Url == "")
-            {
-                //Connexion sur le serveur de sécurité
-                if (userDtoUp.Mail == null || userDtoUp.Password == null)
-                    return new BadRequestResult();
-                else
-                {
-                    string userResult = await _userService.Authenticate(userDtoUp);
-
-                    if (userResult == null)
-                        return new BadRequestResult();
-                    else
-                        return new RedirectResult(userResult);
-                }
-            }
+            if (userDtoUp.Mail == null || userDtoUp.Password == null)
+                return new BadRequestResult();
             else
             {
-                //Connexion sur une autre appli
-                if (userDtoUp.Mail == null || userDtoUp.Password == null)
+                string userResult = await _userService.Authenticate(userDtoUp);
+
+                if (userResult == null)
                     return new BadRequestResult();
                 else
-                {
-                    string userResult = await _userService.AuthenticateWithUrl(userDtoUp);
-
-                    if (userResult == null)
-                        return new BadRequestResult();
-                    else
-                        return new RedirectResult(userResult);
-                }
+                    return new RedirectResult(userResult);
             }
+            //}
         }
 
         [FunctionName("ConnexionGrant")]

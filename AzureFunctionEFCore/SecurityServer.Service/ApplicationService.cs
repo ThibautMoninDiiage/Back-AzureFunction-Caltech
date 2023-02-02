@@ -3,7 +3,6 @@ using SecurityServer.Models.Models;
 using SecurityServer.Service.DTO.Down;
 using SecurityServer.Service.DTO.Up;
 using SecurityServer.Service.Interfaces;
-using System.Linq.Expressions;
 
 namespace SecurityServer.Service
 {
@@ -47,7 +46,7 @@ namespace SecurityServer.Service
                     users.Add(userByApplicationDtoDown);
                 }
 
-                ApplicationDtoDown applicationDtoDown = new ApplicationDtoDown() { Id = application.Id,Description = application.Description,Name = application.Name,Url = application.Url,Users = users};
+                ApplicationDtoDown applicationDtoDown = new ApplicationDtoDown() { Id = application.Id,Description = application.Description,Name = application.Name,Url = application.Url,SecretCode = application.SecretCode,Users = users};
                 applicationsDtoDown.Add(applicationDtoDown);
 
             }
@@ -65,6 +64,7 @@ namespace SecurityServer.Service
                     Description = application.Description,
                     Name = application.Name,
                     Url = application.Url,
+                    SecretCode = Guid.NewGuid().ToString(),
                 };
 
                 _iuow.ApplicationRepository.Add(committed);
@@ -73,7 +73,8 @@ namespace SecurityServer.Service
                 return _iuow.ApplicationRepository.Get(app => 
                     app.Name == committed.Name &&
                     app.Url == committed.Url &&
-                    app.Description == (committed.Description ?? "")
+                    app.Description == (committed.Description ?? "") &&
+                    app.SecretCode == committed.SecretCode
                 );
             });
         }
@@ -101,15 +102,10 @@ namespace SecurityServer.Service
         {
             return await Task.Run(async () =>
             {
-                Type type = typeof(Application);
-                ParameterExpression member = Expression.Parameter(type, "param");
-                MemberExpression fieldId = Expression.PropertyOrField(member, "id");
-                Expression<Func<Application, bool>> requete = Expression.Lambda<Func<Application, bool>>(Expression.Equal(fieldId, Expression.Constant(id)), member);
+                Application application = await _iuow.ApplicationRepository.GetAsync(a => a.Id == id);
 
-                Application user = await _iuow.ApplicationRepository.GetAsync(requete);
-
-                if (user != null)
-                    return user;
+                if (application != null)
+                    return application;
                 else
                     return null;
             });
@@ -117,20 +113,17 @@ namespace SecurityServer.Service
 
         public async Task<Application> UpdateApplication(ApplicationUpdateDtoUp update)
         {
-            return await Task.Run(() =>
-            {
-                Application app = new()
-                {
-                    Id = (int)update.Id,
-                    Description = update.Description,
-                    Name = update.Name,
-                    Url = update.Url,
-                };
+            Application essaiApplication = await _iuow.ApplicationRepository.GetAsync(a => a.Id == update.Id);
 
-                _iuow.ApplicationRepository.Update(app);
-                _iuow.Commit();
-                return app;
-            });
+            essaiApplication.Id = update.Id;
+            essaiApplication.Description = update.Description;
+            essaiApplication.Name = update.Name;
+            essaiApplication.Url = update.Url;
+
+            _iuow.ApplicationRepository.Update(essaiApplication);
+            await _iuow.CommitAsync();
+
+            return essaiApplication;
         }
 
         public async Task<List<ApplicationUserDtoDown>> GetUserWhereIsNotInAppli(int idApp)

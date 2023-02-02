@@ -16,7 +16,7 @@ namespace SecurityServer.Service
             _jwtService = jwtService;
         }
 
-        public async Task<UserGetByIdDtoDown?> GetById(int? id)
+        public async Task<UserGetByIdDtoDown> GetById(int? id)
         {
             User user = await _uow.UserRepository.GetAsync(x => x.Id == id);
 
@@ -58,7 +58,11 @@ namespace SecurityServer.Service
 
             if (user == null) return null;
 
-            ApplicationUserRole applicationUserRole = await _uow.ApplicationUserRoleRepository.GetAsync(x => x.ApplicationId == 1 && x.UserId == user.Id);
+            Application application = await _uow.ApplicationRepository.GetAsync(x => x.SecretCode == model.SecretCode);
+
+            if (application == null) return null;
+
+            ApplicationUserRole applicationUserRole = await _uow.ApplicationUserRoleRepository.GetAsync(x => x.ApplicationId == application.Id && x.UserId == user.Id);
 
             if (applicationUserRole == null) return null;
 
@@ -69,9 +73,7 @@ namespace SecurityServer.Service
 
             Guid grantCode = _jwtService.GenerateGrantCode();
 
-            Application application = await _uow.ApplicationRepository.GetAsync(a => a.Id == 1);
-
-            Grant grantVerify = await _uow.GrantRepository.GetAsync(g => g.UserId == user.Id && g.ApplicationId == 1);
+            Grant grantVerify = await _uow.GrantRepository.GetAsync(g => g.UserId == user.Id && g.ApplicationId == application.Id);
 
             if (grantVerify != null)
             {
@@ -150,50 +152,6 @@ namespace SecurityServer.Service
             _uow.UserRepository.Update(user);
             await _uow.CommitAsync();
             return user;
-        }
-
-        public async Task<string> AuthenticateWithUrl(UserDtoUp model)
-        {
-            User user = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
-
-            if (user == null) return null;
-
-            Application application = await _uow.ApplicationRepository.GetAsync(x => x.Url == model.Url);
-
-            if (application == null) return null;
-
-            ApplicationUserRole applicationUserRole = await _uow.ApplicationUserRoleRepository.GetAsync(x => x.ApplicationId == application.Id && x.UserId == user.Id);
-
-            if (applicationUserRole == null) return null;
-
-            string hashedPassword = _jwtService.HashPasswordWithSalt(model.Password, Convert.FromBase64String(user.Salt));
-
-            if (user.Password != hashedPassword)
-                return null;
-
-            Guid grantCode = _jwtService.GenerateGrantCode();
-
-            Grant grantVerify = await _uow.GrantRepository.GetAsync(g => g.UserId == user.Id && g.ApplicationId == application.Id);
-
-            if (grantVerify != null)
-            {
-                if (application.Url.LastIndexOf('/') == application.Url.Length - 1)
-                    return application.Url + "?code=" + grantVerify.Code.ToString();
-                else
-                    return application.Url + "/?code=" + grantVerify.Code.ToString();
-            }     
-            else
-            {
-                Grant grant = new Grant() { ApplicationId = application.Id, UserId = user.Id, Code = grantCode.ToString(), CreatedAt = DateTime.Now };
-
-                _uow.GrantRepository.Add(grant);
-                await _uow.CommitAsync();
-
-                if(application.Url.LastIndexOf('/') == application.Url.Length -1)
-                    return application.Url + "?code=" + grantCode.ToString();
-                else
-                    return application.Url + "/?code=" + grantCode.ToString();
-            }
         }
 
         public async Task<UserDtoDown> GetToken(string codeGrant)

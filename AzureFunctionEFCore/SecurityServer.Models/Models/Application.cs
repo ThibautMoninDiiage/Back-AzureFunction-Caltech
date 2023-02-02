@@ -12,6 +12,8 @@ namespace SecurityServer.Models.Models
         public string? Url { get; set; }
         [Required]
         public string? Description { get; set; }
+        [Required]
+        public string? SecretCode { get; set; }
         [JsonIgnore]
         public List<Claim>? Claims { get; set; }
         public List<ApplicationUserRole>? ApplicationUserRoles { get; set; }
