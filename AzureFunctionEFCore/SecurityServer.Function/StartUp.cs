@@ -24,7 +24,7 @@ namespace SecurityServer.Function
             string connString = Environment.GetEnvironmentVariable("SqlConnectionString", EnvironmentVariableTarget.Process);
 
             builder.Services.AddHealthChecks();
-            builder.Services.AddCors();
+            builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",builder => builder.WithOrigins("http://localhost:4200")));
             builder.Services.AddEndpointsApiExplorer();
 
             var jwt = new ApiSettings();
