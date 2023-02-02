@@ -19,11 +19,6 @@ stages:
       vmImage: $(vmImageName)
 
     steps:
-    # - task: UseDotNet@2
-    #   inputs:
-    #     packageType: 'sdk'
-    #     version: '6.x'
-
     - task: DotNetCoreCLI@2
       displayName: Running unit tests
       inputs:
