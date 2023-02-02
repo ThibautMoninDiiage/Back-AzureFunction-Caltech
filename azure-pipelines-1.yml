@@ -31,7 +31,7 @@ stages:
       inputs:
         command: 'custom'
         custom: 'tool'
-        arguments: 'install --global dotnet-ef --version 2'
+        arguments: 'install --global dotnet-ef'
 
     - task: DotNetCoreCLI@2
       displayName: Creating migration
