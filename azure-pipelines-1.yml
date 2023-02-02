@@ -65,5 +65,5 @@ stages:
 
     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildNumber).zip
       artifact: drop
-    
+
     - task: QodanaScan@2022
