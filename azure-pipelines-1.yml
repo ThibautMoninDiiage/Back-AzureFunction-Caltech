@@ -45,6 +45,8 @@ stages:
         custom: 'tool'
         arguments: 'install --global dotnet-ef'
 
+    - script: cd $(System.DefaultWorkingDirectory)\AzureFunctionEFCore\SecurityServer.DataAccess
+
     - task: DotNetCoreCLI@2
       displayName: Creating migration
       inputs:
