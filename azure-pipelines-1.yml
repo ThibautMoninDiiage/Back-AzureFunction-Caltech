@@ -34,8 +34,8 @@ stages:
         arguments: 'install --global dotnet-ef'
     
     - script: | 
-        'echo $(System.DefaultWorkingDirectory)' 
-        'dir $(System.DefaultWorkingDirectory)'
+        echo $(System.DefaultWorkingDirectory)
+        dir $(System.DefaultWorkingDirectory)
 
     - task: DotNetCoreCLI@2
       displayName: Creating migration
