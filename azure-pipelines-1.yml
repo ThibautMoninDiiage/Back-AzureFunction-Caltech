@@ -35,7 +35,7 @@ stages:
       displayName: Build
       inputs:
         command: 'build'
-        projects: $(System.DefaultWorkingDirectory)/*.csproj
+        projects: $(WorkingDirectory)/*.csproj
         arguments: --output $(System.DefaultWorkingDirectory)/publish_output --configuration Release
     
     - task: DotNetCoreCLI@2
