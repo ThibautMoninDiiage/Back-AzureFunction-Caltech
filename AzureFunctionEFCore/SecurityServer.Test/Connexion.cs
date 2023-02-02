@@ -130,5 +130,13 @@ namespace SecurityServer.Test
 
             Assert.IsNotNull(userDtoDown.Token);
         }
+
+        [TestMethod]
+        public void TestNul()
+        {
+            int test = 2;
+
+            Assert.AreEqual(4, test + test);
+        }
     }
 }
