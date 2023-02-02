@@ -14,5 +14,5 @@
     "client_id": "4e9414cf-0bfd-4144-880c-ccff9e466553",
     "secret": "pz28Q~65gNo_IQDJR-A6zca5XrwgGRSLY-VWya.S"
   },
-  "Host": {"CORS": "*","CORSCredentials": false}
+  "Host": { "LocalHttpPort" : 4200,"CORS": "*","CORSCredentials": false}
 }
