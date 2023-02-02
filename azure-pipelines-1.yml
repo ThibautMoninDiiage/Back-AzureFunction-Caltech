@@ -32,15 +32,19 @@ stages:
         command: 'custom'
         custom: 'tool'
         arguments: 'install --global dotnet-ef'
-  
+    
+    - script: | 
+        'echo $(System.DefaultWorkingDirectory)' 
+        'dir $(System.DefaultWorkingDirectory)'
+
     - task: DotNetCoreCLI@2
       displayName: Creating migration
       inputs:
         command: 'custom'
-        projects: '$(System.DefaultWorkingDirectory)/AzureFunctionEFCore/SecurityServer.DataAccess/SecurityServer.DataAccess.csproj'
+        projects: '**/SecurityServer.DataAccess.csproj'
         custom: 'ef'
         arguments: 'migrations add Migration_$(Build.BuildNumber)'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/AzureFunctionEFCore/SecurityServer.DataAccess'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/SecurityServer.DataAccess'
     
     - task: DotNetCoreCLI@2
       inputs:
