@@ -18,6 +18,18 @@ stages:
       vmImage: $(vmImageName)
 
     steps:
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '6.x'
+
+    - task: DotNetCoreCLI@2
+      displayName: Running unit tests
+      inputs:
+        command: 'test'
+        projects: '**/SecurityServer.Test.csproj'
+        testRunTitle: 'Unit tests'
+    
     - task: DotNetCoreCLI@2
       displayName: Build
       inputs:
@@ -31,7 +43,7 @@ stages:
       inputs:
         command: 'custom'
         custom: 'tool'
-        arguments: 'install --global dotnet-ef --version 6.0.0'
+        arguments: 'install --global dotnet-ef'
 
     - task: DotNetCoreCLI@2
       displayName: Creating migration
@@ -40,7 +52,6 @@ stages:
         projects: '$(System.DefaultWorkingDirectory)\AzureFunctionEFCore\SecurityServer.DataAccess\SecurityServer.DataAccess.csproj'
         custom: 'ef'
         arguments: 'migrations add Migration_$(Build.BuildNumber)'
-        workingDirectory: '$(System.DefaultWorkingDirectory)\SecurityServer.DataAccess'
     
     - task: DotNetCoreCLI@2
       inputs:
