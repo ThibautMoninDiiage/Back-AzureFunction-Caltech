@@ -31,7 +31,7 @@ stages:
       inputs:
         command: 'custom'
         custom: 'tool'
-        arguments: 'install --global dotnet-ef --version 6.0.0'
+        arguments: 'install --global dotnet-ef --version 2'
 
     - task: DotNetCoreCLI@2
       displayName: Creating migration
@@ -40,7 +40,6 @@ stages:
         projects: '$(System.DefaultWorkingDirectory)\AzureFunctionEFCore\SecurityServer.DataAccess\SecurityServer.DataAccess.csproj'
         custom: 'ef'
         arguments: 'migrations add Migration_$(Build.BuildNumber)'
-        workingDirectory: '$(System.DefaultWorkingDirectory)\SecurityServer.DataAccess'
     
     - task: DotNetCoreCLI@2
       inputs:
