@@ -11,6 +11,8 @@ namespace SecurityServer.DataAccess.SecurityServerContext
         public DbSet<ApplicationUserRole> ApplicationUserRoles { get; set; }
         public DbSet<Claim> Claims { get; set; }
         public DbSet<Grant> Grants { get; set; }
+        public DbSet<Tristan> Tristans { get; set; }
+        
 
         public DbContextServer(DbContextOptions<DbContextServer> options) : base(options)
         {
