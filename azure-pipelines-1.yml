@@ -24,6 +24,13 @@ stages:
         version: '6.x'
 
     - task: DotNetCoreCLI@2
+      displayName: Running unit tests
+      inputs:
+        command: 'test'
+        projects: '**/SecurityServer.Test.csproj'
+        testRunTitle: 'Unit tests'
+    
+    - task: DotNetCoreCLI@2
       displayName: Build
       inputs:
         command: 'build'
