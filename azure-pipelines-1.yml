@@ -51,7 +51,7 @@ stages:
         command: 'custom'
         projects: '$(System.DefaultWorkingDirectory)\AzureFunctionEFCore\SecurityServer.DataAccess\SecurityServer.DataAccess.csproj'
         custom: 'ef'
-        arguments: 'migrations add Migration_$(Build.BuildNumber)'
+        arguments: '--project "$(System.DefaultWorkingDirectory)\AzureFunctionEFCore\SecurityServer.DataAccess\SecurityServer.DataAccess.csproj" migrations add Migration_$(Build.BuildNumber)'
     
     - task: DotNetCoreCLI@2
       inputs:
