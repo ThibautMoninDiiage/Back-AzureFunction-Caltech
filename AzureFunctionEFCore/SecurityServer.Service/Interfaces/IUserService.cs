@@ -9,7 +9,6 @@ namespace SecurityServer.Service.Interfaces
         public Task<UserGetByIdDtoDown> GetById(int? id);
         public Task<GrantDtoDown> Authenticate(UserDtoUp model);
         public Task<UserDtoDown> GetToken(string codeGrant); 
-        public Task<GrantDtoDown> AuthenticateWithUrl(UserDtoUp model);
         public Task<UserDtoDown> CreateUser(UserCreationDtoUp model);
         public Task<User> UpdateUser(UserModifyDtoUp model);
         public Task<bool> AddExistantUser(AddUserInApplicationDtoDown model);

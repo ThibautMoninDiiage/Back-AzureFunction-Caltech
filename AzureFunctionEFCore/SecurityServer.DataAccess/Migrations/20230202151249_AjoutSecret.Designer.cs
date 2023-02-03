@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecurityServer.DataAccess.SecurityServerContext;
 
@@ -11,9 +12,10 @@ using SecurityServer.DataAccess.SecurityServerContext;
 namespace SecurityServer.DataAccess.Migrations
 {
     [DbContext(typeof(DbContextServer))]
-    partial class DbContextServerModelSnapshot : ModelSnapshot
+    [Migration("20230202151249_AjoutSecret")]
+    partial class AjoutSecret
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,6 +71,7 @@ namespace SecurityServer.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecretCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Url")

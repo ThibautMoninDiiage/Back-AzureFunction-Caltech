@@ -32,43 +32,25 @@ namespace SecurityServer.Function
         [FunctionName("ServeurConnexion")]
         [OpenApiOperation(operationId: "ServeurConnexion", tags: new[] { "User" })]
         [OpenApiRequestBody("userDtoUp", typeof(UserDtoUp))]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(GrantDtoDown), Description = "Response")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Description = "Response")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(void))]
         public async Task<IActionResult> ServeurConnexion([HttpTrigger(AuthorizationLevel.Anonymous,"post", Route = "signin")] HttpRequest req)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             UserDtoUp userDtoUp = JsonConvert.DeserializeObject<UserDtoUp>(requestBody);
 
-            if(userDtoUp.Url == null || userDtoUp.Url == "")
-            {
-                //Connexion sur le serveur de sécurité
-                if (userDtoUp.Mail == null || userDtoUp.Password == null)
-                    return new BadRequestResult();
-                else
-                {
-                    GrantDtoDown userResult = await _userService.Authenticate(userDtoUp);
-
-                    if (userResult == null)
-                        return new BadRequestResult();
-                    else
-                        return new OkObjectResult(userResult);
-                }
-            }
+            if (userDtoUp.Mail == null || userDtoUp.Password == null)
+                return new BadRequestResult();
             else
             {
-                //Connexion sur une autre appli
-                if (userDtoUp.Mail == null || userDtoUp.Password == null)
+                GrantDtoDown userResult = await _userService.Authenticate(userDtoUp);
+
+                if (userResult == null)
                     return new BadRequestResult();
                 else
-                {
-                    GrantDtoDown userResult = await _userService.AuthenticateWithUrl(userDtoUp);
-
-                    if (userResult == null)
-                        return new BadRequestResult();
-                    else
-                        return new OkObjectResult(userResult);
-                }
+                    return new OkObjectResult(userResult);
             }
+            //}
         }
 
         [FunctionName("ConnexionGrant")]
