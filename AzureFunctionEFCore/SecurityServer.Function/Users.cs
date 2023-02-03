@@ -51,7 +51,7 @@ namespace SecurityServer.Function
                     if (userResult == null)
                         return new BadRequestResult();
                     else
-                        return new RedirectResult(userResult);
+                        return new OkObjectResult(userResult);
                 }
             }
             else
@@ -66,7 +66,7 @@ namespace SecurityServer.Function
                     if (userResult == null)
                         return new BadRequestResult();
                     else
-                        return new RedirectResult(userResult);
+                        return new OkObjectResult(userResult);
                 }
             }
         }
