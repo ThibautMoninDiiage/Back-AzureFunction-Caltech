@@ -70,9 +70,9 @@ namespace SecurityServer.Test
 
             UserService _userService = new UserService(_uow.Object, _jwtService);
 
-            string resultGrant = _userService.Authenticate(userDtoUp).Result;
+            GrantDtoDown resultGrant = _userService.Authenticate(userDtoUp).Result;
 
-            Assert.IsNotNull(resultGrant);
+            Assert.IsNotNull(resultGrant.UrlGrant);
         }
 
         [TestMethod]
@@ -122,11 +122,11 @@ namespace SecurityServer.Test
 
             UserService _userService = new UserService(_uow.Object, _jwtService);
 
-            string resultGrant = _userService.Authenticate(userDtoUp).Result;
+            GrantDtoDown resultGrant = _userService.Authenticate(userDtoUp).Result;
 
-            resultGrant = resultGrant.Split('=')[1];
+            resultGrant.UrlGrant = resultGrant.UrlGrant.Split('=')[1];
 
-            UserDtoDown userDtoDown = _userService.GetToken(resultGrant).Result;
+            UserDtoDown userDtoDown = _userService.GetToken(resultGrant.UrlGrant).Result;
 
             Assert.IsNotNull(userDtoDown.Token);
         }
