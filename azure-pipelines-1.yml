@@ -19,11 +19,6 @@ stages:
       vmImage: $(vmImageName)
 
     steps:
-    - task: UseDotNet@2
-      inputs:
-        packageType: 'sdk'
-        version: '6.x'
-
     - task: DotNetCoreCLI@2
       displayName: Running unit tests
       inputs:
@@ -35,8 +30,7 @@ stages:
       displayName: Build
       inputs:
         command: 'build'
-        projects: |
-          $(workingDirectory)/*.csproj
+        projects: $(WorkingDirectory)/*.csproj
         arguments: --output $(System.DefaultWorkingDirectory)/publish_output --configuration Release
     
     - task: DotNetCoreCLI@2
