@@ -52,7 +52,7 @@ namespace SecurityServer.Service
 
         }
 
-        public async Task<string> Authenticate(UserDtoUp model)
+        public async Task<GrantDtoDown> Authenticate(UserDtoUp model)
         {
             User user = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
 
@@ -76,9 +76,9 @@ namespace SecurityServer.Service
             if (grantVerify != null)
             {
                 if (application.Url.LastIndexOf('/') == application.Url.Length - 1)
-                    return application.Url + "?code=" + grantVerify.Code.ToString();
+                    return new GrantDtoDown() { UrlGrant = application.Url + "?code=" + grantVerify.Code.ToString() };
                 else
-                    return application.Url + "/?code=" + grantVerify.Code.ToString();
+                    return new GrantDtoDown() { UrlGrant = application.Url + "/?code=" + grantVerify.Code.ToString() };
             }
             else
             {
@@ -88,9 +88,9 @@ namespace SecurityServer.Service
                 await _uow.CommitAsync();
 
                 if (application.Url.LastIndexOf('/') == application.Url.Length - 1)
-                    return application.Url + "?code=" + grantCode.ToString();
+                    return new GrantDtoDown() { UrlGrant = application.Url + "?code=" + grantCode.ToString() };
                 else
-                    return application.Url + "/?code=" + grantCode.ToString();
+                    return new GrantDtoDown() { UrlGrant = application.Url + "/?code=" + grantCode.ToString() };
             }
 
         }
@@ -152,7 +152,7 @@ namespace SecurityServer.Service
             return user;
         }
 
-        public async Task<string> AuthenticateWithUrl(UserDtoUp model)
+        public async Task<GrantDtoDown> AuthenticateWithUrl(UserDtoUp model)
         {
             User user = await _uow.UserRepository.GetAsync(x => x.Mail == model.Mail);
 
@@ -178,10 +178,10 @@ namespace SecurityServer.Service
             if (grantVerify != null)
             {
                 if (application.Url.LastIndexOf('/') == application.Url.Length - 1)
-                    return application.Url + "?code=" + grantVerify.Code.ToString();
+                    return new GrantDtoDown() { UrlGrant = application.Url + "?code=" + grantVerify.Code.ToString() };
                 else
-                    return application.Url + "/?code=" + grantVerify.Code.ToString();
-            }     
+                    return new GrantDtoDown() { UrlGrant = application.Url + "/?code=" + grantVerify.Code.ToString() };
+            }
             else
             {
                 Grant grant = new Grant() { ApplicationId = application.Id, UserId = user.Id, Code = grantCode.ToString(), CreatedAt = DateTime.Now };
@@ -189,10 +189,10 @@ namespace SecurityServer.Service
                 _uow.GrantRepository.Add(grant);
                 await _uow.CommitAsync();
 
-                if(application.Url.LastIndexOf('/') == application.Url.Length -1)
-                    return application.Url + "?code=" + grantCode.ToString();
+                if (application.Url.LastIndexOf('/') == application.Url.Length - 1)
+                    return new GrantDtoDown() { UrlGrant = application.Url + "?code=" + grantCode.ToString() };
                 else
-                    return application.Url + "/?code=" + grantCode.ToString();
+                    return new GrantDtoDown() { UrlGrant = application.Url + "/?code=" + grantCode.ToString() };
             }
         }
 

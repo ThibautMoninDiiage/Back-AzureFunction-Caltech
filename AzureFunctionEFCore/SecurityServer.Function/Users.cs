@@ -46,7 +46,7 @@ namespace SecurityServer.Function
                     return new BadRequestResult();
                 else
                 {
-                    string userResult = await _userService.Authenticate(userDtoUp);
+                    GrantDtoDown userResult = await _userService.Authenticate(userDtoUp);
 
                     if (userResult == null)
                         return new BadRequestResult();
@@ -61,7 +61,7 @@ namespace SecurityServer.Function
                     return new BadRequestResult();
                 else
                 {
-                    string userResult = await _userService.AuthenticateWithUrl(userDtoUp);
+                    GrantDtoDown userResult = await _userService.AuthenticateWithUrl(userDtoUp);
 
                     if (userResult == null)
                         return new BadRequestResult();
