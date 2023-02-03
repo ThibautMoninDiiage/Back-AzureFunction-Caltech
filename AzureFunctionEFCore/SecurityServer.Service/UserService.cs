@@ -77,10 +77,7 @@ namespace SecurityServer.Service
 
             if (grantVerify != null)
             {
-                if (application.Url.LastIndexOf('/') == application.Url.Length - 1)
-                    return new GrantDtoDown() { UrlGrant = application.Url + "?code=" + grantVerify.Code.ToString() };
-                else
-                    return new GrantDtoDown() { UrlGrant = application.Url + "/?code=" + grantVerify.Code.ToString() };
+                return new GrantDtoDown() { RedirectUri = application.Url, CodeGrant = grantVerify.Code.ToString() };
             }
             else
             {
@@ -88,11 +85,8 @@ namespace SecurityServer.Service
 
                 _uow.GrantRepository.Add(grant);
                 await _uow.CommitAsync();
-
-                if (application.Url.LastIndexOf('/') == application.Url.Length - 1)
-                    return new GrantDtoDown() { UrlGrant = application.Url + "?code=" + grantCode.ToString() };
-                else
-                    return new GrantDtoDown() { UrlGrant = application.Url + "/?code=" + grantCode.ToString() };
+                
+                return new GrantDtoDown() { RedirectUri = application.Url, CodeGrant = grantCode.ToString() };
             }
 
         }

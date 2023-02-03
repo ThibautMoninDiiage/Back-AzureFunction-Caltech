@@ -2,6 +2,7 @@
 {
     public class GrantDtoDown
     {
-        public string? UrlGrant { get; set; }
+        public string? RedirectUri { get; set; }
+        public string? CodeGrant { get; set; }
     }
 }

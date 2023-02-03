@@ -76,7 +76,7 @@ namespace SecurityServer.Test
 
             GrantDtoDown resultGrant = _userService.Authenticate(userDtoUp).Result;
 
-            Assert.IsNotNull(resultGrant.UrlGrant);
+            Assert.IsNotNull(resultGrant.CodeGrant);
         }
 
         [TestMethod]
@@ -130,9 +130,7 @@ namespace SecurityServer.Test
 
             GrantDtoDown resultGrant = _userService.Authenticate(userDtoUp).Result;
 
-            resultGrant.UrlGrant = resultGrant.UrlGrant.Split('=')[1];
-
-            UserDtoDown userDtoDown = _userService.GetToken(resultGrant.UrlGrant).Result;
+            UserDtoDown userDtoDown = _userService.GetToken(resultGrant.CodeGrant).Result;
 
             Assert.IsNotNull(userDtoDown.Token);
         }
