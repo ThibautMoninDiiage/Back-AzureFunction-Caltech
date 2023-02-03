@@ -43,12 +43,12 @@ namespace SecurityServer.Function
                 return new BadRequestResult();
             else
             {
-                string userResult = await _userService.Authenticate(userDtoUp);
+                GrantDtoDown userResult = await _userService.Authenticate(userDtoUp);
 
                 if (userResult == null)
                     return new BadRequestResult();
                 else
-                    return new RedirectResult(userResult);
+                    return new OkObjectResult(userResult);
             }
             //}
         }

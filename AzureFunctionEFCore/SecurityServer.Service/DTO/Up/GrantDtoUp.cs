@@ -1,4 +1,4 @@
-﻿namespace SecurityServer.Service.DTO.Down
+﻿namespace SecurityServer.Service.DTO.Up
 {
     public class GrantDtoUp
     {
