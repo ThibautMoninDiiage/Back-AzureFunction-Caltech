@@ -134,15 +134,16 @@ namespace SecurityServer.Service
 
         public async Task<User> UpdateUser(UserModifyDtoUp model)
         {
-            User user = new User()
-            {
-                Id = model.Id,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Username = model.Username,
-                Mail = model.Mail,
-                Avatar = model.Avatar
-            };
+
+            User user = await _uow.UserRepository.GetAsync(x => x.Id == model.Id);
+
+            user.Id = model.Id;
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Username = model.Username;
+            user.Mail = model.Mail;
+            user.Avatar = model.Avatar;
+
             _uow.UserRepository.Update(user);
             await _uow.CommitAsync();
             return user;
