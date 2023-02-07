@@ -57,7 +57,15 @@ namespace SecurityServer.Test
             _apiSettings.JwtIssuer = "mydomain";
             _apiSettings.JwtAudience = "localhost";
 
-            JwtService _jwtService = new JwtService(_apiSettings);
+            CertificatSettings _certificatSettings = new CertificatSettings();
+            _certificatSettings.CertificateName = "certificatetoken";
+            _certificatSettings.ClientId = "4e9414cf-0bfd-4144-880c-ccff9e466553";
+            _certificatSettings.TenantId = "14bc5219-40ca-4d62-a8e4-7c97c1236349";
+            _certificatSettings.Secret = "woJ8Q~UaQLITEXeUaiyKoy1mOGTplvEj8K5WObS2";
+            _certificatSettings.VaultUrl = "https://preprodkeyvaultgdeuxb.vault.azure.net/";
+
+
+            JwtService _jwtService = new JwtService(_apiSettings,_certificatSettings);
 
             string secret = Guid.NewGuid().ToString();
 
@@ -86,7 +94,16 @@ namespace SecurityServer.Test
             _apiSettings.JwtIssuer = "mydomain";
             _apiSettings.JwtAudience = "localhost";
 
-            JwtService _jwtService = new JwtService(_apiSettings);
+            CertificatSettings _certificatSettings = new CertificatSettings();
+            _certificatSettings.CertificateName = "certificatetoken";
+            _certificatSettings.ClientId = "4e9414cf-0bfd-4144-880c-ccff9e466553";
+            _certificatSettings.TenantId = "14bc5219-40ca-4d62-a8e4-7c97c1236349";
+            _certificatSettings.Secret = "woJ8Q~UaQLITEXeUaiyKoy1mOGTplvEj8K5WObS2";
+            _certificatSettings.VaultUrl = "https://preprodkeyvaultgdeuxb.vault.azure.net/";
+
+
+            JwtService _jwtService = new JwtService(_apiSettings, _certificatSettings);
+
             string token = _jwtService.GenerateJwtToken(1,1);
 
             Assert.IsNotNull(token);
@@ -105,7 +122,15 @@ namespace SecurityServer.Test
             _apiSettings.JwtIssuer = "mydomain";
             _apiSettings.JwtAudience = "localhost";
 
-            JwtService _jwtService = new JwtService(_apiSettings);
+            CertificatSettings _certificatSettings = new CertificatSettings();
+            _certificatSettings.CertificateName = "certificatetoken";
+            _certificatSettings.ClientId = "4e9414cf-0bfd-4144-880c-ccff9e466553";
+            _certificatSettings.TenantId = "14bc5219-40ca-4d62-a8e4-7c97c1236349";
+            _certificatSettings.Secret = "woJ8Q~UaQLITEXeUaiyKoy1mOGTplvEj8K5WObS2";
+            _certificatSettings.VaultUrl = "https://preprodkeyvaultgdeuxb.vault.azure.net/";
+
+
+            JwtService _jwtService = new JwtService(_apiSettings, _certificatSettings);
 
             string secret = Guid.NewGuid().ToString();
 
