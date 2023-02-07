@@ -48,6 +48,13 @@ stages:
         arguments: 'migrations add Migration_$(Build.BuildNumber) -p $(DAL_Project) -s $(DAL_Project)'
     
     - task: DotNetCoreCLI@2
+      displayName: Creating migration
+      inputs:
+        command: 'custom'
+        custom: 'ef'
+        arguments: 'database update -p $(DAL_Project) -s $(DAL_Project)'
+
+    - task: DotNetCoreCLI@2
       inputs:
         command: 'publish'
         publishWebProjects: false
