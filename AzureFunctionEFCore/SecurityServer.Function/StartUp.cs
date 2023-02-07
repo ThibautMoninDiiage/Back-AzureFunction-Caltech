@@ -36,7 +36,16 @@ namespace SecurityServer.Function
             jwt.JwtIssuer = Environment.GetEnvironmentVariable("JwtIssuer", EnvironmentVariableTarget.Process);
             jwt.JwtAudience = Environment.GetEnvironmentVariable("JwtAudience", EnvironmentVariableTarget.Process);
 
+            var certificat = new CertificatSettings();
+
+            certificat.VaultUrl = Environment.GetEnvironmentVariable("Vault_url", EnvironmentVariableTarget.Process);
+            certificat.Secret = Environment.GetEnvironmentVariable("Secret", EnvironmentVariableTarget.Process);
+            certificat.ClientId = Environment.GetEnvironmentVariable("Client_id", EnvironmentVariableTarget.Process);
+            certificat.TenantId = Environment.GetEnvironmentVariable("Tenant_id", EnvironmentVariableTarget.Process);
+            certificat.CertificateName = Environment.GetEnvironmentVariable("CertificateName", EnvironmentVariableTarget.Process);
+
             builder.Services.AddSingleton(jwt);
+            builder.Services.AddSingleton(certificat);
 
             // configuration du middleware d'authentification JWT fourni par Microsoft
             builder.Services.AddAuthentication(auth =>

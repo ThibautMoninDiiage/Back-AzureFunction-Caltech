@@ -6,13 +6,12 @@
     "SqlConnectionString": "Server=tcp:preprod-server-database-groupe2b.database.windows.net,1433;Initial Catalog=pre-prod-sql-server;Persist Security Info=False;User ID=CloudSAa18a0c39;Password=JgR7hp2AB8/eua;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
     "JwtSecret": "masuperclesecrete",
     "JwtIssuer": "mydomain",
-    "JwtAudience": "localhost"
-  },
-  "KeyValues": {
-    "url": "https://preprodkeyvaultgdeux.vault.azure.net/",
-    "tenant_id": "14bc5219-40ca-4d62-a8e4-7c97c1236349",
-    "client_id": "4e9414cf-0bfd-4144-880c-ccff9e466553",
-    "secret": "pz28Q~65gNo_IQDJR-A6zca5XrwgGRSLY-VWya.S"
+    "JwtAudience": "localhost",
+    "Vault_url": "https://preprodkeyvaultgdeuxb.vault.azure.net/",
+    "Tenant_id": "14bc5219-40ca-4d62-a8e4-7c97c1236349",
+    "Client_id": "4e9414cf-0bfd-4144-880c-ccff9e466553",
+    "Secret": "woJ8Q~UaQLITEXeUaiyKoy1mOGTplvEj8K5WObS2",
+    "CertificateName": "certificatetoken"
   },
   "Host": { "LocalHttpPort" : 4200,"CORS": "*","CORSCredentials": false}
 }

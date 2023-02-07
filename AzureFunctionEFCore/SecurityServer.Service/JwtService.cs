@@ -17,19 +17,21 @@ namespace SecurityServer.Service
     {
 
         private readonly ApiSettings _apiSettings;
+        private readonly CertificatSettings _certificatSettings;
 
-        public JwtService(ApiSettings apiSettings)
+        public JwtService(ApiSettings apiSettings,CertificatSettings certificatSettings)
         {
+            _certificatSettings = certificatSettings;
             _apiSettings = apiSettings;
         }
 
-        public static X509Certificate2 LoadCertificate(string vaultUrl,string clientId,string tenantId,string secret)
+        public X509Certificate2 LoadCertificate()
         {
-            var certificateName = "certificatetoken";
+            string certificateName = _certificatSettings.CertificateName;
 
-            var credentials = new ClientSecretCredential(tenantId,clientId,secret);
-            var certClient = new CertificateClient(new Uri(vaultUrl), credentials);
-            var secretClient = new SecretClient(new Uri(vaultUrl),credentials);
+            var credentials = new ClientSecretCredential(_certificatSettings.TenantId,_certificatSettings.ClientId,_certificatSettings.Secret);
+            var certClient = new CertificateClient(new Uri(_certificatSettings.VaultUrl), credentials);
+            var secretClient = new SecretClient(new Uri(_certificatSettings.VaultUrl),credentials);
 
 
             KeyVaultCertificateWithPolicy certificate = certClient.GetCertificate(certificateName);
@@ -61,7 +63,7 @@ namespace SecurityServer.Service
         public string GenerateJwtToken(int idUser,int idRole)
         {
 
-            X509Certificate2 certificate = LoadCertificate("https://preprodkeyvaultgdeuxb.vault.azure.net/", "4e9414cf-0bfd-4144-880c-ccff9e466553", "14bc5219-40ca-4d62-a8e4-7c97c1236349", "woJ8Q~UaQLITEXeUaiyKoy1mOGTplvEj8K5WObS2");
+            X509Certificate2 certificate = LoadCertificate();
 
             RSA test = certificate.GetRSAPrivateKey();
             RsaSecurityKey securityKey = new RsaSecurityKey(test);
