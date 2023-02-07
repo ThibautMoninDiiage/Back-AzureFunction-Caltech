@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +14,6 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
-using SecurityServer.Models.Models;
 using SecurityServer.Service.DTO.Down;
 using SecurityServer.Service.DTO.Up;
 using SecurityServer.Service.Interfaces;
@@ -21,14 +22,24 @@ namespace SecurityServer.Function
 {
     public class Admins
     {
+        #region Public Variables
         public const string Route = "panelAdmin";
-        private readonly IAdminService _adminService;
+        #endregion
 
-        public Admins(IAdminService adminService)
+        #region Private Variables
+        private readonly IAdminService _adminService;
+        private readonly IAuthenticationService _authenticationService;
+        #endregion
+
+        #region CTOR
+        public Admins(IAdminService adminService, IAuthenticationService authenticationService)
         {
             _adminService = adminService;
+            _authenticationService = authenticationService;
         }
+        #endregion
 
+        #region CreateUserByAdmin
         [FunctionName("CreateUserByAdmin")]
         [OpenApiOperation(operationId: "CreateUserByAdmin", tags: new[] { "Admin" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
@@ -38,6 +49,13 @@ namespace SecurityServer.Function
         {
             try
             {
+                bool verifyToken = _authenticationService.VerifyToken(req.Headers["Bearer"].FirstOrDefault());
+
+                if (!verifyToken)
+                {
+                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                }
+
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 UserCreationDtoUp user = JsonConvert.DeserializeObject<UserCreationDtoUp>(requestBody);
 
@@ -54,7 +72,9 @@ namespace SecurityServer.Function
                 return new BadRequestResult();
             }
         }
+        #endregion
 
+        #region GetAllUsers
         [FunctionName("GetAllUsers")]
         [OpenApiOperation(operationId: "GetAllUsers", tags: new[] { "Admin" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
@@ -63,6 +83,13 @@ namespace SecurityServer.Function
         {
             try
             {
+                bool verifyToken = _authenticationService.VerifyToken(req.Headers["Bearer"].FirstOrDefault());
+
+                if (!verifyToken)
+                {
+                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                }
+
                 List<UserAllDtoDown> result = await _adminService.GetAllUsers();
 
                 if (result == null)
@@ -76,6 +103,7 @@ namespace SecurityServer.Function
                 return new BadRequestResult();
             }
         }
+        #endregion
     }
 }
 

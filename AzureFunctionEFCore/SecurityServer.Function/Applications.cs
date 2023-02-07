@@ -22,16 +22,25 @@ namespace SecurityServer.Function
 {
     public class Applications
     {
+        #region Public Variables
         public const string Route = "application";
-        private readonly IApplicationService _applicationService;
+        #endregion
 
-        public Applications(IApplicationService applicationService)
+        #region Private Variables
+        private readonly IApplicationService _applicationService;
+        private readonly IAuthenticationService _authenticationService;
+        #endregion
+
+        #region CTOR
+        public Applications(IApplicationService applicationService, IAuthenticationService authenticationService)
         {
             _applicationService = applicationService;
+            _authenticationService = authenticationService;
         }
+        #endregion
 
-        #region GET
-        [FunctionName("GetAllApplications")]                                                            //Get ALL
+        #region GetAllApplications
+        [FunctionName("GetAllApplications")]
         [OpenApiOperation(operationId: "Run", tags: new[] { "Application" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(IEnumerable<ApplicationDtoDown>), Description = "All applications from the database.")]
@@ -41,6 +50,13 @@ namespace SecurityServer.Function
         {
             try
             {
+                bool verifyToken = _authenticationService.VerifyToken(req.Headers["Bearer"].FirstOrDefault());
+
+                if (!verifyToken)
+                {
+                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                }
+
                 var result = await _applicationService.GetAllApplications();
 
                 if (result == null || result.Count() == 0)
@@ -54,8 +70,10 @@ namespace SecurityServer.Function
                 return new BadRequestResult();
             }
         }
+        #endregion
 
-        [FunctionName("GetApplicationById")]                                                            //Get by ID
+        #region GetApplicationById
+        [FunctionName("GetApplicationById")]
         [OpenApiOperation(operationId: "Run", tags: new[] { "Application" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
         [OpenApiParameter(name: "id", In = ParameterLocation.Path, Required = true, Type = typeof(int))]
@@ -66,6 +84,13 @@ namespace SecurityServer.Function
         {
             try
             {
+                bool verifyToken = _authenticationService.VerifyToken(req.Headers["Bearer"].FirstOrDefault());
+
+                if (!verifyToken)
+                {
+                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                }
+
                 if (id == null)
                     return new BadRequestResult();
                 else
@@ -86,8 +111,8 @@ namespace SecurityServer.Function
         }
         #endregion
 
-        #region POST
-        [FunctionName("CreateApplication")]                                         // Create application
+        #region CreateApplication
+        [FunctionName("CreateApplication")]
         [OpenApiOperation(operationId: "Run", tags: new[] { "Application" })]
         [OpenApiRequestBody(contentType: "application/json", typeof(ApplicationCreationDtoUp), Description = "The application to be created.", Required = true)]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
@@ -96,6 +121,13 @@ namespace SecurityServer.Function
         {
             try
             {
+                bool verifyToken = _authenticationService.VerifyToken(req.Headers["Bearer"].FirstOrDefault());
+
+                if (!verifyToken)
+                {
+                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                }
+
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 ApplicationCreationDtoUp created = JsonConvert.DeserializeObject<ApplicationCreationDtoUp>(requestBody);
 
@@ -114,8 +146,8 @@ namespace SecurityServer.Function
         }
         #endregion
 
-        #region PUT
-        [FunctionName("UpdateApplication")]                                                                 //Update application
+        #region UpdateApplication
+        [FunctionName("UpdateApplication")]
         [OpenApiOperation(operationId: "Run", tags: new[] { "Application" })]
         [OpenApiRequestBody(contentType: "application/json", typeof(ApplicationUpdateDtoUp), Description = "The updated application. Comparison is ID-based.", Required = true)]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
@@ -124,10 +156,17 @@ namespace SecurityServer.Function
         {
             try
             {
+                bool verifyToken = _authenticationService.VerifyToken(req.Headers["Bearer"].FirstOrDefault());
+
+                if (!verifyToken)
+                {
+                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                }
+
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 ApplicationUpdateDtoUp updated = JsonConvert.DeserializeObject<ApplicationUpdateDtoUp>(requestBody);
 
-                if (updated.Id == null)
+                if (updated == null)
                     return new BadRequestResult();
 
                 Application result = await _applicationService.UpdateApplication(updated);
@@ -142,8 +181,8 @@ namespace SecurityServer.Function
         }
         #endregion
 
-        #region DELETE
-        [FunctionName("DeleteApplication")]                                                                 //Delete application
+        #region DeleteApplication
+        [FunctionName("DeleteApplication")]
         [OpenApiOperation(operationId: "Run", tags: new[] { "Application" })]
         [OpenApiParameter("id",In = ParameterLocation.Path ,Description = "Id of the application to delete",Required = true,Type = typeof(int))]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
@@ -152,7 +191,14 @@ namespace SecurityServer.Function
         {
             try
             {
-                if(id == 1)
+                bool verifyToken = _authenticationService.VerifyToken(req.Headers["Bearer"].FirstOrDefault());
+
+                if (!verifyToken)
+                {
+                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                }
+
+                if (id == 1)
                     return new BadRequestResult();
                 else
                 {
@@ -169,7 +215,7 @@ namespace SecurityServer.Function
         }
         #endregion
 
-        #region LstUserNotInAppli
+        #region GetUserWhereIsNotInAppli
         [FunctionName("GetUserWhereIsNotInAppli")]
         [OpenApiOperation(operationId: "Run", tags: new[] { "Application" })]
         [OpenApiParameter("id", In = ParameterLocation.Path, Description = "Id of the application", Required = true, Type = typeof(int))]
@@ -179,6 +225,13 @@ namespace SecurityServer.Function
         {
             try
             {
+                bool verifyToken = _authenticationService.VerifyToken(req.Headers["Bearer"].FirstOrDefault());
+
+                if (!verifyToken)
+                {
+                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                }
+
                 List<ApplicationUserDtoDown> result = await _applicationService.GetUserWhereIsNotInAppli(id);
 
                 return new OkObjectResult(result);

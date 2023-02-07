@@ -47,7 +47,6 @@ namespace SecurityServer.Function
             builder.Services.AddSingleton(jwt);
             builder.Services.AddSingleton(certificat);
 
-            // configuration du middleware d'authentification JWT fourni par Microsoft
             builder.Services.AddAuthentication(auth =>
             {
                 auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -74,6 +73,7 @@ namespace SecurityServer.Function
             builder.Services.AddTransient<IUserService, UserService>();
             builder.Services.AddTransient<IApplicationService,ApplicationService>();
             builder.Services.AddTransient<IAdminService, AdminService>();
+            builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
             builder.Services.AddTransient<IJwtService, JwtService>();
         }
     }

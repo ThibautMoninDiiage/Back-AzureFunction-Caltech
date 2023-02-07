@@ -1,4 +1,6 @@
-﻿namespace SecurityServer.Service.Interfaces
+﻿using System.Security.Cryptography.X509Certificates;
+
+namespace SecurityServer.Service.Interfaces
 {
     public interface IJwtService
     {
@@ -6,5 +8,6 @@
         public byte[] GenerateSalt();
         public string HashPasswordWithSalt(string password, byte[] salt);
         public Guid GenerateGrantCode();
+        public X509Certificate2 LoadCertificate();
     }
 }

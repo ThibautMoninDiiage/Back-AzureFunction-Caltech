@@ -15,20 +15,30 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using System.Net;
 using Microsoft.OpenApi.Models;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
-using SecurityServer.Service;
+using System.Linq;
 
 namespace SecurityServer.Function
 {
     public class Users
     {
+        #region Public Variables
         public const string Route = "users";
-        private readonly IUserService _userService;
+        #endregion
 
-        public Users(IUserService userService)
+        #region Private Variables
+        private readonly IUserService _userService;
+        private readonly IAuthenticationService _authenticationService;
+        #endregion
+
+        #region CTOR
+        public Users(IUserService userService, IAuthenticationService authenticationService)
         {
             _userService = userService;
+            _authenticationService = authenticationService;
         }
+        #endregion
 
+        #region ServeurConnexion
         [FunctionName("ServeurConnexion")]
         [OpenApiOperation(operationId: "ServeurConnexion", tags: new[] { "User" })]
         [OpenApiRequestBody("userDtoUp", typeof(UserDtoUp))]
@@ -50,9 +60,10 @@ namespace SecurityServer.Function
                 else
                     return new OkObjectResult(userResult);
             }
-            //}
         }
+        #endregion
 
+        #region ConnexionGrant
         [FunctionName("ConnexionGrant")]
         [OpenApiOperation(operationId: "ConnexionGrant", tags: new[] { "User" })]
         [OpenApiRequestBody("GrantDtoUp", typeof(GrantDtoUp))]
@@ -75,7 +86,9 @@ namespace SecurityServer.Function
                     return new OkObjectResult(userResult);
             }
         }
+        #endregion
 
+        #region GetUserById
         [FunctionName("GetUserById")]
         [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
@@ -86,6 +99,13 @@ namespace SecurityServer.Function
         {
             try
             {
+                bool verifyToken = _authenticationService.VerifyToken(req.Headers["Bearer"].FirstOrDefault());
+
+                if (!verifyToken)
+                {
+                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                }
+
                 if (id == null)
                     return new BadRequestResult();
                 else
@@ -104,7 +124,9 @@ namespace SecurityServer.Function
                 return new BadRequestResult();
             }
         }
+        #endregion
 
+        #region CreateUser
         [FunctionName("CreateUser")]
         [OpenApiOperation(operationId: "CreateUser", tags: new[] { "User" })]
         [OpenApiRequestBody("user",typeof(UserCreationDtoUp))]
@@ -115,6 +137,13 @@ namespace SecurityServer.Function
         {
             try
             {
+                bool verifyToken = _authenticationService.VerifyToken(req.Headers["Bearer"].FirstOrDefault());
+
+                if (!verifyToken)
+                {
+                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                }
+
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 UserCreationDtoUp user = JsonConvert.DeserializeObject<UserCreationDtoUp>(requestBody);
 
@@ -131,7 +160,9 @@ namespace SecurityServer.Function
                 return new BadRequestResult();
             }
         }
+        #endregion
 
+        #region ModifyUser
         [FunctionName("ModifyUser")]
         [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
         [OpenApiRequestBody("user", typeof(UserModifyDtoUp))]
@@ -142,6 +173,13 @@ namespace SecurityServer.Function
         {
             try
             {
+                bool verifyToken = _authenticationService.VerifyToken(req.Headers["Bearer"].FirstOrDefault());
+
+                if (!verifyToken)
+                {
+                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                }
+
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 UserModifyDtoUp user = JsonConvert.DeserializeObject<UserModifyDtoUp>(requestBody);
 
@@ -158,7 +196,9 @@ namespace SecurityServer.Function
                 return new BadRequestResult();
             }
         }
+        #endregion
 
+        #region AjoutExistantUser
         [FunctionName("AjoutExistantUser")]
         [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
         [OpenApiRequestBody("AddUserInApplicationDtoDown", typeof(AddUserInApplicationDtoDown))]
@@ -169,12 +209,19 @@ namespace SecurityServer.Function
         {
             try
             {
+                bool verifyToken = _authenticationService.VerifyToken(req.Headers["Bearer"].FirstOrDefault());
+
+                if (!verifyToken)
+                {
+                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                }
+
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 AddUserInApplicationDtoDown user = JsonConvert.DeserializeObject<AddUserInApplicationDtoDown>(requestBody);
 
                 bool result = await _userService.AddExistantUser(user);
 
-                if (result == null)
+                if (!result)
                     return new BadRequestResult();
                 else
                     return new OkObjectResult(result);
@@ -185,8 +232,9 @@ namespace SecurityServer.Function
                 return new BadRequestResult();
             }
         }
+        #endregion
 
-        #region DELETE
+        #region Delete
         [FunctionName("DeleteUser")]                                                                 //Delete application
         [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
         [OpenApiParameter("id", In = ParameterLocation.Path, Description = "Id of the user to delete", Required = true, Type = typeof(int))]
@@ -196,6 +244,13 @@ namespace SecurityServer.Function
         {
             try
             {
+                bool verifyToken = _authenticationService.VerifyToken(req.Headers["Bearer"].FirstOrDefault());
+
+                if (!verifyToken)
+                {
+                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                }
+
                 bool result = await _userService.DeleteUser(id);
 
                 return new OkObjectResult(result);
