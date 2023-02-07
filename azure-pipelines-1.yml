@@ -52,7 +52,7 @@ stages:
       inputs:
         command: 'custom'
         custom: 'ef'
-        arguments: 'database update'
+        arguments: 'database update -p $(DAL_Project) -s $(DAL_Project)'
 
     - task: DotNetCoreCLI@2
       inputs:
