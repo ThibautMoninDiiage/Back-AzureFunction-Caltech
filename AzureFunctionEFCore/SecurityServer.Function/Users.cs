@@ -103,7 +103,7 @@ namespace SecurityServer.Function
 
                 if (!verifyToken)
                 {
-                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                    return new ContentResult() { Content = "Erreur token non valide ou absent", StatusCode = (int)HttpStatusCode.Unauthorized };
                 }
 
                 if (id == null)
@@ -141,7 +141,7 @@ namespace SecurityServer.Function
 
                 if (!verifyToken)
                 {
-                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                    return new ContentResult() { Content = "Erreur token non valide ou absent", StatusCode = (int)HttpStatusCode.Unauthorized };
                 }
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -177,7 +177,7 @@ namespace SecurityServer.Function
 
                 if (!verifyToken)
                 {
-                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                    return new ContentResult() { Content = "Erreur token non valide ou absent", StatusCode = (int)HttpStatusCode.Unauthorized };
                 }
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -213,7 +213,7 @@ namespace SecurityServer.Function
 
                 if (!verifyToken)
                 {
-                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                    return new ContentResult() { Content = "Erreur token non valide ou absent", StatusCode = (int)HttpStatusCode.Unauthorized };
                 }
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -235,7 +235,7 @@ namespace SecurityServer.Function
         #endregion
 
         #region Delete
-        [FunctionName("DeleteUser")]                                                                 //Delete application
+        [FunctionName("DeleteUser")]
         [OpenApiOperation(operationId: "Run", tags: new[] { "User" })]
         [OpenApiParameter("id", In = ParameterLocation.Path, Description = "Id of the user to delete", Required = true, Type = typeof(int))]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
@@ -248,7 +248,7 @@ namespace SecurityServer.Function
 
                 if (!verifyToken)
                 {
-                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                    return new ContentResult() { Content = "Erreur token non valide ou absent", StatusCode = (int)HttpStatusCode.Unauthorized };
                 }
 
                 bool result = await _userService.DeleteUser(id);

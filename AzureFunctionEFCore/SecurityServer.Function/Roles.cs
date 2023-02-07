@@ -46,7 +46,7 @@ namespace SecurityServer.Function
 
             if (!verifyToken)
             {
-                return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                return new ContentResult() { Content = "Erreur token non valide ou absent", StatusCode = (int)HttpStatusCode.Unauthorized };
             }
 
             IEnumerable<RoleDtoDown> result = await _roleService.GetAll();

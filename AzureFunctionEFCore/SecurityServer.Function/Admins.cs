@@ -53,7 +53,7 @@ namespace SecurityServer.Function
 
                 if (!verifyToken)
                 {
-                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                    return new ContentResult() { Content = "Erreur token non valide ou absent", StatusCode = (int)HttpStatusCode.Unauthorized };
                 }
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -87,7 +87,7 @@ namespace SecurityServer.Function
 
                 if (!verifyToken)
                 {
-                    return new ContentResult() { Content = "My error message", StatusCode = (int)HttpStatusCode.Unauthorized };
+                    return new ContentResult() { Content = "Erreur token non valide ou absent", StatusCode = (int)HttpStatusCode.Unauthorized };
                 }
 
                 List<UserAllDtoDown> result = await _adminService.GetAllUsers();

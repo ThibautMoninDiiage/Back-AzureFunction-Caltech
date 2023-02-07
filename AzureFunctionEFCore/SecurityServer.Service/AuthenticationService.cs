@@ -1,6 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using SecurityServer.Service.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
@@ -42,12 +43,12 @@ namespace SecurityServer.Service
                         IssuerSigningKey = securityKey
                     };
 
-                    SecurityToken securityToken;
-                    var verify = handler.ValidateToken(token, validationParameters, out securityToken);
+                    ClaimsPrincipal verify = handler.ValidateToken(token, validationParameters, out SecurityToken securityToken);
 
-                    Console.WriteLine("");
-
-                    return true;
+                    if (verify != null)
+                        return true;
+                    else
+                        return false;
                 }
             }
         }
